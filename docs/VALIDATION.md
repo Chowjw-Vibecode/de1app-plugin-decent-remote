@@ -35,9 +35,9 @@ The earlier profile-library dashboard passed **66 isolated browser checks**, inc
 
 此前曲线库网页候选通过 **66 项隔离浏览器检查**，包含两个原生预浸名称、基本曲线有效温度字段及接近零的数值边界。此套件拦截网络请求，没有连接机器。
 
-On the installed tablet, an independent tester opened all **123 profiles in English and Chinese: 246 previews**. List titles before and after selection agreed with the source titles. All 96 advanced profiles had the expected stage count in both languages; all 27 basic profiles displayed their parameters without a misleading “0 stages” label. The cleaning profile with near-zero floating-point residue could also be opened.
+On an earlier dashboard candidate installed on the tablet, an independent tester opened all **123 profiles in English and Chinese: 246 previews**. List titles before and after selection agreed with the source titles. All 96 advanced profiles had the expected stage count in both languages; all 27 basic profiles displayed their parameters without a misleading “0 stages” label. The cleaning profile with near-zero floating-point residue could also be opened. Later revisions received focused checks of affected paths; this was not repeated as a full 123-profile run on the final dashboard.
 
-测试专员在已安装的平板网页逐条点击 **123 条曲线，中英文共 246 次预览**。点击前后名称与来源一致；96 条高级曲线的双语阶段数量一致，27 条基本曲线均显示基本参数，不再标成“0 段”。含接近零浮点误差的清洗曲线也可预览。
+测试专员在较早候选版本的平板网页逐条点击 **123 条曲线，中英文共 246 次预览**。点击前后名称与来源一致；96 条高级曲线的双语阶段数量一致，27 条基本曲线均显示基本参数，不再标成“0 段”。含接近零浮点误差的清洗曲线也可预览。后续修改做了受影响路径的定向复测，最终网页未重新完成全部 123 条逐项遍历。
 
 For the current basic profile, all 12 displayed values matched the API in each language. The other 26 basic profiles contributed 570 displayed values checked against saved source samples; those comparisons do not prove the files were unchanged between sampling times. Two initial mismatches were test errors caused by including internal fields that the UI does not display. The test was corrected. A missing native-stage translation was identified separately and corrected.
 
