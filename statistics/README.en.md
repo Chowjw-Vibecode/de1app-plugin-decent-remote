@@ -4,7 +4,7 @@
 
 Installation totals grouped by country or region help us understand where Decent Remote is used. A random installation ID prevents double-counting. Names, accounts, access keys, profiles and shot records are not sent.
 
-**The Cloudflare Worker and D1 database are deployed. Version 0.3.4 includes the service URL.** [Public summary](https://chowjw-code.github.io/de1app-plugin-decent-remote/).
+**The Cloudflare Worker and D1 database are deployed. Version 0.3.4 includes the service URL.** [Public summary](https://chowjw-vibecode.github.io/de1app-plugin-decent-remote/).
 
 Service: `https://decent-remote-usage.decent-remote-stats.workers.dev`; [country summary](https://decent-remote-usage.decent-remote-stats.workers.dev/v1/summary). Deployment checks covered creation, deduplication, validation, deletion and summary export. See [VALIDATION.md](../docs/VALIDATION.md) for the verification scope.
 

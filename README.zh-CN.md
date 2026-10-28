@@ -12,7 +12,7 @@ Decent 的魅力，在于你能看见每一次萃取，也能决定下一次如�
 
 ![Decent Remote 中文工作台](docs/images/current-zh-dark.png)
 
-**版本 0.3.4** · [下载安装包](https://github.com/chowjw-code/de1app-plugin-decent-remote/releases/latest)
+**版本 0.3.4** · [下载安装包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/latest)
 
 已实机验证的基础环境：**classic de1app 1.46.1.1 + Streamline**。本包用于经典 de1app。
 

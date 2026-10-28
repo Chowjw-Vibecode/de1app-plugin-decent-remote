@@ -14,7 +14,7 @@ The project grew out of two goals: bring more of the remote-control experience o
 
 ![Decent Remote browser dashboard](docs/images/current-en-dark.png)
 
-**Version 0.3.4** · [Download the plugin](https://github.com/chowjw-code/de1app-plugin-decent-remote/releases/latest)
+**Version 0.3.4** · [Download the plugin](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/latest)
 
 Device-tested baseline: **classic de1app 1.46.1.1 + Streamline**.
 

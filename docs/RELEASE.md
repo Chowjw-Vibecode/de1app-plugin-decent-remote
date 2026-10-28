@@ -1,6 +1,6 @@
 # Introducing Decent Remote · 0.3.4
 
-[中文说明](../README.zh-CN.md) · [Install ZIP / 安装包](https://github.com/chowjw-code/de1app-plugin-decent-remote/releases/download/v0.3.4/decent_remote-v0.3.4.zip) · [Source ZIP / 源码包](https://github.com/chowjw-code/de1app-plugin-decent-remote/releases/download/v0.3.4/decent-remote-v0.3.4-source.zip)
+[中文说明](../README.zh-CN.md) · [Install ZIP / 安装包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/download/v0.3.4/decent_remote-v0.3.4.zip) · [Source ZIP / 源码包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/download/v0.3.4/decent-remote-v0.3.4-source.zip)
 
 ## Your classic de1app workflow, with more ways to connect
 

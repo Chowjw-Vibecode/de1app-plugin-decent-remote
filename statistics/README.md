@@ -4,7 +4,7 @@
 
 按国家／地区汇总安装数量，帮助了解 Decent Remote 在各地的使用情况。随机安装编号用于去重，不发送姓名、账户、密钥、曲线或出杯记录。
 
-**Cloudflare Worker 与 D1 已部署，0.3.4 已配置正式服务地址。** [公开汇总页](https://chowjw-code.github.io/de1app-plugin-decent-remote/)。
+**Cloudflare Worker 与 D1 已部署，0.3.4 已配置正式服务地址。** [公开汇总页](https://chowjw-vibecode.github.io/de1app-plugin-decent-remote/)。
 
 服务：`https://decent-remote-usage.decent-remote-stats.workers.dev`；[地区汇总](https://decent-remote-usage.decent-remote-stats.workers.dev/v1/summary)。部署冒烟验证了新增、去重、校验、删除和汇总导出；验证范围见 [VALIDATION.md](../docs/VALIDATION.md)。
 
