@@ -86,6 +86,14 @@ test statistics-start-failure-isolated {statistics startup failure cannot disabl
             [llength $::wibble::zonehandlers] $::events
     }
 } -result {1 1 3 {}}
+test legacy-start-setting-disabled {loading an old enabled configuration cannot restore starts} -body {
+    fixture
+    interp eval app {
+        set ::plugins::decent_remote::settings(allow_start) 1
+        ::plugins::decent_remote::main
+        list [info exists ::plugins::decent_remote::settings(allow_start)] [info exists ::plugins::decent_remote::api::allow_start] $::events
+    }
+} -result {0 0 {}}
 catch {interp eval app {::plugins::decent_remote::stop}}
 interp delete app
 removeDirectory lifecycle

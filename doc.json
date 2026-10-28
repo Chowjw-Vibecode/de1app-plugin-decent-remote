@@ -1,9 +1,8 @@
 {
-  "version": "0.3.4",
+  "version": "0.3.5",
   "status": "implemented; physical starts disabled and not exercised",
   "authentication": "v1使用Authorization: Bearer；写请求需要唯一X-Request-ID。旧路径另兼容auth查询参数。",
   "defaults": {
-    "allow_start": false,
     "hds_enabled": false
   },
   "result_semantics": {
@@ -263,47 +262,47 @@
     {
       "method": "POST",
       "path": "/api/v1/machine/wake",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "唤醒机器，不启动萃取；正文{}"
     },
     {
       "method": "POST",
       "path": "/api/v1/machine/sleep",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "使机器休眠；正文{}"
     },
     {
       "method": "POST",
       "path": "/api/v1/machine/stop",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "通过原生控制停止当前运行；正文{}"
     },
     {
       "method": "POST",
       "path": "/api/v1/machine/espresso",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "已停用；返回403 start_disabled，请使用机器实体按键"
     },
     {
       "method": "POST",
       "path": "/api/v1/machine/flush",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "已停用；返回403 start_disabled，请使用机器实体按键"
     },
     {
       "method": "POST",
       "path": "/api/v1/machine/steam",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "已停用；返回403 start_disabled，请使用机器实体按键"
     },
     {
       "method": "POST",
       "path": "/api/v1/machine/hotwater",
-      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+      "description": "已停用；返回403 start_disabled，请使用机器实体按键"
     },
     {
       "method": "POST",
       "path": "/api/v1/grinder/start",
-      "description": "可选现有小方兼容桥；启动默认关闭，新网页无小方控件"
+      "description": "已停用；返回403 start_disabled"
     },
     {
       "method": "POST",
       "path": "/api/v1/grinder/stop",
-      "description": "可选现有小方兼容桥；启动默认关闭，新网页无小方控件"
+      "description": "已有小方插件的可选停止接口；远程启动已停用"
     },
     {
       "method": "POST",

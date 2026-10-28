@@ -1,7 +1,7 @@
 # Metadata/source is inert. de1app calls main only when enabled.
 namespace eval ::plugins::decent_remote {
     variable author "JW / Codex"
-    variable version 0.3.4
+    variable version 0.3.5
     variable name "Decent Remote"
     variable description "Local browser control for classic de1app"
     variable directory [file dirname [info script]]
@@ -33,14 +33,14 @@ namespace eval ::plugins::decent_remote {
             }
         }
         if {![info exists settings(token)] || $settings(token) eq {}} {set settings(token) admin1234; set persist 1}
-        foreach {key default} {port 8888 allow_start 0 hds_enabled 0 usage_enabled 1 usage_endpoint https://decent-remote-usage.decent-remote-stats.workers.dev/v1/check-in} {if {![info exists settings($key)]} {set settings($key) $default}}
+        foreach {key default} {port 8888 hds_enabled 0 usage_enabled 1 usage_endpoint https://decent-remote-usage.decent-remote-stats.workers.dev/v1/check-in} {if {![info exists settings($key)]} {set settings($key) $default}}
         if {![string is integer -strict $settings(port)] || $settings(port) < 1024 || $settings(port) > 65535} {error "无效服务端口"}
         if {![::plugins::decent_remote::api::valid_token $settings(token)]} {error "访问密钥须为8–128位英文、数字或符号，不含空白"}
-        foreach key {allow_start hds_enabled} {if {![string is boolean -strict $settings($key)]} {error "无效开关：$key"}}
+        foreach key {hds_enabled} {if {![string is boolean -strict $settings($key)]} {error "无效开关：$key"}}
+        if {[info exists settings(allow_start)]} {unset settings(allow_start); set persist 1}
         if {$persist} {::plugins::decent_remote::access::write_config [array get settings]}
         set ::plugins::decent_remote::api::root [homedir]
         set ::plugins::decent_remote::api::token $settings(token)
-        set ::plugins::decent_remote::api::allow_start $settings(allow_start)
         set ::plugins::decent_remote::hds::enabled $settings(hds_enabled)
     }
     proc unregister {} {

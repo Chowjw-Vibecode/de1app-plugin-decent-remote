@@ -175,13 +175,7 @@ namespace eval ::plugins::decent_remote::device {
                 set command ::start_idle
             }
             espresso - flush - steam - hotwater {
-                guard {Idle}
-                require_cmd ::ghc_required
-                if {[::ghc_required]} {fail 409 ghc_required "机器要求实体冲煮头操作，远程启动不可用"}
-                if {$operation eq "espresso" && [get ::settings(start_espresso_only_if_scale_connected) 0] == 1 && [get ::de1(scale_device_handle)] in {{} 0}} {
-                    fail 409 scale_disconnected "该配方要求秤连接后才能启动"
-                }
-                set command [dict get {espresso ::start_espresso flush ::start_flush steam ::start_steam hotwater ::start_water} $operation]
+                fail 403 start_disabled "远程启动已停用，请使用机器实体按键"
             }
             default {fail 404 unknown_operation "未知机器操作"}
         }
@@ -322,7 +316,7 @@ namespace eval ::plugins::decent_remote::device {
             status {
                 keys $payload {}
                 set out [dict create connected [connected] state [state] substate [get ::de1(substate)] recipe [recipe] readback app_cache \
-                    remote_start_enabled [get ::plugins::decent_remote::api::allow_start 0]]
+                    remote_start_enabled 0]
                 foreach {field key} {temperature_c head_temperature mix_temperature_c mix_temperature steam_temperature_c steam_heater_temperature flow_ml_s flow pressure_bar pressure scale_weight_g scale_weight scale_flow_g_s scale_weight_rate} {
                     dict set out $field [get ::de1($key)]
                 }

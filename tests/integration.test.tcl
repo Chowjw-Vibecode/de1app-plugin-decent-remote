@@ -446,13 +446,13 @@ test route-start-disabled {default remote-start gate blocks before any native ac
         [dict get $execution accepted] [dict get $execution device_confirmed] $::calls $::forbidden_calls
 } -result {403 start_disabled rejected false false {} 0}
 
-test route-start-policy-readback {start policy is a JSON boolean; reading it does not operate a machine} -body {
+test route-start-policy-readback {compatibility status stays false even if a legacy runtime variable is injected} -body {
     reset
     set disabled [request GET /api/v1/status]
     set ::plugins::decent_remote::api::allow_start 1
     set enabled [request GET /api/v1/status]
     list [regexp {"remote_start_enabled"\s*:\s*false} [dict get $disabled body]] \
-        [regexp {"remote_start_enabled"\s*:\s*true} [dict get $enabled body]] $::calls $::forbidden_calls
+        [regexp {"remote_start_enabled"\s*:\s*false} [dict get $enabled body]] $::calls $::forbidden_calls
 } -result {1 1 {} 0}
 
 removeDirectory $::testroot

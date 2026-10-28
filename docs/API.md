@@ -1,8 +1,8 @@
-# Decent Remote 0.3.3 API
+# Decent Remote 0.3.5 API
 
 [中文文档](../API.md)
 
-This document covers the 0.3.3 service and the Decent Remote web interface. Both use de1app's native control methods. Remote start is disabled by default. Version 0.3.2 fixes tablet access-key navigation; 0.3.3 fixes custom-name display in the browser. The API is unchanged.
+This document describes the 0.3.5 service and dashboard. Parameter changes, status reads and stop commands use de1app's native controls. Remote start endpoints are disabled.
 
 Change the access key on the tablet's plugin settings page. There is no remote key-change endpoint. A new installation defaults to `admin1234`; an existing key is preserved. A saved key takes effect immediately. The old key then returns 401 on v1 endpoints or 403 on legacy endpoints. Keys must contain 8–128 visible ASCII characters, with no whitespace. The web interface saves connection details in browser local storage only after successful authentication and only when the user selects **Remember connection**.
 
@@ -67,10 +67,10 @@ Profile edits, loading, restoring, saving, and saving as a new profile share one
 | GET | `/api/v1/shots/json`, `/api/v1/shots/json/{name.json}` | List or download JSON shot history |
 | GET | `/api/v1/requests/{request_id}` | Read the execution record |
 | POST | `/api/v1/machine/{wake,sleep,stop}` | Native wake, sleep, or stop |
-| POST | `/api/v1/machine/{espresso,flush,steam,hotwater}` | Start a hardware action; disabled by default |
-| POST | `/api/v1/grinder/{start,stop}` | Optional bridge to the existing Crystal (小方) grinder plugin; start is disabled by default |
+| POST | `/api/v1/machine/{espresso,flush,steam,hotwater}` | Unavailable; returns 403 start_disabled |
+| POST | `/api/v1/grinder/{start,stop}` | Optional bridge to the existing Crystal (小方) grinder plugin; start is unavailable |
 
-Parameter changes generally require a connected machine in `Idle` or `Sleep`; edits are rejected while the machine is running. Start actions also require the states and restrictions enforced by de1app. The default `allow_start=0` blocks espresso, flush, hot water, steam, and grinder starts. The web interface has no control for enabling this master switch.
+Parameter changes generally require a connected machine in `Idle` or `Sleep`; edits are rejected while the machine is running. Remote start endpoints return `403 start_disabled` for espresso, flush, hot water, steam, and grinder starts, regardless of the legacy `allow_start` setting. The dashboard has no start buttons. Remote stop, wake and sleep remain available through native de1app controls.
 
 ## Recipe and profile
 

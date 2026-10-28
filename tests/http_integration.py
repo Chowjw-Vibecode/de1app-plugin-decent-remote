@@ -107,9 +107,11 @@ with tempfile.TemporaryDirectory(prefix='decent-http-test-') as td:
         expect(400, 'GET', '/api/v1/status?ignored=true')
         expect(400, 'GET', '/api/profile/%FF.tcl')
         expect(400, 'GET', '/api/profile/%2e%2e/secret.tcl')
-        result = expect(200, 'POST', '/api/v1/machine/espresso', '{}', 'start-001')
-        first_count = int(json.loads(result[1])['calls'])
-        expect(409, 'POST', '/api/v1/machine/espresso', '{}', 'start-001')
+        first_count = int(json.loads(expect(200, 'GET', '/api/v1/status')[1])['calls'])
+        for action in ('espresso', 'flush', 'steam', 'hotwater'):
+            result = expect(403, 'POST', '/api/v1/machine/' + action, '{}', 'start-' + action)
+            assert json.loads(result[1])['error'] == 'start_disabled'
+            expect(409, 'POST', '/api/v1/machine/' + action, '{}', 'start-' + action)
         result = expect(200, 'GET', '/api/v1/status')
         assert int(json.loads(result[1])['calls']) == first_count + 1
         token = 'abcdefghijklmnopqrstuvwxyz'

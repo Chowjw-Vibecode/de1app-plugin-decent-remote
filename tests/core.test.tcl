@@ -21,7 +21,12 @@ test json-3 {} -body {status [req POST /api/v1/recipe {{"dose_g":18} junk}]} -re
 test patch-1 {} -body {status [req POST /api/v1/recipe {{"dose_g":18.5}}]} -result 200
 test start-1 {} -body {status [req POST /api/v1/machine/espresso {{}}]} -result 403
 test start-2 {} -body {status [req GET /api/v1/machine/espresso]} -result 405
-test start-3 {} -body {set ::plugins::decent_remote::api::allow_start 1; status [req POST /api/v1/machine/espresso {{}}]} -result 200
+test start-3 {legacy permission cannot re-enable removed starts} -body {
+ set ::plugins::decent_remote::api::allow_start 1
+ set before $::calls; set result {}
+ foreach kind {espresso flush steam hotwater} {lappend result [status [req POST /api/v1/machine/$kind {{}}]]}
+ list $result [expr {$before eq $::calls}]
+} -result {{403 403 403 403} 1}
 test replay-1 {} -body {status [::plugins::decent_remote::api::dispatch POST /api/v1/machine/espresso $headers {{}}]} -result 409
 test stop-1 {} -body {set ::plugins::decent_remote::api::allow_start 0; status [req POST /api/v1/machine/stop {{}}]} -result 200
 test fields-1 {} -body {status [req POST /api/v1/scale/tare {{"ignored":true}}]} -result 422

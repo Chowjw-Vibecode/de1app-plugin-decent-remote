@@ -1,5 +1,12 @@
 # Changelog / 更新记录
 
+## 0.3.5 — 2026-10-28
+
+- Remove remote-start buttons and the permission setting; all start requests are rejected. Stop, wake, sleep and scale tare remain available. / 移除远程启动按钮和权限项，启动接口统一拒绝；保留停止、唤醒、休眠与秤清零。
+- Remove the obsolete start-permission field when loading or saving configuration. / 加载或保存配置时清理旧启动权限字段。
+- Add tablet settings for HDS sleep/wake and the server port, with draft/cancel behavior and validation. / 平板设置页增加 HDS 联动和端口，支持草稿取消与输入校验。
+
+
 ## 0.3.4 — 2026-10-28
 
 - Add five named favorites to the Current page, using the tablet’s saved order; selecting a shortcut loads the recipe without starting the machine. / 主屏增加五个具名常用曲线按钮，沿用平板顺序，点击加载配方但不启动机器。

@@ -32,7 +32,7 @@ test recipe-3 {reject offset clipping} -body {reset; set ::settings(espresso_tem
 test recipe-4 {missing native method fails before mutation} -body {reset; rename ::send_de1_settings_soon ::saved_sender; set result [errorcode {invoke recipe.patch {dose_g 20}}]; rename ::saved_sender ::send_de1_settings_soon; list $result $::settings(grinder_dose_weight)} -result {{REMOTE 501 unsupported} 18}
 test disconnected-1 {no command while disconnected} -body {reset; set ::de1(device_handle) 0; list [errorcode {invoke machine.wake}] $::calls} -result {{REMOTE 409 disconnected} {}}
 test busy-1 {busy recipe fails} -body {reset; set ::de1(state) 4; list [errorcode {invoke recipe.patch {dose_g 20}}] $::calls} -result {{REMOTE 409 busy} {}}
-test ghc-1 {espresso cannot bypass physical control} -body {reset; set ::ghc 1; list [errorcode {invoke machine.espresso}] $::calls} -result {{REMOTE 409 ghc_required} {}}
+test ghc-1 {removed espresso start rejects before native control} -body {reset; set ::ghc 1; list [errorcode {invoke machine.espresso}] $::calls} -result {{REMOTE 403 start_disabled} {}}
 test busy-2 {stop remains possible during extraction} -body {reset; set ::de1(state) 4; set r [invoke machine.stop]; list [dict get $r accepted] $::calls [dict get $r device_confirmed]} -result {1 start_idle 0}
 test stop-idle-sleep {stop never wakes or re-enters an inactive machine} -body {
     reset; set actions {}

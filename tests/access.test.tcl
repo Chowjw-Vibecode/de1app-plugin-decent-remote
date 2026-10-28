@@ -14,7 +14,7 @@ proc fixture {} {
         proc homedir {} {return $::root}
         proc plugin_directory {} {return plugins}
         ::plugins::decent_remote::load_components
-        array set ::plugins::decent_remote::settings {token old-key-123 port 8888 allow_start 0 hds_enabled 1 future_setting {keep this value}}
+        array set ::plugins::decent_remote::settings {token old-key-123 port 8888 hds_enabled 1 future_setting {keep this value}}
         set ::plugins::decent_remote::api::token old-key-123
         set ::plugins::decent_remote::api::adapter ::fake
         set ::events {}
@@ -86,7 +86,7 @@ test default-no-configuration {First startup persists requested default with rem
     interp eval app {
         array unset ::plugins::decent_remote::settings
         ::plugins::decent_remote::configure
-        list [dict get [snapshot] token] $::plugins::decent_remote::api::token $::plugins::decent_remote::api::allow_start
+        list [dict get [snapshot] token] $::plugins::decent_remote::api::token [info exists ::plugins::decent_remote::api::allow_start]
     }
 } -result {admin1234 admin1234 0}
 
@@ -210,7 +210,7 @@ test saves-immediately {Commit invalidates old authentication without hardware c
         set ::plugins::decent_remote::access::draft new-key-456
         set saved [::plugins::decent_remote::access::save]
         set no_actions [expr {$::events eq {}}]
-        list $saved $no_actions [authorize old-key-123] [authorize new-key-456] [dict get [snapshot] token] $::plugins::decent_remote::settings(allow_start)
+        list $saved $no_actions [authorize old-key-123] [authorize new-key-456] [dict get [snapshot] token] [info exists ::plugins::decent_remote::settings(allow_start)]
     }
 } -result {1 1 401 200 new-key-456 0}
 
@@ -296,7 +296,7 @@ test native-page-entry {Registers settings page once, with masked entry and expl
         set first $::ui_calls
         ::plugins::decent_remote::access::build
         set entry {}
-        foreach row $::ui_calls {if {[lrange $row 0 1] eq {add entry}} {set entry $row}}
+        foreach row $::ui_calls {if {[lrange $row 0 1] eq {add entry} && "access_key" in $row} {set entry $row}}
         list $::plugins::decent_remote::ui_entry [expr {$::ui_calls eq $first}] [lindex $entry [expr {[lsearch -exact $entry -show] + 1}]] [lindex $entry [expr {[lsearch -exact $entry -trim] + 1}]] [expr {[string first old-key-123 $::ui_calls] == -1}]
     }
 } -result {DecentRemoteSettings 1 * 0 1}
@@ -351,6 +351,76 @@ test invalid-runtime-token {Authentication preflight applies the same visible-AS
     fixture
     interp eval app {set ::plugins::decent_remote::api::token "bad key123"; authorize "bad key123"}
 } -result 503
+
+test switches-draft-and-cancel {Switches and port remain drafts until Save} -body {
+    fixture
+    interp eval app {
+        persist; set before [snapshot]
+        ::plugins::decent_remote::access::open
+        ::plugins::decent_remote::access::toggle_option allow_start
+        ::plugins::decent_remote::access::toggle_option hds_enabled
+        set ::plugins::decent_remote::access::options(port) 9999
+        ::plugins::decent_remote::access::cancel
+        list [expr {[snapshot] eq $before}] [info exists ::plugins::decent_remote::api::allow_start] [array size ::plugins::decent_remote::access::options]
+    }
+} -result {1 0 0}
+
+test settings-save {Port and HDS wait for restart; removed start setting stays absent; usage preserved} -body {
+    fixture
+    interp eval app {
+        set ::plugins::decent_remote::settings(usage_enabled) 1
+        set ::plugins::decent_remote::settings(usage_endpoint) https://example.test/usage
+        set ::plugins::decent_remote::hds::enabled 1
+        set ::plugins::decent_remote::listener sentinel
+        ::plugins::decent_remote::access::open
+        ::plugins::decent_remote::access::toggle_option allow_start
+        ::plugins::decent_remote::access::toggle_option hds_enabled
+        set ::plugins::decent_remote::access::options(port) 9999
+        set ok [::plugins::decent_remote::access::save]
+        set disk [snapshot]
+        list $ok [info exists ::plugins::decent_remote::api::allow_start] [dict get $disk port] [dict get $disk hds_enabled] $::plugins::decent_remote::hds::enabled $::plugins::decent_remote::listener [dict get $disk usage_enabled] [dict get $disk usage_endpoint] $::events $::page
+    }
+} -result {1 0 9999 0 1 sentinel 1 https://example.test/usage {} extensions}
+
+test invalid-options {Invalid controls never partially change authentication or permission} -body {
+    fixture
+    interp eval app {
+        persist; set before [snapshot]; set outcomes {}
+        foreach port {0 1023 65536 abc 8888.5 { 8888} 1e4} {
+            ::plugins::decent_remote::access::open
+            set ::plugins::decent_remote::access::draft new-key-456
+            set ::plugins::decent_remote::access::options(port) $port
+            set ::plugins::decent_remote::access::options(allow_start) 1
+            lappend outcomes [::plugins::decent_remote::access::save]
+        }
+        ::plugins::decent_remote::access::open
+        set ::plugins::decent_remote::access::options(hds_enabled) invalid
+        lappend outcomes [::plugins::decent_remote::access::save]
+        list [lsort -unique $outcomes] [expr {[snapshot] eq $before}] [info exists ::plugins::decent_remote::api::allow_start] $::plugins::decent_remote::api::token
+    }
+} -result {0 1 0 old-key-123}
+
+test failed-options-save {Disk error preserves active settings and leaves editable draft} -body {
+    fixture
+    interp eval app {
+        persist
+        ::plugins::decent_remote::access::open
+        ::plugins::decent_remote::access::toggle_option allow_start
+        rename ::plugins::decent_remote::access::write_config ::original_write
+        proc ::plugins::decent_remote::access::write_config args {error simulated}
+        list [::plugins::decent_remote::access::save] [info exists ::plugins::decent_remote::api::allow_start] [info exists ::plugins::decent_remote::settings(allow_start)] [info exists ::plugins::decent_remote::access::options(allow_start)]
+    }
+} -result {0 0 0 0}
+
+test no-start-switch {settings page has no remote-start control} -body {
+    fixture; fake_ui
+    interp eval app {
+        ::plugins::decent_remote::access::build
+        ::plugins::decent_remote::access::open
+        ::plugins::decent_remote::access::toggle_option allow_start
+        list [info exists ::plugins::decent_remote::access::options(allow_start)] [string match *allow_start* $::ui_calls]
+    }
+} -result {0 0}
 
 catch {interp delete app}
 removeDirectory access-test

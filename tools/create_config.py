@@ -16,7 +16,7 @@ def main():
     if not 1024 <= args.port <= 65535:
         parser.error('port must be between 1024 and 65535')
     token = secrets.token_hex(32) if args.random_key else 'admin1234'
-    content = f'port {args.port}\ntoken {token}\nallow_start 0\nhds_enabled {int(args.hds)}\n'
+    content = f'port {args.port}\ntoken {token}\nhds_enabled {int(args.hds)}\n'
     try:
         descriptor = os.open(args.output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     except FileExistsError:

@@ -12,7 +12,7 @@ Decent 的魅力，在于你能看见每一次萃取，也能决定下一次如�
 
 ![Decent Remote 中文工作台](docs/images/current-zh-dark.png)
 
-**版本 0.3.4** · [下载安装包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/latest)
+**版本 0.3.5** · [下载安装包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/latest)
 
 已实机验证的基础环境：**classic de1app 1.46.1.1 + Streamline**。本包用于经典 de1app。
 
@@ -69,7 +69,7 @@ flowchart LR
 
 中英文与深浅色可以随时切换。界面针对横屏平板和电脑浏览器设计，曲线名称及你自己填写的内容保持原样。
 
-部分功能依赖皮肤、设备或可选插件。完整条件见[兼容与迁移](docs/COMPATIBILITY.md)。**远程启动默认关闭**，网页不能启用启动总开关；原生冲煮头控制器的限制仍然生效。唤醒只解除休眠，不启动萃取。
+部分功能依赖皮肤、设备或可选插件。完整条件见[兼容与迁移](docs/COMPATIBILITY.md)。**远程启动已停用**，网页不提供萃取、冲洗、热水或蒸汽的启动按钮，接口也拒绝启动请求。请使用机器实体按键启动；远程停止仍可用。唤醒只解除休眠，不启动萃取。
 
 ### 让 HDS 秤随机器休眠和唤醒
 
@@ -101,11 +101,13 @@ flowchart LR
 
 ## 安装
 
-1. 使用安装包 **`decent_remote-v0.3.4.zip`**，解压得到 `decent_remote/` 文件夹。GitHub 自动生成的源码包不是直接安装包。
+1. 使用安装包 **`decent_remote-v0.3.5.zip`**，解压得到 `decent_remote/` 文件夹。GitHub 自动生成的源码包不是直接安装包。
 2. 将文件夹放入 de1app 数据目录下的 `plugins/`。最终路径应为 `plugins/decent_remote/plugin.tcl`，不要多套一层目录。经典 Android 安装常见位置为 `/sdcard/de1plus/plugins/`。
 3. 在 de1app 插件列表中启用 **Decent Remote**，机器待机时重启 App。已有远程或秤休眠插件的用户，先按[兼容与迁移说明](docs/COMPATIBILITY.md)停用冲突插件。
 4. 电脑或手机连接同一网络，打开 **`http://平板IP:8888/`**。
 5. 全新安装使用默认密钥 **`admin1234`**。在平板插件列表 → **Decent Remote → 设置** 中修改；已有安装保留原密钥。
+
+平板插件设置页可调整密钥、HDS 秤休眠联动和服务端口。密钥保存后生效；HDS 与端口需重启 App。保存设置不会启动机器。
 
 “记住连接”可将密钥保存在当前浏览器中；“忘记连接”会清除它。插件需要 de1app 持续运行。服务使用普通 HTTP，适用于可信局域网，请勿直接暴露到公网。
 
@@ -121,7 +123,7 @@ Decent Remote 是独立社区项目。它调用经典 de1app 的原生控制方�
 
 - **实机验证：** 状态及秤读数、曲线浏览、可逆设置、密钥保存和休眠／唤醒。定向检查包括两次休眠／唤醒循环、79 条历史自动加载，以及较早候选版本的 123 条曲线中英文逐条只读预览。后续修改做了受影响路径的定向复测，没有再次完整跑遍 123 条。
 - **自动化测试：** 模拟原生调用与网络响应，检查接口行为、异常处理和网页交互，不操作设备。
-- **尚未验证：** 其他 App 版本、皮肤和设备，以及通过远程接口实际启动出水等动作。
+- **尚未验证：** 其他 App 版本、皮肤和设备。
 
 完整测试结果和未覆盖范围集中在[验证说明](docs/VALIDATION.md)，版本变化见[更新记录](CHANGELOG.md)。截图集中在[界面预览](docs/SCREENSHOTS.md)。
 

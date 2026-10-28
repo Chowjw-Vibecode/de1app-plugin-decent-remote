@@ -1,6 +1,13 @@
-# Introducing Decent Remote · 0.3.4
+# Decent Remote · 0.3.5
 
-[中文说明](../README.zh-CN.md) · [Install ZIP / 安装包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/download/v0.3.4/decent_remote-v0.3.4.zip) · [Source ZIP / 源码包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/download/v0.3.4/decent-remote-v0.3.4-source.zip)
+[中文说明](../README.zh-CN.md) · [Install ZIP / 安装包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/download/v0.3.5/decent_remote-v0.3.5.zip) · [Source ZIP / 源码包](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/download/v0.3.5/decent-remote-v0.3.5-source.zip)
+
+## Changes in 0.3.5 / 本次更新
+
+- Remove remote-start buttons and the start-permission setting. Start endpoints now reject requests; stop, wake, sleep and scale tare remain available. / 移除远程启动按钮和权限设置；启动接口统一拒绝，保留停止、唤醒、休眠和秤清零。
+- Clean up the obsolete permission field when configuration is loaded or saved. / 加载或保存配置时清理旧权限字段。
+- Configure HDS sleep/wake integration and the server port from the tablet settings page, with input validation and Cancel support. / 平板设置页可配置 HDS 联动和端口，支持输入校验与取消。
+- Update bilingual documentation, screenshots and both download packages. / 同步更新中英文说明、截图及两个下载包。
 
 ## Your classic de1app workflow, with more ways to connect
 
@@ -30,7 +37,7 @@ The plugin runs inside the classic app and uses its native control functions. No
 
 The API distinguishes a request being accepted, values being read back from the app, and native profile frames being acknowledged. Those states are not presented as proof that a physical shot completed. The browser also blocks saving an edited profile while its transfer remains unconfirmed; retries require an explicit action.
 
-Remote start is disabled by default. Wake, sleep and stop retain their native behavior, including group-head restrictions.
+Remote start is unavailable; start buttons and the permission setting have been removed. Wake, sleep and stop retain their native behavior, including group-head restrictions.
 
 ![Settings in the light theme](images/settings-en-light.png)
 
@@ -38,8 +45,8 @@ Remote start is disabled by default. Wake, sleep and stop retain their native be
 
 | Package | Use |
 |---|---|
-| `decent_remote-v0.3.4.zip` | Install in the classic de1app `plugins/` directory |
-| `decent-remote-v0.3.4-source.zip` | Source, bilingual documentation, screenshots, offline tests and build tools |
+| `decent_remote-v0.3.5.zip` | Install in the classic de1app `plugins/` directory |
+| `decent-remote-v0.3.5-source.zip` | Source, bilingual documentation, screenshots, offline tests and build tools |
 
 Enable the plugin, restart de1app while idle, then open `http://TABLET_IP:8888/` on the same network. A fresh installation uses `admin1234`; change it in the tablet's Decent Remote settings. Existing installations retain their key. Preserve `settings.tdb` and any `usage-state.tdb` when updating.
 
@@ -47,7 +54,7 @@ Full steps: [English README](../README.md) · [API reference](API.md) · [Agent 
 
 ### Tested compatibility
 
-Version 0.3.4 is installed on one classic de1app **1.46.1.1 + Streamline** tablet. An earlier candidate passed read-only previews of all 123 profiles in both languages. Later changes received focused checks of affected paths, not another full-library run. Separate physical-device checks covered state and scale readback, reversible settings, access-key saving and sleep/wake behavior. Automated tests additionally simulate native calls and network responses. Other configurations and physical start actions have not been verified. See [validation scope](VALIDATION.md).
+The implementation released in 0.3.5 was tested on one classic de1app **1.46.1.1 + Streamline** tablet before the version metadata was updated. All four machine-start endpoints returned 403, with the machine remaining idle and at zero flow. Eight browser combinations covering both languages, both themes and the Current/water settings pages passed focused checks. An earlier candidate passed read-only previews of all 123 profiles in both languages. Later changes received focused checks of affected paths, not another full-library run. Separate physical-device checks covered state and scale readback, reversible settings, access-key saving and sleep/wake behavior. Automated tests additionally simulate native calls and network responses. Other configurations and physical start actions have not been verified. See [validation scope](VALIDATION.md).
 
 Decent Remote is an independent community project, prepared under GPL-3.0-only. It does not replace firmware or promise every feature of newer apps. This package is for classic de1app, not Decaid.
 
@@ -75,12 +82,12 @@ Decent Remote 为经典 de1app 增加浏览器工作台和 HTTP 接口。你可�
 
 插件在 de1app 内运行，沿用原生控制方法。远程控制不需要云端账号或独立服务器；曲线和历史继续保存在原目录。支持中英文和深浅色切换，用户自定义名称保持原样。
 
-安装使用 `decent_remote-v0.3.4.zip`，放入 `plugins/` 目录，启用后于待机时重启 App。在同一网络打开 `http://平板IP:8888/`。全新安装默认密钥 `admin1234`，可在平板插件设置页修改；更新时保留 `settings.tdb` 与已有的 `usage-state.tdb`。
+安装使用 `decent_remote-v0.3.5.zip`，放入 `plugins/` 目录，启用后于待机时重启 App。在同一网络打开 `http://平板IP:8888/`。全新安装默认密钥 `admin1234`，可在平板插件设置页修改；更新时保留 `settings.tdb` 与已有的 `usage-state.tdb`。
 
-**已验证环境：classic de1app 1.46.1.1 / Streamline。** 0.3.4 已安装到一台 classic de1app 1.46.1.1 / Streamline 平板，较早候选版本已完成 123 条曲线的中英文逐条只读预览；后续修改做了定向复测，没有再次全量遍历。另有真实设备验证覆盖状态及秤读数、可逆设置、密钥保存和休眠／唤醒，并通过自动化测试验证模拟调用与网络响应。远程启动默认关闭；本轮未启动出水、蒸汽或磨豆。
+**已验证环境：classic de1app 1.46.1.1 / Streamline。** 0.3.5 的功能实现已在一台平板完成验证，随后更新发布版本号。四类启动请求全部返回 403，机器保持待机、零流量；当前页和水设置页的中英文、深浅主题共 8 组检查通过。较早候选版本已完成 123 条曲线的中英文逐条只读预览；后续修改做了定向复测，没有再次全量遍历。另有真实设备验证覆盖状态及秤读数、可逆设置、密钥保存和休眠／唤醒，并通过自动化测试验证模拟调用与网络响应。远程启动已停用，启动按钮及权限配置已移除；本轮未启动出水、蒸汽或磨豆。
 
 [完整中文说明](../README.zh-CN.md) · [接口文档](../API.md) · [验证范围](VALIDATION.md) · [更多截图](SCREENSHOTS.md)
 
 [Data & privacy / 数据与隐私](USAGE.md)
 
-*Documentation and screenshots refreshed on 2026-10-28; plugin runtime files are unchanged. / 2026-10-28 更新说明与截图，插件运行文件未变。*
+*Released on 2026-10-28. / 发布日期：2026-10-28。*

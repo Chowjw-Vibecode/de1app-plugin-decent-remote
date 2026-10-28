@@ -3,7 +3,6 @@ package require json
 package require json::write
 namespace eval ::plugins::decent_remote::api {
     variable token {}
-    variable allow_start 0
     variable root {}
     variable seen {}
     variable adapter ::plugins::decent_remote::device::call
@@ -65,7 +64,6 @@ namespace eval ::plugins::decent_remote::api {
     proc invoke {op payload} {variable adapter; return [response 200 [object [{*}$adapter $op $payload]]]}
     proc route {method uri body {headers {}}} {
         if {![string match /api/v1/* $uri]} {return [::plugins::decent_remote::legacy::route $method $uri $headers $body]}
-        variable allow_start
         # All mutating operations have an exact method and path.
         set key "$method $uri"
         switch -- $key {
@@ -110,7 +108,7 @@ namespace eval ::plugins::decent_remote::api {
             if {$method ne "POST"} {fail 405 method_not_allowed "此操作仅接受 POST"}
             if {($device eq "machine" && $action eq "start") || ($device eq "grinder" && $action ni {start stop})} {fail 404 not_found "没有此操作"}
             if {[dict size [body_object $body]]} {fail 422 unknown_field "此操作不接受参数"}
-            if {$action in {espresso flush steam hotwater start} && !$allow_start} {fail 403 start_disabled "远程启动尚未启用"}
+            if {$action in {espresso flush steam hotwater start}} {fail 403 start_disabled "远程启动已停用，请使用机器实体按键"}
             return [invoke $device.$action {}]
         }
         if {[regexp {^/api/(?:v1/profiles|profile)/([^/]+)$} $uri -> name]} {

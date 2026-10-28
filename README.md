@@ -14,7 +14,7 @@ The project grew out of two goals: bring more of the remote-control experience o
 
 ![Decent Remote browser dashboard](docs/images/current-en-dark.png)
 
-**Version 0.3.4** · [Download the plugin](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/latest)
+**Version 0.3.5** · [Download the plugin](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/releases/latest)
 
 Device-tested baseline: **classic de1app 1.46.1.1 + Streamline**.
 
@@ -71,7 +71,7 @@ The plugin runs inside de1app on the tablet. There is no cloud account to create
 
 Switch between **English and Chinese**, or **light and dark** themes. The dashboard is designed for landscape tablets and desktop browsers. Names and notes you have written stay as you wrote them.
 
-Some functions depend on the skin, hardware or optional plugins; see [compatibility](docs/COMPATIBILITY.md). **Remote start is disabled by default**, and the webpage cannot enable the master switch. Native group-head restrictions still apply. Wake brings the machine out of sleep; it does not start a shot.
+Some functions depend on the skin, hardware or optional plugins; see [compatibility](docs/COMPATIBILITY.md). **Remote start is unavailable.** The dashboard has no start buttons for espresso, flushing, hot water or steam, and the API rejects start requests. Start these operations using the machine’s physical controls; remote stop remains available. Wake brings the machine out of sleep; it does not start a shot.
 
 ### Let your HDS scale follow the machine
 
@@ -103,7 +103,7 @@ This is an HTTP API. Connect it through your agent's HTTP tools or an adapter; n
 
 ## Install
 
-1. Extract **`decent_remote-v0.3.4.zip`**, the install package. Use this asset rather than GitHub's automatic source-code download.
+1. Extract **`decent_remote-v0.3.5.zip`**, the install package. Use this asset rather than GitHub's automatic source-code download.
 2. Copy the extracted `decent_remote/` folder into the `plugins/` directory inside your de1app data folder. The final path must end in `plugins/decent_remote/plugin.tcl`, without an extra nested folder. A common classic Android location is `/sdcard/de1plus/plugins/`.
 3. Enable **Decent Remote** in de1app's plugin list, then restart the app while the machine is idle. If you already use a remote-control or scale-sleep plugin, follow the [migration notes](docs/COMPATIBILITY.md) first.
 4. On the same network, open **`http://TABLET_IP:8888/`** in a browser, substituting the tablet's Wi-Fi IP address.
@@ -115,6 +115,8 @@ This is an HTTP API. Connect it through your agent's HTTP tools or an adapter; n
 
 **Disable or roll back:** disable the plugin and restart de1app. To roll back, restore the earlier plugin files while retaining the configuration. Existing profiles and shot history stay in their original folders.
 
+The tablet plugin settings provide the access key, HDS scale sleep/wake and the server port. Key changes apply on Save; HDS and port changes require an app restart. Saving settings does not start the machine.
+
 ## Compatibility and release status
 
 Decent Remote is an independent community project. It uses classic de1app's native control functions and does not replace machine firmware. It aims to extend the classic workflow, without promising every feature of newer apps.
@@ -123,7 +125,7 @@ Validation combines automated tests and physical-device checks on a **Samsung ta
 
 - **On the device:** state and scale readback, profile browsing, reversible settings, access-key saving and sleep/wake behavior. Focused checks included two sleep/wake cycles and automatic loading of 79 history records. An earlier candidate passed read-only previews of all 123 profiles in both languages; later revisions received focused checks of affected paths, not another complete 123-profile run.
 - **Automated:** native-call and network-response simulations exercise API behavior, failures and browser interactions without operating equipment.
-- **Still unverified:** other app versions, skins and devices, and physical remote-start actions.
+- **Still unverified:** other app versions, skins and devices.
 
 See [validation scope](docs/VALIDATION.md) for results and remaining gaps, the [changelog](CHANGELOG.md) for version history, and the [gallery](docs/SCREENSHOTS.md) for more interface views.
 

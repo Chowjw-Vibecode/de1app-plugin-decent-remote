@@ -33,4 +33,4 @@ for path in ("/api/v1/status", "/api/v1/profile"):
 4. Query the request result if the connection drops. A missing response does not prove that nothing happened. / 连接中断先查结果，不把无响应视作未执行。
 5. Read back the affected values. Separate app state and profile-frame confirmation from actual flow, temperature and cup weight. / 修改后读回，区分 App 数据、帧确认与实际出水表现。
 
-Remote starts are off by default. The integration must not silently enable them or bypass the machine's native controls. / 远程启动默认关闭，接入方不得静默开启或绕过原生控制。
+Remote starts are disabled. Use the machine’s physical controls to start; do not attempt to enable or bypass this restriction. / 远程启动已停用，请使用机器实体按键启动，不得尝试开启或绕过限制。

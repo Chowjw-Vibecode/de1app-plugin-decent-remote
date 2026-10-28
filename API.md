@@ -1,6 +1,6 @@
-# Decent Remote 0.3.3 API
+# Decent Remote 0.3.5 API
 
-本文件描述 0.3.3 服务和原创网页使用的接口。网页与接口均沿用 de1app 原生控制，远程启动默认关闭。0.3.2 修复平板密钥页退出导航；0.3.3 修复网页自定义名称显示，接口保持不变。
+本文件描述 0.3.5 服务和网页接口。参数调整、状态读取与停止操作沿用 de1app 原生控制；远程启动接口已停用。
 
 密钥在平板插件设置页修改，不提供远程改密钥端点。新安装默认 `admin1234`，现有密钥优先保留；保存新密钥后立即用于鉴权，旧密钥返回 401（旧接口返回 403）。允许 8–128 位可见 ASCII、无空白。网页仅在用户勾选“记住连接”且鉴权成功后保存到浏览器本地存储。
 
@@ -45,10 +45,10 @@ GET `/api/v1/requests/{request_id}` 返回当前进程记录，包括 `in_flight
 |GET|`/api/v1/shots/json`、`/api/v1/shots/json/{name.json}`|JSON历史列表/文件|
 |GET|`/api/v1/requests/{request_id}`|执行结果记录|
 |POST|`/api/v1/machine/{wake,sleep,stop}`|原生唤醒、休眠、停止|
-|POST|`/api/v1/machine/{espresso,flush,steam,hotwater}`|硬件启动，默认禁用|
-|POST|`/api/v1/grinder/{start,stop}`|已有小方插件的可选兼容桥，启动默认禁用|
+|POST|`/api/v1/machine/{espresso,flush,steam,hotwater}`|已停用，返回403 start_disabled|
+|POST|`/api/v1/grinder/{start,stop}`|已有小方插件的可选兼容桥，启动已停用|
 
-参数修改通常要求咖啡机已连接且处于 Idle 或 Sleep；设备运行中拒绝编辑。启动动作另要求原生允许的状态与限制。`allow_start=0` 默认阻断出水、蒸汽及磨豆启动；网页不提供开启该总开关的入口。
+参数修改通常要求咖啡机已连接且处于 Idle 或 Sleep；设备运行中拒绝编辑。萃取、冲洗、热水、蒸汽及磨豆启动接口统一返回 `403 start_disabled`。不再提供远程启动配置项或按钮；停止、唤醒和休眠仍可用。
 
 ## 配方与曲线
 

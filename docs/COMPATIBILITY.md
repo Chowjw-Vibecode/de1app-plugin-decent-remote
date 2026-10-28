@@ -36,24 +36,25 @@ The plugin creates `settings.tdb` on first use. Updates must preserve it. / 首�
 
 | Key / 键 | Default / 默认 | Meaning / 含义 |
 |---|---|---|
-| `port` | `8888` | TCP port, 1024–65535 / 服务端口 |
+| `port` | `8888` | Tablet settings; 1024–65535; restart the app to apply / 平板设置页修改，重启 App 后生效 |
 | `token` | `admin1234` | New installation only; 8–128 visible ASCII characters, no whitespace / 仅全新安装，无空白 |
-| `allow_start` | `0` | Remote physical starts; not configurable from the webpage / 远程物理启动总开关，网页不可开启 |
-| `hds_enabled` | `0` | Optional compatible-scale soft sleep / 可选秤软休眠 |
+| `hds_enabled` | `0` | Tablet settings; restart the app to apply / 平板设置页开关，重启 App 后生效 |
 | `usage_endpoint` | Deployed Cloudflare service / 已部署的 Cloudflare 服务 | Defaults to `https://decent-remote-usage.decent-remote-stats.workers.dev/v1/check-in`; an explicit empty value disables updates / 缺省使用正式统计地址，显式空值不联网 |
 | `usage_enabled` | `1` | Allow statistics when an endpoint is configured; `0` disables it / 配置地址后允许统计，`0` 停用 |
 
+The tablet settings page provides the access key, HDS sleep/wake and port controls. Save returns to the plugin list; Cancel discards edits. Port and HDS changes take effect after restarting de1app. Saving does not start the machine.
+
 For offline setup, `python3 tools/create_config.py --output settings.tdb` creates a new file without overwriting one. `--random-key` generates a key; `--hds` enables the optional scale integration. This tool never connects to de1app. Do not include your configuration in a public repository.
 
-离线配置工具仅生成文件，不连接设备、不覆盖已有文件。它不是安装必需步骤。密钥可直接在平板插件设置页修改。
+离线配置工具仅生成文件，不连接设备、不覆盖已有文件。它不是安装必需步骤。密钥、HDS 联动和端口均可在平板插件设置页修改，无需编辑配置文件。保存会返回插件列表，取消会放弃修改。
 
 <a id="hds-scale-integration"></a>
 
 ## HDS scale integration / HDS 秤联动
 
-HDS soft sleep is optional and disabled on a fresh install (`hds_enabled=0`). For a compatible scale, enable it in the local plugin configuration (`hds_enabled=1`), enable de1app’s keep-scale-on option, and restart de1app while idle. Pair the scale through de1app as usual. The plugin adds soft sleep/wake commands; it does not replace the native scale driver or automatically identify HDS hardware revisions. The earlier standalone implementation was physically checked with a scale reporting HDS 3.1.15; this is not a claim that every HDS revision has been tested.
+HDS soft sleep is optional and disabled on a fresh install (`hds_enabled=0`). For a compatible scale, open the tablet’s plugin list → Decent Remote → Settings and turn on **HDS scale sleep/wake**, enable de1app’s keep-scale-on option, and restart de1app while idle. Pair the scale through de1app as usual. The plugin adds soft sleep/wake commands; it does not replace the native scale driver or automatically identify HDS hardware revisions. The earlier standalone implementation was physically checked with a scale reporting HDS 3.1.15; this is not a claim that every HDS revision has been tested.
 
-全新安装默认关闭 HDS 软休眠（`hds_enabled=0`）。使用兼容秤时，在本地插件配置中启用 `hds_enabled=1`，开启 de1app 的保持秤开启选项，再于待机时重启 App。秤仍通过 de1app 正常配对。插件补充软休眠／唤醒指令，不替换原生驱动，也不自动识别 HDS 硬件版本。早期独立实现曾在报告 HDS 3.1.15 的秤上实测；不代表所有版本均已验证。
+全新安装默认关闭 HDS 软休眠（`hds_enabled=0`）。使用兼容秤时，打开平板插件列表 → Decent Remote → 设置，开启 **HDS 秤休眠联动**，开启 de1app 的保持秤开启选项，再于待机时重启 App。秤仍通过 de1app 正常配对。插件补充软休眠／唤醒指令，不替换原生驱动，也不自动识别 HDS 硬件版本。早期独立实现曾在报告 HDS 3.1.15 的秤上实测；不代表所有版本均已验证。
 
 **Only for users of the earlier standalone HDS Soft Sleep plugin:** its behavior is now included in Decent Remote. Disable the standalone plugin before enabling this integration, so the same native methods are not wrapped twice.
 

@@ -60,7 +60,7 @@ array set ::plugins::decent_remote::settings [read $f]; close $f
 source $plugin
 ::plugins::decent_remote::main
 if {!$::plugins::decent_remote::started || $::listen_calls != 1 || $::hardware_calls != 0} {error "startup side effects"}
-if {$::plugins::decent_remote::settings(allow_start) != 0} {error "remote start default"}
+if {[info exists ::plugins::decent_remote::settings(allow_start)]} {error "obsolete remote start option"}
 puts "OK $::plugins::decent_remote::settings(hds_enabled) $::plugins::decent_remote::hds::installed"
 '''
         if data is not None:
@@ -79,7 +79,7 @@ puts "OK $::plugins::decent_remote::settings(hds_enabled) $::plugins::decent_rem
         self.assertEqual(result.returncode, 0)
         values = self.values()
         self.assertEqual(values['token'], 'admin1234')
-        self.assertEqual({k: values[k] for k in ('port', 'allow_start', 'hds_enabled')}, {'port': '8888', 'allow_start': '0', 'hds_enabled': '0'})
+        self.assertEqual({k: values[k] for k in ('port', 'hds_enabled')}, {'port': '8888', 'hds_enabled': '0'})
         self.assertNotIn(values['token'], result.stdout + result.stderr)
         if os.name == 'posix':
             self.assertEqual(stat.S_IMODE(self.output.stat().st_mode), 0o600)
@@ -99,7 +99,7 @@ puts "OK $::plugins::decent_remote::settings(hds_enabled) $::plugins::decent_rem
         self.assertEqual(self.create('--port', '9001', '--hds').returncode, 0)
         self.assertEqual(self.values()['port'], '9001')
         self.assertEqual(self.values()['hds_enabled'], '1')
-        self.assertEqual(self.values()['allow_start'], '0')
+        self.assertNotIn('allow_start', self.values())
 
     def test_unique_secrets(self):
         self.create('--random-key'); first = self.values()['token']

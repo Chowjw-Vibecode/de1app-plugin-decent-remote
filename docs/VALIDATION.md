@@ -1,5 +1,19 @@
 # Validation scope / 验证范围
 
+## 0.3.5 remote-start removal / 移除远程启动
+
+On classic de1app 1.46.1.1 with Streamline, an independent tester sent one request to each of the espresso, flush, hot-water and steam start endpoints. All returned 403 `start_disabled`; the machine remained idle with zero flow and the recipe was unchanged. Saving tablet settings removed the obsolete permission field while preserving the existing effective configuration. No brewing, steam or grinding was started.
+
+测试专员在真实平板分别请求浓缩、冲洗、热水和蒸汽启动，全部返回 403 `start_disabled`；机器保持待机、零流量，配方不变。平板设置保存后清除了旧权限字段，原有效配置保留。本轮未启动出水、蒸汽或磨豆。
+
+The final dashboard passed eight read-only tablet checks across Chinese/English, dark/light and Current/water settings pages. Start controls were absent; stop, wake, sleep and tare remained visible. Those retained controls were not clicked in this round. The tablet settings page was checked in Chinese. This was targeted regression, not a new full-profile-library run.
+
+最终网页在真实平板服务上完成中英文、深浅主题、当前／水设置页共 8 组只读检查。启动按钮已移除，停止、唤醒、休眠和清零仍显示，本轮没有点击这些保留按钮。平板设置页验证了中文状态；此次是定向回归，并非全部曲线重测。
+
+Independent offline checks passed 340 unit/integration checks and 48 HTTP requests against simulated device methods. After the final wording cleanup, development corrected an obsolete browser assertion and reran the production browser suite: 75/75 passed, with all requests intercepted. The tester reviewed that final log. Release version metadata and documentation were updated afterward; the package builder checked version consistency and archive integrity.
+
+独立离线检查通过 340 项单元／集成检查及 48 次模拟设备 HTTP 请求。最终文案清理后，开发修正过时的浏览器断言，重新运行正式网页测试，75/75 通过且网络全部拦截；测试专员核对了最终日志。之后更新发布版本号与文档，由构建工具检查版本一致性和压缩包完整性。
+
 ## 0.3.4 home shortcuts and wake schedule / 主屏常用与每日唤醒
 
 The updated dashboard passed **9 focused development checks**. These cover favorite names and ordering, loading a recipe without starting the machine, unsaved edits, duplicate clicks, busy/offline states, favorites management, stale favorite selection, responsive layout and the bilingual wake-schedule explanation. Requests were intercepted using synthetic fixtures.
