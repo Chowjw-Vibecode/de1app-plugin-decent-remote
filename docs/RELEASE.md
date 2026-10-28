@@ -17,6 +17,7 @@ Keep the app, profiles and shot history you already use. Open a larger screen to
 - **Keep experiments intentional:** preview, load, apply, save, save as and restore are separate actions.
 - **Learn from the result:** inspect recorded chart samples, zoom, and download the tablet's original shot files.
 - **Connect your tools:** query structured state, submit changes and inspect request results through the API.
+- **Let your HDS scale follow the machine:** optional soft sleep and wake integration for compatible scales; disabled on a fresh installation. Pairing, readings and tare remain native to de1app.
 - **Make it yours:** English or Chinese, light or dark, favorites and supported native settings.
 
 ![Advanced profile editing](images/profiles-en-dark.png)
@@ -44,17 +45,13 @@ Enable the plugin, restart de1app while idle, then open `http://TABLET_IP:8888/`
 
 Full steps: [English README](../README.md) · [API reference](API.md) · [Agent guide](AGENTS.md).
 
-### Usage by country
-
-The optional service groups installation counts by country or region. A random ID prevents duplicate counts; names, accounts, profiles and shots are not sent. The release includes the deployed service URL. [View country totals](https://chowjw-code.github.io/de1app-plugin-decent-remote/). [Details and configuration](USAGE.md).
-
 ### Tested compatibility
 
-Version 0.3.4 is installed on one classic de1app **1.46.1.1 + Streamline** tablet. All 123 profiles were opened in both languages for read-only verification. The deployed statistics service also received an update from the native tablet client. Other configurations and physical start actions have not been verified. See [validation scope](VALIDATION.md).
+Version 0.3.4 is installed on one classic de1app **1.46.1.1 + Streamline** tablet. An earlier candidate passed read-only previews of all 123 profiles in both languages. Later changes received focused checks of affected paths, not another full-library run. Separate physical-device checks covered state and scale readback, reversible settings, access-key saving and sleep/wake behavior. Automated tests additionally simulate native calls and network responses. Other configurations and physical start actions have not been verified. See [validation scope](VALIDATION.md).
 
 Decent Remote is an independent community project, prepared under GPL-3.0-only. It does not replace firmware or promise every feature of newer apps. This package is for classic de1app, not Decaid.
 
-*All screenshots show the actual dashboard with synthetic demonstration data. They are interface examples, not measured extractions.*
+*Charts replay anonymized samples from a real shot in the released dashboard. Names, dates, dose/yield summaries and surrounding status values are demonstration data.*
 
 ## 中文说明
 
@@ -73,14 +70,17 @@ Decent Remote 为经典 de1app 增加浏览器工作台和 HTTP 接口。你可�
 - 分开处理预览、载入、临时应用、保存、另存和恢复。
 - 查看历史曲线、逐点读数、放大和下载原始文件。
 - 设置常用、预热、休眠、亮度、充电及定时唤醒。
+- 可选 HDS 秤软休眠／唤醒联动；全新安装默认关闭，配对、称重和清零沿用原生功能。
 - 通过 API 读取、修改和查询请求结果，供自有工具与 Agent 接入。
 
 插件在 de1app 内运行，沿用原生控制方法。远程控制不需要云端账号或独立服务器；曲线和历史继续保存在原目录。支持中英文和深浅色切换，用户自定义名称保持原样。
 
 安装使用 `decent_remote-v0.3.4.zip`，放入 `plugins/` 目录，启用后于待机时重启 App。在同一网络打开 `http://平板IP:8888/`。全新安装默认密钥 `admin1234`，可在平板插件设置页修改；更新时保留 `settings.tdb` 与已有的 `usage-state.tdb`。
 
-使用地区统计按国家／地区汇总安装数量，随机编号用于去重，不发送姓名、账户、曲线或出杯记录。发布版已配置正式统计服务地址。[查看地区汇总](https://chowjw-code.github.io/de1app-plugin-decent-remote/)。[统计说明](USAGE.md)。
-
-**已验证环境：classic de1app 1.46.1.1 / Streamline。** 0.3.4 已安装到一台 classic de1app 1.46.1.1 / Streamline 平板，123 条曲线已逐条完成中英文只读预览核对；平板原生统计客户端也已成功连接正式服务。远程启动默认关闭；本轮未启动出水、蒸汽或磨豆。
+**已验证环境：classic de1app 1.46.1.1 / Streamline。** 0.3.4 已安装到一台 classic de1app 1.46.1.1 / Streamline 平板，较早候选版本已完成 123 条曲线的中英文逐条只读预览；后续修改做了定向复测，没有再次全量遍历。另有真实设备验证覆盖状态及秤读数、可逆设置、密钥保存和休眠／唤醒，并通过自动化测试验证模拟调用与网络响应。远程启动默认关闭；本轮未启动出水、蒸汽或磨豆。
 
 [完整中文说明](../README.zh-CN.md) · [接口文档](../API.md) · [验证范围](VALIDATION.md) · [更多截图](SCREENSHOTS.md)
+
+[Data & privacy / 数据与隐私](USAGE.md)
+
+*Documentation and screenshots refreshed on 2026-10-28; plugin runtime files are unchanged. / 2026-10-28 更新说明与截图，插件运行文件未变。*

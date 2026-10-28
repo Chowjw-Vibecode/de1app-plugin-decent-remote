@@ -14,10 +14,11 @@ The project grew out of two goals: bring more of the remote-control experience o
 
 ![Decent Remote browser dashboard](docs/images/current-en-dark.png)
 
-**Version 0.3.4** · [Download the plugin](https://github.com/chowjw-code/de1app-plugin-decent-remote/releases/latest) · [Usage by country](https://chowjw-code.github.io/de1app-plugin-decent-remote/)  
+**Version 0.3.4** · [Download the plugin](https://github.com/chowjw-code/de1app-plugin-decent-remote/releases/latest)
+
 Device-tested baseline: **classic de1app 1.46.1.1 + Streamline**.
 
-*Screenshots show the actual interface with synthetic demonstration data, not measured shots.*
+*Charts replay anonymized samples from a real shot in the released dashboard. Names, dates, dose/yield summaries and surrounding status values are demonstration data.*
 
 ## From a shot to your next adjustment
 
@@ -63,7 +64,7 @@ The plugin runs inside de1app on the tablet. There is no cloud account to create
 | Machine and recipe | Status, dose, target yield, temperature, wake, sleep and stop |
 | Profiles | Preview, load, advanced stage editing, import, save, save as, restore and favorites |
 | Shot history | Browse records, inspect chart samples, zoom and download original files |
-| Scale | Status, tare, supported stop-by-weight policies and connection settings |
+| Scale | Status, tare, supported stop-by-weight policies, connection settings and optional HDS sleep/wake integration |
 | Everyday settings | Preheat, automatic sleep, screen brightness, scheduled wake and smart charging |
 | Water and steam | Native flush, hot-water and steam settings |
 | Integrations | Structured reads, parameter updates, request-result tracking and compatibility routes for existing clients |
@@ -71,6 +72,12 @@ The plugin runs inside de1app on the tablet. There is no cloud account to create
 Switch between **English and Chinese**, or **light and dark** themes. The dashboard is designed for landscape tablets and desktop browsers. Names and notes you have written stay as you wrote them.
 
 Some functions depend on the skin, hardware or optional plugins; see [compatibility](docs/COMPATIBILITY.md). **Remote start is disabled by default**, and the webpage cannot enable the master switch. Native group-head restrictions still apply. Wake brings the machine out of sleep; it does not start a shot.
+
+### Let your HDS scale follow the machine
+
+The optional HDS integration puts a compatible scale into soft sleep when the machine sleeps, then resumes weighing when the machine wakes. With de1app’s keep-scale-on setting enabled, it uses soft sleep rather than the native power-off path. Bluetooth pairing, weight readings and tare still use de1app’s native scale support.
+
+This feature is disabled on a fresh installation. It must be enabled for a compatible HDS scale; the plugin does not identify the hardware revision automatically. See [setup and compatibility](docs/COMPATIBILITY.md#hds-scale-integration).
 
 ## Built for agent-assisted workflows
 
@@ -90,7 +97,7 @@ An app readback is not proof of a completed physical action. Profile-frame confi
 
 **Saving from the dashboard:** A new connection, page reload, profile load or restore starts without a confirmation for this page. To save a copy of unchanged current settings, select **Resend profile**, wait for confirmation, then save. If this page has no unresolved transfer, saving a newly edited draft applies it and waits for confirmation first. After an unconfirmed transfer, further edits still require an explicit resend; repeated Save clicks do not retry it.
 
-Every non-GET request to the v1 API requires a unique request ID. IDs are optional on legacy compatibility routes; integrations should use v1. Only one profile write can be in flight at a time, while status reads and stop remain available. If a result is unknown, the client can query it before deciding what to do next. Commanded flow, measured flow, inlet volume and beverage weight retain their distinct meanings.
+Every non-GET request to the v1 API requires a unique request ID. IDs are optional on legacy compatibility routes; integrations should use v1. Only one profile write can be in flight at a time, while status reads and stop remain available. If a result is unknown, the client can query it before deciding what to do next. Commanded flow, machine-reported flow, scale-derived flow, inlet volume and beverage weight retain their distinct meanings.
 
 This is an HTTP API. Connect it through your agent's HTTP tools or an adapter; no MCP server is bundled. Start with the [agent guide](docs/AGENTS.md) and [API reference](docs/API.md).
 
@@ -108,24 +115,24 @@ This is an HTTP API. Connect it through your agent's HTTP tools or an adapter; n
 
 **Disable or roll back:** disable the plugin and restart de1app. To roll back, restore the earlier plugin files while retaining the configuration. Existing profiles and shot history stay in their original folders.
 
-## Usage by country
-
-Country and region totals help us understand where Decent Remote is used. A random installation ID prevents double-counting; names, accounts, profiles and shot records are not sent. Cloudflare stores the statistics and GitHub displays aggregate totals. The release includes the deployed service URL. [View country totals](https://chowjw-code.github.io/de1app-plugin-decent-remote/). See [how statistics work and how to disable them](docs/USAGE.md).
-
 ## Compatibility and release status
 
 Decent Remote is an independent community project. It uses classic de1app's native control functions and does not replace machine firmware. It aims to extend the classic workflow, without promising every feature of newer apps.
 
-The device-tested baseline is **classic de1app 1.46.1.1 / Streamline**. The 0.3.3 UI fixes passed focused tablet checks for saving access-key settings, two sleep/wake cycles, Chinese profile names and automatic loading of 79 history records. Version 0.3.4 includes the 0.3.3 interface fixes and adds the usage-statistics client and publishing tools. The Cloudflare service URL is included in the release. Profile previews now include native basic parameters and load library metadata automatically; see the current [validation scope](docs/VALIDATION.md). Other app versions, skins and devices have not been verified.
+Validation combines automated tests and physical-device checks on a **Samsung tablet running classic de1app 1.46.1.1 / Streamline, connected to a Decent DE1PRO**.
+
+- **On the device:** state and scale readback, profile browsing, reversible settings, access-key saving and sleep/wake behavior. Focused checks included two sleep/wake cycles and automatic loading of 79 history records. An earlier candidate passed read-only previews of all 123 profiles in both languages; later revisions received focused checks of affected paths, not another complete 123-profile run.
+- **Automated:** native-call and network-response simulations exercise API behavior, failures and browser interactions without operating equipment.
+- **Still unverified:** other app versions, skins and devices, and physical remote-start actions.
 
 See [validation scope](docs/VALIDATION.md) for results and remaining gaps, the [changelog](CHANGELOG.md) for version history, and the [gallery](docs/SCREENSHOTS.md) for more interface views.
 
 ## Development and contributions
 
-The source bundle includes the plugin, dashboard, API documentation, offline tests and packaging tools. Tests mock native methods and network responses; they do not connect to coffee equipment. A GitHub Actions workflow is included. See [development](docs/DEVELOPMENT.md) to run the suite or build an install archive.
+The source bundle includes the plugin, dashboard, API documentation, automated tests and packaging tools. A GitHub Actions workflow runs the offline checks. See [development](docs/DEVELOPMENT.md) to run the suite or build an install archive.
 
 Compatibility reports, interface feedback and integration ideas are welcome. Include the app and skin versions, steps to reproduce, and screenshots with sensitive information removed. Keep access keys and private shot records out of public reports.
 
 This project is released under **GPL-3.0-only**. Third-party components retain their own notices; see [LICENSE](LICENSE) and [THIRD_PARTY.md](THIRD_PARTY.md).
 
-[简体中文](README.zh-CN.md) · [Release notes](docs/RELEASE.md) · [API](docs/API.md) · [Development](docs/DEVELOPMENT.md)
+[简体中文](README.zh-CN.md) · [Release notes](docs/RELEASE.md) · [API](docs/API.md) · [Development](docs/DEVELOPMENT.md) · [Data & privacy](docs/USAGE.md)

@@ -25,6 +25,18 @@ if(process.env.REMOTE_SCREENSHOT_DIR){
  shot.totals.weight=shot.totals.weight.map(w=>w*80/weight);
  shot.state_change=times.map(t=>t<12?10000000:-10000000);
  shot.profile.title='Demo — two-stage espresso';
+ if(process.env.REMOTE_SCREENSHOT_SHOT){
+  const recorded=JSON.parse(fs.readFileSync(process.env.REMOTE_SCREENSHOT_SHOT,'utf8'));
+  const n=recorded.elapsed.length;
+  const series=(values)=>{assert(Array.isArray(values)&&values.length===n&&values.every(v=>v!==''&&v!=null&&Number.isFinite(Number(v))),'Invalid recorded series');return values.map(Number)};
+  shot.elapsed=series(recorded.elapsed);
+  for(const [group,keys] of Object.entries({pressure:['pressure','goal'],flow:['flow','by_weight','goal'],temperature:['basket','goal']}))
+   for(const key of keys)shot[group][key]=series(recorded[group][key]);
+  shot.state_change=series(recorded.state_change);
+  shot.totals={weight:[]}; // No synthetic weight trace; fixture summary is illustrative.
+  shot.meta={in:original.dose_g,out:original.yield_g,time:shot.elapsed.at(-1)};
+  assert(Object.values(shot.meta).every(Number.isFinite),'Invalid recorded metadata');
+ }
 }
 const failures=[];let passed=0;
 async function check(name,fn){try{await fn();passed++;console.log('PASS',name)}catch(e){failures.push({name,error:e.message});console.log('FAIL',name,e.message)}}
@@ -258,21 +270,21 @@ async function check(name,fn){try{await fn();passed++;console.log('PASS',name)}c
   // Documentation images use this isolated fixture, never a live device.
   const out=path.resolve(process.env.REMOTE_SCREENSHOT_DIR);fs.mkdirSync(out,{recursive:true});
   await f.page.setViewportSize({width:1440,height:900});
-  await f.page.waitForFunction(()=>chartViews.get('home-chart')?.rows.length===173);
-  const shot=async(name)=>{await f.page.waitForTimeout(180);await f.page.screenshot({path:path.join(out,name),fullPage:true})};
-  await shot('current-zh-dark.png');
+  await f.page.waitForFunction(n=>chartViews.get('home-chart')?.rows.length===n,shot.elapsed.length);
+  const capture=async(name)=>{await f.page.waitForTimeout(180);await f.page.screenshot({path:path.join(out,name),fullPage:true})};
+  await capture('current-zh-dark.png');
   await f.page.locator('#language-button').click();
-  await shot('current-en-dark.png');
+  await capture('current-en-dark.png');
   await f.page.locator('nav [data-page=profiles]').click();
-  await shot('profiles-en-dark.png');
+  await capture('profiles-en-dark.png');
   await f.page.locator('nav [data-page=history]').click();
-  await shot('history-en-dark.png');
+  await capture('history-en-dark.png');
   await f.page.locator('#theme-button').click();
   await f.page.locator('nav [data-page=settings]').click();
-  await shot('settings-en-light.png');
+  await capture('settings-en-light.png');
   await f.page.locator('#language-button').click();
   await f.page.locator('nav [data-page=current]').click();
-  await shot('current-zh-light.png');
+  await capture('current-zh-light.png');
   await browser.close();console.log('Documentation screenshots saved from mocked data; no device traffic.');return;
  }
  await check('live recipe and exact telemetry readback',async()=>{assert.equal(await f.page.locator('#recipe-dose').inputValue(),'20');assert.equal(await f.page.locator('#home-profile').innerText(),'演示两段曲线');assert((await f.page.locator('#readouts').innerText()).includes('92.4'))});

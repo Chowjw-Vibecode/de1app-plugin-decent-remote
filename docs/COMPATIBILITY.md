@@ -15,7 +15,7 @@
 
 ## Existing remote plugins / 已有远程插件
 
-Disable `advanced_rest_api`, `web_api` and `hds_soft_sleep` if installed, then enable `decent_remote` and restart de1app while idle. Keep their files and settings if you want to roll back. They must not run alongside this plugin.
+If migrating from `advanced_rest_api`, `web_api` or the earlier standalone `hds_soft_sleep`, disable those installed plugins, then enable `decent_remote` and restart de1app while idle. Keep their files and settings if you want to roll back. They must not run alongside this plugin.
 
 如果装有上述旧插件，先停用，再启用 `decent_remote` 并在待机时重启 App。保留旧文件和设置便于回退，不要同时启用。
 
@@ -46,3 +46,15 @@ The plugin creates `settings.tdb` on first use. Updates must preserve it. / 首�
 For offline setup, `python3 tools/create_config.py --output settings.tdb` creates a new file without overwriting one. `--random-key` generates a key; `--hds` enables the optional scale integration. This tool never connects to de1app. Do not include your configuration in a public repository.
 
 离线配置工具仅生成文件，不连接设备、不覆盖已有文件。它不是安装必需步骤。密钥可直接在平板插件设置页修改。
+
+<a id="hds-scale-integration"></a>
+
+## HDS scale integration / HDS 秤联动
+
+HDS soft sleep is optional and disabled on a fresh install (`hds_enabled=0`). For a compatible scale, enable it in the local plugin configuration (`hds_enabled=1`), enable de1app’s keep-scale-on option, and restart de1app while idle. Pair the scale through de1app as usual. The plugin adds soft sleep/wake commands; it does not replace the native scale driver or automatically identify HDS hardware revisions. The earlier standalone implementation was physically checked with a scale reporting HDS 3.1.15; this is not a claim that every HDS revision has been tested.
+
+全新安装默认关闭 HDS 软休眠（`hds_enabled=0`）。使用兼容秤时，在本地插件配置中启用 `hds_enabled=1`，开启 de1app 的保持秤开启选项，再于待机时重启 App。秤仍通过 de1app 正常配对。插件补充软休眠／唤醒指令，不替换原生驱动，也不自动识别 HDS 硬件版本。早期独立实现曾在报告 HDS 3.1.15 的秤上实测；不代表所有版本均已验证。
+
+**Only for users of the earlier standalone HDS Soft Sleep plugin:** its behavior is now included in Decent Remote. Disable the standalone plugin before enabling this integration, so the same native methods are not wrapped twice.
+
+**仅适用于曾安装独立版 HDS Soft Sleep 的用户：** 此功能已合并到 Decent Remote。启用本集成前停用独立插件，避免重复接管同一原生方法。普通新用户无需安装或寻找该旧插件。
