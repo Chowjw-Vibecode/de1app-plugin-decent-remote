@@ -68,6 +68,9 @@ def main():
     for name in ('doc.json', 'package.json', 'package-lock.json'):
         if json.loads(checked(name).read_text())['version'] != version:
             raise ValueError(f'Version mismatch: {name}')
+    dashboard_version = re.search(r"info\('Decent Remote','([0-9.]+) ·", checked('index.html').read_text())
+    if dashboard_version is None or dashboard_version[1] != version:
+        raise ValueError('Version mismatch: index.html')
     # Validate all paths before creating output.
     for name in INSTALL + SOURCE:
         checked(name)
