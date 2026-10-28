@@ -28,7 +28,7 @@ Decent Remote implements compatible Advanced REST API paths and fields for exist
 - **DYE / SDB:** additional history workflows; missing dependencies return a clear unsupported response. / 扩展历史工作流，缺失时返回明确的不可用结果。
 - **Decent/HDS scale soft sleep:** disabled on a fresh install. Requires a compatible scale and native scale functions; `keep_scale_on` and connection conditions govern behavior. / 新安装默认关闭，需要兼容秤及原生方法，受保持秤连接和实际连接条件控制。
 - **Flow compensation (`flow_lut`):** query the already-installed plugin and change its enabled flag. The package does not include a calibration map or rewrite factory calibration. / 只查询已安装插件并切换其开关，不附带校准表，不改官方倍率。
-- **Grinder bridge:** retained for existing API clients, requires the separate `crystal_grinder` plugin. There are no grinder controls in the dashboard and that plugin is not bundled. / 仅保留现有接口兼容桥，需单独的小方插件，网页没有磨豆控制，本包不附带该插件。
+- **Grinder bridge:** retained for existing API clients, requires the separate `crystal_grinder` plugin. Only state queries and stop remain available; grinder start requests are rejected. There are no grinder controls in the dashboard and that plugin is not bundled. / 仅保留现有接口的状态查询和停止功能，磨豆启动请求被拒绝；需单独的小方插件，网页没有磨豆控制，本包不附带该插件。
 
 ## Configuration / 配置
 

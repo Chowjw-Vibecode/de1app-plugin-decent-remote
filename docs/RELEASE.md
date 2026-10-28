@@ -54,7 +54,7 @@ Full steps: [English README](../README.md) · [API reference](API.md) · [Agent 
 
 ### Tested compatibility
 
-The implementation released in 0.3.5 was tested on one classic de1app **1.46.1.1 + Streamline** tablet before the version metadata was updated. All four machine-start endpoints returned 403, with the machine remaining idle and at zero flow. Eight browser combinations covering both languages, both themes and the Current/water settings pages passed focused checks. An earlier candidate passed read-only previews of all 123 profiles in both languages. Later changes received focused checks of affected paths, not another full-library run. Separate physical-device checks covered state and scale readback, reversible settings, access-key saving and sleep/wake behavior. Automated tests additionally simulate native calls and network responses. Other configurations and physical start actions have not been verified. See [validation scope](VALIDATION.md).
+The published 0.3.5 package is installed on one classic de1app **1.46.1.1 + Streamline** tablet. After restarting the app, the plugin files and browser About dialog both reported 0.3.5; the current profile, configuration and shot counters were unchanged. An independent read-only installation check passed. All four machine-start endpoints returned 403, with the machine remaining idle and at zero flow. Eight browser combinations covering both languages, both themes and the Current/water settings pages passed focused checks. An earlier candidate passed read-only previews of all 123 profiles in both languages. Later changes received focused checks of affected paths, not another full-library run. Separate physical-device checks covered state and scale readback, reversible settings, access-key saving and sleep/wake behavior. Automated tests additionally simulate native calls and network responses. Other configurations and physical start actions have not been verified. See [validation scope](VALIDATION.md).
 
 Decent Remote is an independent community project, prepared under GPL-3.0-only. It does not replace firmware or promise every feature of newer apps. This package is for classic de1app, not Decaid.
 
@@ -84,7 +84,7 @@ Decent Remote 为经典 de1app 增加浏览器工作台和 HTTP 接口。你可�
 
 安装使用 `decent_remote-v0.3.5.zip`，放入 `plugins/` 目录，启用后于待机时重启 App。在同一网络打开 `http://平板IP:8888/`。全新安装默认密钥 `admin1234`，可在平板插件设置页修改；更新时保留 `settings.tdb` 与已有的 `usage-state.tdb`。
 
-**已验证环境：classic de1app 1.46.1.1 / Streamline。** 0.3.5 的功能实现已在一台平板完成验证，随后更新发布版本号。四类启动请求全部返回 403，机器保持待机、零流量；当前页和水设置页的中英文、深浅主题共 8 组检查通过。较早候选版本已完成 123 条曲线的中英文逐条只读预览；后续修改做了定向复测，没有再次全量遍历。另有真实设备验证覆盖状态及秤读数、可逆设置、密钥保存和休眠／唤醒，并通过自动化测试验证模拟调用与网络响应。远程启动已停用，启动按钮及权限配置已移除；本轮未启动出水、蒸汽或磨豆。
+**已验证环境：classic de1app 1.46.1.1 / Streamline。** 正式 0.3.5 安装包已部署到平板并重启 App；插件文件和网页“关于”均确认 0.3.5，当前曲线、配置和出杯计数未变，独立只读安装核对通过。四类启动请求全部返回 403，机器保持待机、零流量；当前页和水设置页的中英文、深浅主题共 8 组检查通过。较早候选版本已完成 123 条曲线的中英文逐条只读预览；后续修改做了定向复测，没有再次全量遍历。另有真实设备验证覆盖状态及秤读数、可逆设置、密钥保存和休眠／唤醒，并通过自动化测试验证模拟调用与网络响应。远程启动已停用，启动按钮及权限配置已移除；本轮未启动出水、蒸汽或磨豆。
 
 [完整中文说明](../README.zh-CN.md) · [接口文档](../API.md) · [验证范围](VALIDATION.md) · [更多截图](SCREENSHOTS.md)
 

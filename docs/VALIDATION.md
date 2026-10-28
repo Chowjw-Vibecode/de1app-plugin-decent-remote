@@ -14,6 +14,20 @@ Independent offline checks passed 340 unit/integration checks and 48 HTTP reques
 
 独立离线检查通过 340 项单元／集成检查及 48 次模拟设备 HTTP 请求。最终文案清理后，开发修正过时的浏览器断言，重新运行正式网页测试，75/75 通过且网络全部拦截；测试专员核对了最终日志。之后更新发布版本号与文档，由构建工具检查版本一致性和压缩包完整性。
 
+### Published 0.3.5 installation / 正式版本安装
+
+The published install package was copied to the tablet and all 36 files were read back against the package. After restarting de1app, the plugin metadata and browser About dialog showed 0.3.5. An independent read-only check confirmed the Current page and water settings, with no remote-start controls. The machine remained connected, idle and at zero flow; the full current profile, plugin settings and shot/steam counters matched the pre-update baseline. Retained control buttons were inspected but not clicked.
+
+正式安装包的 36 个文件已逐一与平板读回对照。重启 de1app 后，插件元数据和网页“关于”显示 0.3.5。测试专员独立只读核对了当前页、水设置及远程启动按钮的移除。机器保持连接、待机、零流量；完整当前曲线、插件配置和出杯／蒸汽计数与更新前一致。保留的控制按钮只检查显示，未点击。
+
+The release-version update initially missed the About dialog's version string. GitHub CI caught that mismatch; three later checks were blocked by the dialog left open after the failed assertion. The string was corrected and packaging now checks the dashboard version as well. The final browser suite passed 75/75, and [GitHub's offline workflow](https://github.com/Chowjw-Vibecode/de1app-plugin-decent-remote/actions/runs/40628490314) passed regression, archive building and statistics checks for the released runtime commit.
+
+发布版本号更新时曾漏改“关于”窗口，GitHub 测试检出了版本不一致，后续三项被失败断言留下的弹窗挡住。修正后，打包检查也覆盖网页版本号。最终浏览器测试 75/75 通过，正式运行代码对应的 GitHub 离线回归、打包和统计检查全部通过。
+
+The sections below preserve historical verification scopes; they do not describe the current release state.
+
+以下保留各旧版本的历史验证范围，不代表当前发布状态。
+
 ## 0.3.4 home shortcuts and wake schedule / 主屏常用与每日唤醒
 
 The updated dashboard passed **9 focused development checks**. These cover favorite names and ordering, loading a recipe without starting the machine, unsaved edits, duplicate clicks, busy/offline states, favorites management, stale favorite selection, responsive layout and the bilingual wake-schedule explanation. Requests were intercepted using synthetic fixtures.

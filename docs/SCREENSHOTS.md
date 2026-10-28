@@ -2,9 +2,9 @@
 
 [English README](../README.md) · [中文 README](../README.zh-CN.md)
 
-These images render the released HTML at 1440 × 900. Chart traces replay anonymized numeric samples from a real shot, without replacing them with interpolated demonstration curves. Names, dates, recipe labels, dose/yield summaries and surrounding status values are illustrative. Rendering runs offline with intercepted requests and does not operate equipment. Profile names are user content and do not change with the interface language.
+These six images show the 0.3.5 dashboard layout at 1440 × 900. The controls match the installed tablet version: no remote-start buttons or start-permission switch; stop, wake, sleep and tare remain available. Chart traces replay anonymized numeric samples from a real shot, without replacing them with interpolated demonstration curves. Names, dates, recipe labels, dose/yield summaries and surrounding status values are illustrative. Rendering runs offline with intercepted requests and does not operate equipment. Profile names are user content and do not change with the interface language.
 
-以下截图使用正式 HTML，以 1440 × 900 渲染。图表回放真实出杯的匿名数值采样，不再使用插值拼出的演示曲线。名称、日期、配方标签、粉量／出液摘要及周边状态为演示值。截图通过离线回放生成，不操作设备；用户自定义名称不随界面语言翻译。
+这六张截图展示 0.3.5 的网页布局，以 1440 × 900 渲染。控件与平板已安装版本一致：无远程启动按钮或权限开关，保留停止、唤醒、休眠与清零。图表回放真实出杯的匿名数值采样，不再使用插值拼出的演示曲线。名称、日期、配方标签、粉量／出液摘要及周边状态为演示值。截图通过离线回放生成，不操作设备；用户自定义名称不随界面语言翻译。
 
 ## Current · English · Dark
 

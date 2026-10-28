@@ -28,7 +28,7 @@ for path in ("/api/v1/status", "/api/v1/profile"):
 ## Before changing anything / 修改前
 
 1. Read the current profile and machine state. Do not fill in missing values from an old shot. / 读取当前状态，不用历史配方补猜。
-2. Keep changes within the user's request. Loading, applying, saving and starting are distinct actions. / 按用户授权区分载入、应用、保存和启动。
+2. Keep changes within the user's request. Loading, applying and saving are distinct actions; none starts brewing. / 按用户授权区分载入、应用与保存；这些操作均不启动萃取。
 3. Send a unique request ID for a write. Wait for its result before another profile write. / 写操作带唯一请求编号，前一笔结束再发下一笔曲线修改。
 4. Query the request result if the connection drops. A missing response does not prove that nothing happened. / 连接中断先查结果，不把无响应视作未执行。
 5. Read back the affected values. Separate app state and profile-frame confirmation from actual flow, temperature and cup weight. / 修改后读回，区分 App 数据、帧确认与实际出水表现。

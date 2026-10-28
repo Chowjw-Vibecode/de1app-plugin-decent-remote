@@ -70,7 +70,7 @@ Profile edits, loading, restoring, saving, and saving as a new profile share one
 | POST | `/api/v1/machine/{espresso,flush,steam,hotwater}` | Unavailable; returns 403 start_disabled |
 | POST | `/api/v1/grinder/{start,stop}` | Optional bridge to the existing Crystal (小方) grinder plugin; start is unavailable |
 
-Parameter changes generally require a connected machine in `Idle` or `Sleep`; edits are rejected while the machine is running. Remote start endpoints return `403 start_disabled` for espresso, flush, hot water, steam, and grinder starts, regardless of the legacy `allow_start` setting. The dashboard has no start buttons. Remote stop, wake and sleep remain available through native de1app controls.
+Parameter changes generally require a connected machine in `Idle` or `Sleep`; edits are rejected while the machine is running. Remote start endpoints return `403 start_disabled` for espresso, flush, hot water, steam, and grinder starts. There is no configuration option to enable remote start. The dashboard has no start buttons. Remote stop, wake and sleep remain available through native de1app controls.
 
 ## Recipe and profile
 
