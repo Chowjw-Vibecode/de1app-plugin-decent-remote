@@ -28,7 +28,7 @@ The Current page brings temperature, pressure, machine flow, scale weight and re
 
 ### Give profiles room to work
 
-Preview profiles, edit advanced stages, organize favorites and import local Tcl or de1app v2 JSON files. The editor exposes pressure or flow control, temperature, duration, stage weight and early-exit conditions.
+Preview profiles, edit advanced stages, organize favorites and import local Tcl profiles or de1app v2 advanced-profile JSON files. The editor exposes pressure or flow control, temperature, duration, stage weight and early-exit conditions.
 
 Loading, applying, saving, saving a copy and restoring a file are separate actions. Basic profiles can also be loaded and their recipes adjusted; individual stage editing is available for advanced profiles.
 

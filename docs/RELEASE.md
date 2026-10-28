@@ -13,7 +13,7 @@ Keep the app, profiles and shot history you already use. Open a larger screen to
 ### A workspace for the whole adjustment cycle
 
 - **See the machine:** temperature, pressure, machine flow, scale weight and the current recipe in one view.
-- **Shape the next shot:** load one of five named favorites from the Current page; adjust dose, target yield and temperature; edit advanced stages; import Tcl or de1app v2 JSON profiles.
+- **Shape the next shot:** load one of five named favorites from the Current page; adjust dose, target yield and temperature; edit advanced stages; import Tcl profiles or de1app v2 advanced-profile JSON files.
 - **Keep experiments intentional:** preview, load, apply, save, save as and restore are separate actions.
 - **Learn from the result:** inspect recorded chart samples, zoom, and download the tablet's original shot files.
 - **Connect your tools:** query structured state, submit changes and inspect request results through the API.
@@ -66,7 +66,7 @@ Decent Remote 为经典 de1app 增加浏览器工作台和 HTTP 接口。你可�
 **这一版覆盖了从设置到复盘的日常流程：**
 
 - 读取温度、压力、机器流量、秤重和当前配方。
-- 从主屏五个常用按钮直接载入曲线，调整粉量、目标出液与温度，编辑高级分段，导入本地 Tcl／JSON 曲线。
+- 从主屏五个常用按钮直接载入曲线，调整粉量、目标出液与温度，编辑高级分段，上传本地 Tcl 曲线，或导入 de1app v2 高级曲线 JSON。
 - 分开处理预览、载入、临时应用、保存、另存和恢复。
 - 查看历史曲线、逐点读数、放大和下载原始文件。
 - 设置常用、预热、休眠、亮度、充电及定时唤醒。
