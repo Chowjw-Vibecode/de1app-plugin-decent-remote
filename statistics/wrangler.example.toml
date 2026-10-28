@@ -1,0 +1,18 @@
+name = "decent-remote-usage"
+main = "worker.mjs"
+compatibility_date = "2026-10-27"
+
+# This example cannot be deployed until the owner supplies a real D1 database ID.
+[[d1_databases]]
+binding = "DB"
+database_name = "decent-remote-usage"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[observability]
+enabled = false
+
+# Choose a namespace ID unused by other limiters in the same account.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "10331"
+simple = { limit = 100, period = 60 }

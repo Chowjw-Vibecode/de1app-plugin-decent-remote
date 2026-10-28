@@ -1,0 +1,34 @@
+name: Offline checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install Tcl and browser tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tcl8.6 tcllib
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Offline regression
+        run: python3 tests/run.py --tcl86 tclsh8.6 --browser --output /tmp/decent-remote-tests.json
+      - name: Build install archive
+        run: python3 tools/build_release.py
+      - name: Offline usage statistics checks
+        run: |
+          node --test statistics/tests/worker.test.mjs
+          tclsh8.6 statistics/tests/client.test.tcl
+          python3 statistics/tests/export.test.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-artifacts
+          path: |
+            dist/*.zip
+            /tmp/decent-remote-tests.json

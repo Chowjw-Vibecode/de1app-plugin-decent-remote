@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'self'; font-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Decent Remote</title>
+<style>
+:root{color-scheme:dark;--bg:#141719;--panel:#1b1f22;--raised:#242a2e;--line:#30363a;--text:#eeeade;--muted:#9ba3a7;--accent:#8dc7b7;--accent-dark:#163d32;--amber:#d7b074;--danger:#e18a7d;--num:ui-monospace,SFMono-Regular,Consolas,monospace;--pressure:#17c29a;--flow:#0358cf;--temp:#AE6D73;--cupflow:#695f57;--weight:#C8A27A}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;height:100dvh;min-height:480px;display:grid;grid-template-rows:60px minmax(0,1fr) 34px;overflow:hidden}button,input,select,textarea{font:inherit}button{min-height:44px;cursor:pointer;border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--text);padding:8px 15px;transition:background .15s,border-color .15s;touch-action:manipulation}button:hover:not(:disabled){background:#30383c;border-color:#67716f}button:disabled{opacity:.36;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.primary{background:var(--accent);border-color:var(--accent);color:#112a24;font-weight:650}.primary:hover:not(:disabled){background:#acdccc}.quiet{border-color:transparent;color:var(--muted)}.danger{color:var(--danger);border-color:#654039}.small{padding:5px 10px}.icon{width:20px;height:20px;display:inline-block;vertical-align:middle;flex:none}svg{display:block}.muted{color:var(--muted)}.num{font-family:var(--num);font-variant-numeric:tabular-nums}.tiny{font-size:12px;color:var(--muted)}.tag{font-size:11px;letter-spacing:.06em;line-height:22px;padding:0 7px;border-radius:4px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.demo-tag{border:1px solid #585043;color:var(--amber)}.tag.draft{color:var(--amber);background:#3c3224}.tag.good{color:var(--accent);background:#20382e}.topbar{border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px 0 22px;gap:16px}.brand{font-size:16px;font-weight:650;letter-spacing:-.5px;display:flex;gap:10px;align-items:center}.brand-mark{width:22px;height:26px;display:flex;align-items:center;gap:3px}.brand-mark i{width:4px;background:var(--accent);height:14px;border-radius:2px}.brand-mark i:nth-child(2){height:24px}.brand-mark i:nth-child(3){height:18px}.top-status{display:flex;align-items:center;gap:8px;color:#b9c3be;padding-left:20px;border-left:1px solid var(--line)}.dot{width:6px;height:6px;background:var(--accent);border-radius:50%;display:inline-block}.top-spacer{flex:1}.start-lock{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}.start-lock svg{width:14px;height:14px}.shell{min-height:0;display:grid;grid-template-columns:82px minmax(0,1fr)}nav{border-right:1px solid var(--line);padding:24px 10px;display:flex;flex-direction:column;gap:10px}nav button{height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;padding:6px;border-color:transparent;color:var(--muted)}nav button.active{background:#23352f;color:var(--accent);border-color:#3c5149}nav .help{margin-top:auto}main{padding:20px 26px 22px;min-height:0;min-width:0}.view{display:none;height:100%;min-width:0;min-height:0;grid-template-rows:auto minmax(0,1fr);gap:17px}.view.active{display:grid}.page-title{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;min-height:46px}.page-title h1{font-size:26px;line-height:1.25;font-weight:550;margin:0;letter-spacing:-.8px}.page-title p{margin:3px 0 0;color:var(--muted);font-size:12px}.title-right{display:flex;align-items:center;gap:9px}.current-grid{min-height:0;display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px}.recipe{min-height:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:9px;background:var(--panel)}.recipe-head{padding:17px 20px 11px}.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:1.4px;color:var(--muted)}.recipe-title{font-size:20px;font-weight:550;margin:4px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recipe-head button{float:right;margin-right:-8px}.recipe-fields{padding:0 20px;display:grid;gap:10px}.recipe-fields label{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;font-size:12px;color:var(--muted)}.stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden;height:46px;background:var(--bg)}.stepper button{border:0;border-radius:0;width:42px;padding:0;font-size:20px;color:var(--muted)}.stepper input{background:transparent;color:var(--text);width:65px;border:0;text-align:center;font-size:21px;font-family:var(--num);padding:0;appearance:textfield;-moz-appearance:textfield}.stepper input::-webkit-inner-spin-button{appearance:none}.recipe-note{min-height:20px;font-size:11px;color:var(--amber);margin:10px 20px 0}.recipe-bottom{margin-top:auto;padding:14px 20px 18px;display:grid;gap:12px}.recipe-bottom .primary{width:100%}.power-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.telemetry{display:grid;min-width:0;min-height:0;grid-template-rows:74px minmax(120px,1fr) 52px;gap:12px}.readouts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.reading{border-bottom:1px solid var(--line);padding-bottom:12px}.reading .label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}.reading .value{display:flex;align-items:baseline;gap:6px}.reading strong{font:31px/1.5 var(--num);letter-spacing:-1.3px}.reading em{font-size:11px;font-style:normal;color:var(--muted)}.chart-panel{background:var(--panel);border:1px solid var(--line);border-radius:9px;min-height:0;display:grid;grid-template-rows:46px minmax(0,1fr);overflow:hidden}.chart-head{display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:8px;min-width:0}.chart-head>span{font-size:12px;color:var(--muted);white-space:nowrap}.legend{display:flex;gap:1px;flex-wrap:wrap;justify-content:flex-end}.legend button{padding:0 5px;min-height:44px;border:0;font-size:11px;color:#aeb6b7;display:flex;align-items:center;gap:5px}.legend button.off{opacity:.35;text-decoration:line-through}.swatch{display:inline-block;width:12px;height:3px;border-radius:2px}.chart-wrap{min-height:0;position:relative;padding:0 6px 4px}.chart{width:100%;height:100%}.chart text{font-family:var(--num);fill:#899195;font-size:10px}.plot-line{fill:none;stroke-width:2.3;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}.chart-caption{position:absolute;right:14px;bottom:4px;font-size:10px;color:#8c9699}.main-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}.main-actions .right{display:flex;gap:9px}.scale-button{min-width:90px}.stop-button{min-width:100px}.statusbar{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 101px;gap:12px;font-size:11px;color:var(--muted)}.statusbar .receipt{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.statusbar .receipt.busy{color:var(--amber)}.statusbar .receipt.ok{color:var(--accent)}.statusbar .receipt.warn{color:var(--amber)}.local-only{white-space:nowrap;font-size:10px;letter-spacing:.06em}.split{display:grid;grid-template-columns:242px minmax(0,1fr);gap:24px;min-height:0;min-width:0}.library{min-height:0;display:grid;grid-template-rows:44px auto minmax(0,1fr);gap:12px}.search{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:10px 12px;color:var(--text);min-height:44px}.favorites{display:flex;gap:5px;align-items:center;overflow-x:auto;scrollbar-width:thin}.favorites>span{display:none}.favorites button{width:44px;min-width:44px;height:44px;padding:0;font-family:var(--num);border-radius:5px}.favorites button.chosen{color:var(--accent);border-color:#496457;background:#23352f}.list{overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:#46514e transparent}.list-item{width:100%;display:flex;flex-direction:column;align-items:flex-start;border-radius:0;border:0;border-bottom:1px solid #2b3033;padding:12px 11px;gap:3px;text-align:left;min-height:70px}.list-item.active{background:#24342f;border-left:3px solid var(--accent);padding-left:8px}.list-item strong{font-size:14px;font-weight:550;display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.list-item span{font-size:11px;color:var(--muted)}.list-item .row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}.list-item .tag{font-size:9px}.editor{min-height:0;min-width:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--line);border-radius:9px;background:var(--panel);overflow:hidden}.editor-heading{padding:15px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px}.editor-heading h2{margin:0;font-size:19px;font-weight:550}.editor-heading p{font-size:11px;color:var(--muted);margin:3px 0 0}.editor-heading .heading-text{min-width:0}.editor-heading h2{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.chips{display:flex;gap:7px;padding:0 18px 12px;overflow-x:auto;scrollbar-width:thin;flex-shrink:0}.chips button{white-space:nowrap;font-size:12px;padding:9px 14px;display:flex;align-items:center;gap:8px}.chips button.active{color:var(--accent);border-color:#5c8073;background:#253930}.chips small{font:10px var(--num);color:var(--muted)}.editor-content{min-height:0;overflow:auto;padding:2px 18px 16px;scrollbar-width:thin}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}.field{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--muted);min-width:0}.field input,.field select,.field textarea{min-height:44px;border-radius:5px;border:1px solid var(--line);background:#15191b;color:var(--text);padding:9px 11px;width:100%;font-size:15px}.field input{font-family:var(--num)}.field select{font-size:13px}.field input:invalid{border-color:var(--danger)}.field.wide{grid-column:1/-1}.field-unit{position:relative}.field-unit input{padding-right:50px}.field-unit>span{position:absolute;right:12px;top:12px;color:var(--muted);font:12px var(--num);pointer-events:none}.subline{margin:15px 0 10px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:12px;font-size:12px}.stage-tools{display:flex;gap:6px}.stage-tools button{padding:6px 10px;font-size:11px}.editor-footer{padding:12px 18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:8px;background:#1b1f22;flex-wrap:wrap}.editor-footer .left{margin-right:auto}.editor-footer button{font-size:12px;padding:9px 12px}.preview-message{padding:24px 4px;color:var(--muted);font-size:13px}.preview-stages{display:grid;gap:0;margin:18px 0}.preview-stage{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}.preview-stage>b{font:16px var(--num);color:var(--accent)}.preview-stage strong{font-weight:500;color:var(--text)}.preview-stage small{display:block;margin-top:2px;font-size:11px}.preview-stage .num{font-size:15px;color:var(--text)}.history-main{min-height:0;display:grid;grid-template-rows:70px minmax(0,1fr) 48px;gap:12px}.history-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.history-metrics .reading strong{font-size:26px}.history-actions{display:flex;justify-content:space-between;align-items:center;gap:8px}.history-actions button{font-size:12px}.settings-layout{grid-template-columns:190px minmax(0,1fr)}.group-nav{display:flex;flex-direction:column;gap:5px;overflow:auto;min-height:0}.group-nav button{text-align:left;min-height:48px;border-color:transparent;font-size:13px;padding:10px 14px;color:var(--muted)}.group-nav button.active{background:#26352f;color:var(--accent)}.settings-panel{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;border:1px solid var(--line);border-radius:9px;background:var(--panel);overflow:hidden}.settings-body{overflow:auto;min-height:0;padding:8px 22px 20px;scrollbar-width:thin}.settings-panel h2{font-size:19px;font-weight:550;margin:0}.settings-heading{padding:18px 22px 13px}.settings-heading p{font-size:12px;color:var(--muted);margin:3px 0 0}.setting-row{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid #2e3437}.setting-row label{color:var(--text);font-size:13px}.setting-row small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.setting-row .control{width:132px;flex:none}.setting-row input:not([type=checkbox]),.setting-row select{min-height:44px;background:#15191b;border:1px solid var(--line);border-radius:5px;color:var(--text);width:100%;padding:8px 10px;font:14px var(--num)}.setting-row select{font:13px -apple-system,sans-serif}.setting-row .toggle{width:48px;height:28px;min-height:44px;position:relative;border:0;padding:0;display:flex;align-items:center}.toggle:before{content:"";width:44px;height:26px;background:#42494d;border-radius:18px;display:block}.toggle:after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;left:4px;background:#d4d6d1;transition:transform .15s}.toggle[aria-checked=true]:before{background:#597e6b}.toggle[aria-checked=true]:after{transform:translateX(18px);background:#c8e6da}.setting-note{font-size:12px;color:var(--muted);padding:14px 0;max-width:600px}.mini-table{width:100%;border-collapse:collapse;font-size:13px}.mini-table th,.mini-table td{text-align:left;padding:13px 8px;border-bottom:1px solid var(--line)}.mini-table th{font-weight:400;color:var(--muted);font-size:11px}.mini-table td{font-family:var(--num)}.settings-footer{border-top:1px solid var(--line);padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px}.settings-footer span{font-size:11px;color:var(--amber)}dialog{background:#202628;color:var(--text);border:1px solid #49534f;border-radius:12px;padding:25px;max-width:460px;width:calc(100% - 40px);box-shadow:0 24px 90px #0008}dialog::backdrop{background:#070b0dcc;backdrop-filter:blur(4px)}dialog h2{font-size:21px;font-weight:550;margin:0 0 8px}dialog p{color:var(--muted);font-size:13px;margin:0 0 20px}.dialog-body{display:grid;gap:14px}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap}.dialog-actions button{flex:1;font-size:13px}.dialog-error{font-size:12px;color:var(--danger)}.keypad-display{font:40px var(--num);text-align:center;padding:12px;background:#15191b;border:1px solid var(--line);border-radius:6px}.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.keypad button{font:23px var(--num);height:50px;background:#2b3235}.keypad button:hover{background:#3c4948}.mobile-warning{display:none}@media(max-width:1100px){main{padding:16px 18px 18px}.current-grid{grid-template-columns:270px minmax(0,1fr);gap:18px}.split{grid-template-columns:242px minmax(0,1fr);gap:18px}.settings-layout{grid-template-columns:170px minmax(0,1fr)}.topbar{gap:10px;padding-right:18px}.start-lock{font-size:11px}.reading strong{font-size:28px}.recipe-fields{padding:0 17px}.recipe-head{padding:13px 17px 10px}.recipe-bottom{padding:12px 17px 15px}.chart-head{padding:0 10px}.chart-head>span{font-size:10px}.legend button{font-size:10px;padding:0 4px}.editor-footer{gap:6px;padding:10px 14px}.editor-footer button{padding:9px 9px}.field-grid{gap:10px 14px}.top-status{padding-left:12px}}@media(max-height:650px){main{padding-top:12px;padding-bottom:14px}.view{gap:11px}.page-title h1{font-size:23px}.page-title{min-height:42px}.recipe-fields{gap:6px}.recipe-head{padding-top:10px;padding-bottom:8px}.recipe-bottom{gap:8px;padding-top:8px;padding-bottom:12px}.recipe-note{margin-top:4px}.telemetry{grid-template-rows:65px minmax(100px,1fr) 48px;gap:9px}.reading strong{font-size:27px}.chart-panel{grid-template-rows:44px minmax(0,1fr)}.chart-head{min-height:44px}.chart-head .legend button{min-height:44px}.editor-heading{padding-top:12px;padding-bottom:9px}.settings-heading{padding-top:13px}.list-item{min-height:62px;padding-top:9px;padding-bottom:9px}.editor-heading h2{font-size:17px}.chips{padding-bottom:10px}.history-main{grid-template-rows:62px minmax(0,1fr) 46px;gap:9px}nav{padding-top:16px}.settings-footer{padding-top:10px;padding-bottom:10px}}@media(max-width:850px){.start-lock{display:none}.top-status{display:none}.shell{grid-template-columns:64px minmax(0,1fr)}nav{padding:16px 6px}nav button{padding:4px}.current-grid{grid-template-columns:240px minmax(0,1fr);gap:12px}main{padding:12px}.split{grid-template-columns:180px minmax(0,1fr);gap:12px}.settings-layout{grid-template-columns:135px minmax(0,1fr)}.legend{gap:0}.legend button{font-size:0;gap:0;width:24px}.reading strong{font-size:23px}.statusbar{padding-left:78px}.chart-head{padding:0 8px}.local-only{display:none}.favorites{gap:4px}.favorites button{width:44px;min-width:44px}.favorites>span{display:none}.field-grid{grid-template-columns:1fr}.editor-footer{justify-content:stretch}.editor-footer .left{margin-right:0}.editor-footer button{flex:1;font-size:11px;padding:8px}.title-right .tiny{display:none}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.language-button{display:flex;align-items:center;gap:7px;font-size:12px;padding:6px 10px;color:var(--muted);flex:none}.language-button .selected{color:var(--text);font-weight:650}.lang-divider{color:#59635f}html[lang=en] .recipe-fields label{font-size:11px}html[lang=en] .recipe-fields{padding-left:14px;padding-right:14px}html[lang=en] .recipe-fields .stepper button{width:32px}html[lang=en] .recipe-fields .stepper input{width:62px}html[lang=en] .editor-footer{gap:6px}html[lang=en] .editor-footer button{font-size:11px;padding:9px 10px}html[lang=en] .group-nav button{font-size:12px}html[lang=en] .start-lock{font-size:11px}html[lang=en] .chart-head{flex-wrap:wrap;gap:0}html[lang=en] .chart-head>span{font-size:10px}html[lang=en] .legend button{font-size:10px}html[lang=en] .chart-panel{grid-template-rows:54px minmax(0,1fr)}@media(max-width:1100px){html[lang=en] .topbar{gap:8px}html[lang=en] .top-status{padding-left:8px}html[lang=en] .demo-tag{font-size:10px}html[lang=en] .brand{font-size:14px}html[lang=en] .start-lock{font-size:10px}html[lang=en] .topbar button{font-size:11px}html[lang=en] .editor-footer button{padding:9px 7px}html[lang=en] .current-grid{grid-template-columns:280px minmax(0,1fr)}}
+
+.theme-button{width:44px;min-width:44px;display:flex;align-items:center;justify-content:center;padding:8px;color:var(--muted);border-color:transparent}
+nav button:not(.active):hover{background:#1d2325;border-color:transparent}
+html[data-theme=light]{color-scheme:light;--bg:#f2f3ef;--panel:#fff;--raised:#e8ebe6;--line:#d5dbd4;--text:#202d27;--muted:#68736b;--accent:#2c795e;--accent-dark:#e2efe8;--amber:#90641c;--danger:#b24e40;--temp:#ff97a1;--cupflow:#e9d3c3;--weight:#997e57}
+html[data-theme=light] button:hover:not(:disabled){background:#e7ece5;border-color:#a7b8ab}
+html[data-theme=light] .primary{color:#fff}html[data-theme=light] .primary:hover:not(:disabled){background:#23674e;border-color:#23674e}
+html[data-theme=light] .danger{border-color:#d8b6ac}
+html[data-theme=light] .top-status{color:var(--muted)}
+html[data-theme=light] .demo-tag{color:#7b6334;border-color:#cfbea1}
+html[data-theme=light] nav button.active,html[data-theme=light] .favorites button.chosen,html[data-theme=light] .chips button.active{background:#e2eee5;color:var(--accent);border-color:#aec9b6}
+html[data-theme=light] nav button:not(.active):hover{background:#e8ece6;border-color:transparent}
+html[data-theme=light] .stepper,html[data-theme=light] .field input,html[data-theme=light] .field select,html[data-theme=light] .field textarea,html[data-theme=light] .setting-row input:not([type=checkbox]),html[data-theme=light] .setting-row select,html[data-theme=light] .keypad-display{background:#f6f8f3}
+html[data-theme=light] .editor-footer{background:#fff}
+html[data-theme=light] .list-item{border-color:#e0e5de}
+html[data-theme=light] .list-item.active,html[data-theme=light] .group-nav button.active{background:#e3eee6}
+html[data-theme=light] .setting-row{border-color:#e0e5de}
+html[data-theme=light] .tag.good{background:#e0eee5;color:#2c795e}
+html[data-theme=light] .tag.draft{background:#f3ead8;color:#80601f}
+html[data-theme=light] .legend button{color:#66716b}
+html[data-theme=light] .chart text{fill:#748078}
+html[data-theme=light] .toggle:before{background:#c7cec7}
+html[data-theme=light] .toggle:after{background:#fff}
+html[data-theme=light] .toggle[aria-checked=true]:before{background:#3c8465}
+html[data-theme=light] .toggle[aria-checked=true]:after{background:#fff}
+html[data-theme=light] dialog{background:#fff;border-color:#b7c8b9;box-shadow:0 24px 90px #26352c33}
+html[data-theme=light] dialog::backdrop{background:#26352c66}
+html[data-theme=light] .keypad button{background:#edf1e9}
+html[data-theme=light] .language-button .lang-divider{color:#9da79e}
+
+
+/* Streamline chart treatment; UI shell remains the agreed prototype. */
+.chart-panel{background:#0d0e14;border-radius:5px;border-color:#24272e;grid-template-rows:44px minmax(0,1fr)}
+.chart-head{padding:0 9px 0 12px;min-height:44px;gap:6px;flex-wrap:nowrap}
+.chart-toolbar{display:flex;align-items:center;gap:3px;flex:none}
+.chart-expand{width:36px;min-height:44px;border:0;color:var(--muted);font-size:21px;padding:0;line-height:1}
+.chart-wrap{padding:0 3px 2px}
+.chart text{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;font-size:10px;font-variant-numeric:tabular-nums}
+.chart .axis-units{font-size:9px;fill:#606579}
+.native-trace{fill:none;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.chart-time{display:none;min-width:82px;font:14px var(--num);color:var(--text);white-space:nowrap}
+.chart-toolbar{flex:1;justify-content:flex-end}
+.chart-head .legend,.zoom-caption .legend{flex:1;max-width:410px;justify-content:space-between}
+.chart-head .legend button,.zoom-caption .legend button{flex:1;min-width:62px;justify-content:center}
+.legend-text{display:flex;flex-direction:column;gap:1px;text-align:left;white-space:nowrap}
+.legend-reading{font:14px/1.15 var(--num);color:var(--text);font-variant-numeric:tabular-nums}
+.legend-reading small{font:9px -apple-system,sans-serif;color:var(--muted);margin-left:3px}
+.has-inspection .chart-time{display:block}
+.has-inspection .chart-head>span,.has-inspection .zoom-caption>span{display:none}
+.has-inspection .legend-name{font-size:9px;line-height:1.1}
+.chart-hit-area{fill:transparent;cursor:crosshair}
+.chart-cursor{pointer-events:none}
+.chart-cursor line{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.chart-cursor circle{stroke-width:1.7;vector-effect:non-scaling-stroke}
+svg.chart{touch-action:none;outline-offset:-2px}
+@media(max-width:1100px){.chart-time{min-width:73px;font-size:12px}.legend-reading{font-size:12px}.legend-reading small{font-size:8px;margin-left:2px}.chart-head .legend button{padding:0 3px;gap:4px;min-width:58px}}
+.target-line,.chart-grid,.stage-divider{vector-effect:non-scaling-stroke}
+.legend{gap:2px;flex-wrap:nowrap}
+.legend button{min-height:44px;min-width:44px;padding:0 5px;font-size:11px;gap:5px}
+.legend button:hover:not(:disabled){background:transparent;border-color:transparent;color:var(--text)}
+.legend .swatch{height:2px;width:12px}
+html[data-theme=light] .chart-panel{background:#fff;border-color:#e0e0e0}
+html[data-theme=light] .chart .axis-units{fill:#959595}
+html[lang=en] .chart-head{flex-wrap:nowrap;gap:3px}
+html[lang=en] .chart-panel{grid-template-rows:44px minmax(0,1fr)}
+html[lang=en] .chart-head .legend button{font-size:10px}
+dialog.chart-dialog{width:min(1160px,calc(100vw - 40px));max-width:none;height:calc(100dvh - 48px);max-height:900px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:12px;padding:20px}
+dialog.chart-dialog #dialog-description{display:none}
+dialog.chart-dialog #dialog-body{min-height:0;display:block}
+dialog.chart-dialog #dialog-title{font-size:18px;margin:0}
+dialog.chart-dialog .dialog-actions{margin:0;justify-content:flex-end}
+dialog.chart-dialog .dialog-actions button{flex:none;min-width:100px}
+.zoom-chart-panel{height:100%;display:grid;grid-template-rows:44px minmax(0,1fr);background:#0d0e14;border-radius:4px;padding:0 8px 6px}
+.zoom-caption{display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:12px;color:var(--muted)}
+html[data-theme=light] .zoom-chart-panel{background:white}
+@media(max-width:1100px){.legend button{font-size:10px;min-width:40px}.chart-head>span{font-size:10px}.chart-expand{width:30px}html[lang=en] .legend button{padding:0 4px;font-size:9px}}
+
+/* Local-file preview stays inside the prototype; the footer never scrolls. */
+dialog.import-dialog{width:min(820px,calc(100vw - 40px));max-width:none;max-height:calc(100dvh - 40px);display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;padding:22px;gap:10px}
+dialog.import-dialog h2,dialog.import-dialog p{margin:0}
+dialog.import-dialog #dialog-body{min-height:0;overflow:auto;scrollbar-width:thin}
+dialog.import-dialog .dialog-actions{margin:8px 0 0;border-top:1px solid var(--line);padding-top:16px}
+dialog.import-dialog .dialog-actions button{flex:none;min-width:110px}
+.upload-zone{width:100%;min-height:210px;border:1px dashed var(--muted);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;margin:10px 0;background:var(--panel)}
+.upload-zone svg{width:32px;height:32px;color:var(--accent)}
+.upload-zone strong{font-size:17px;font-weight:550}.upload-zone small{font-size:12px;color:var(--muted)}
+dialog.import-dialog.dragging{outline:2px solid var(--accent);outline-offset:-6px}
+.upload-file{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.upload-file>div{min-width:0}.upload-file strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}.upload-file button{flex:none}
+.upload-preview{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;min-height:0;padding:14px 0 3px}
+.upload-details{display:flex;flex-direction:column;gap:16px}.upload-details .field input{font-family:inherit}
+.upload-metrics{margin:0;display:grid;gap:14px}.upload-metrics>div{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.upload-metrics dt{color:var(--muted);font-size:12px}.upload-metrics dd{margin:0;font:17px var(--num)}.upload-metrics dd small{font:11px -apple-system,sans-serif;color:var(--muted)}
+.upload-stages{min-width:0;border-left:1px solid var(--line);padding-left:24px}.upload-stages .preview-stages{margin:0}.upload-stages .preview-stage{padding:10px 0;grid-template-columns:22px minmax(0,1fr) auto}.upload-stages strong{font-size:13px;overflow-wrap:anywhere}.upload-stages small{color:var(--muted);font-size:11px}.upload-stages .num small{white-space:nowrap}
+.upload-notice{font-size:12px;color:var(--amber);margin:0}.upload-notice:empty{display:none}.upload-error{color:var(--danger);font-size:13px;padding:12px 0}
+@media(max-height:650px){dialog.import-dialog{padding:18px;max-height:calc(100dvh - 30px)}.upload-preview{padding-top:10px}.upload-zone{min-height:175px}}
+@media(max-width:650px){.upload-preview{grid-template-columns:1fr;gap:16px}.upload-stages{padding-left:0;border-left:0}.upload-metrics{grid-template-columns:repeat(3,1fr)}.upload-metrics>div{display:block}.upload-metrics dd{margin-top:4px}}
+
+.water-actions{display:flex;gap:10px;padding-top:15px}.water-actions button{flex:1}.shortcut-grid .control{display:flex;gap:8px}.shortcut-grid .control input{width:70px!important}.dialog-error:empty{display:none}
+
+@media(max-width:800px){
+ .current-grid,html[lang=en] .current-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(320px,1fr);overflow-y:auto}
+ .current-grid .recipe{min-height:0}
+ .current-grid .recipe-head{padding:12px 16px 8px}
+ .current-grid .recipe-title{font-size:22px;margin:2px 0}
+ .current-grid .recipe-fields{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 16px}
+ .current-grid .recipe-fields label{grid-template-columns:1fr;gap:4px;font-size:11px}
+ .current-grid .stepper{width:100%}
+ .current-grid .stepper input,html[lang=en] .current-grid .stepper input{width:0;min-width:0;flex:1;font-size:20px}
+ .current-grid .stepper button,html[lang=en] .current-grid .stepper button{width:32px;flex:none}
+ .current-grid .recipe-note{min-height:0;margin:5px 16px 0}
+ .current-grid .recipe-note:empty{display:none}
+ .current-grid .recipe-bottom{display:flex;align-items:center;gap:10px;padding:10px 16px 12px}
+ .current-grid .recipe-bottom>.primary{flex:1;min-width:0;width:auto}
+ .current-grid .power-row{flex:1}
+ .current-grid .telemetry{min-height:320px;grid-template-rows:64px minmax(190px,1fr) 48px;gap:10px}
+ .current-grid .reading .value{gap:4px;white-space:nowrap}
+ .current-grid .reading strong{font-size:26px}
+ .current-grid .readouts{gap:8px}
+ .current-grid .chart-head>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+}
+.key-input{display:flex;gap:8px}.key-input input{min-width:0;flex:1}.key-input button{flex:none;min-width:62px}.remember-row{display:flex;align-items:center;gap:8px;font-size:13px;min-height:44px}.remember-row input{width:18px;height:18px;accent-color:var(--accent)}.remember-row .tiny{margin-left:auto}.connection-help{line-height:1.8}
+#view-current{grid-template-rows:auto auto minmax(0,1fr)}
+.quick-profiles{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;gap:8px;min-width:0}
+.quick-profile-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;min-width:0}
+.quick-profile{display:flex;align-items:center;gap:10px;min-width:0;min-height:52px;padding:10px 12px;text-align:left;background:var(--panel)}
+.quick-profile .slot{font:12px var(--num);color:var(--muted);flex:none}
+.quick-profile .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:550}
+.quick-profile.chosen{color:var(--accent);border-color:#496457;background:#23352f}
+.quick-profile.chosen .slot{color:inherit}
+#home-favorite-edit{padding:10px;color:var(--muted)}
+#view-current .recipe-note:empty{display:none}
+html[data-theme=light] .quick-profile.chosen{background:#e2eee5;color:var(--accent);border-color:#aec9b6}
+@media(max-width:800px){.quick-profile-list{display:flex;overflow-x:auto;scrollbar-width:thin}.quick-profile{flex:0 0 158px}}
+@media(max-height:650px) and (min-width:801px){
+ .quick-profile{min-height:44px;padding:8px 12px}
+ #view-current .recipe-head{padding-top:8px;padding-bottom:6px}
+ #view-current .recipe-title{font-size:18px;line-height:1.3;margin:2px 0}
+ #view-current .recipe-fields{gap:5px}
+ #view-current .recipe-note{min-height:0;margin:4px 17px 0;font-size:10px;line-height:1.3}
+ #view-current .recipe-bottom{padding-top:8px;padding-bottom:10px;gap:6px}
+}
+@media(max-width:600px){
+ body{grid-template-columns:minmax(0,1fr)}
+ .topbar{padding:0 10px;gap:6px}.topbar .demo-tag{display:none}.brand{font-size:14px;gap:6px}
+ #connect-button{padding:8px 4px}.language-button{gap:4px;padding:6px}
+ .current-grid,html[lang=en] .current-grid{grid-template-rows:max-content minmax(470px,1fr);align-content:start}
+ .current-grid .recipe{min-width:0;min-height:max-content}.current-grid .recipe-fields label{min-width:0}
+ .current-grid .recipe-bottom{display:grid;grid-template-columns:1fr}
+ .current-grid .readouts{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .current-grid .telemetry{min-height:470px;grid-template-rows:150px minmax(190px,1fr) 96px}
+ .current-grid .main-actions{flex-direction:column;align-items:stretch;gap:8px}
+ .current-grid .main-actions .right{display:grid;grid-template-columns:1fr 1fr}
+ .current-grid .main-actions button{min-width:0}
+ .current-grid .recipe-fields{padding:0 12px;gap:6px}
+ .page-title h1{font-size:22px}.title-right #current-hint{display:none}
+ .settings-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:8px}
+ .settings-layout .group-nav{flex-direction:row;overflow-x:auto;white-space:nowrap;min-height:48px}
+ .settings-layout .group-nav button{flex-shrink:0}
+ .settings-body{padding:8px 12px 16px}.settings-heading{padding:14px 12px}.settings-footer{padding:10px 12px}
+}
+@media(max-width:360px){.topbar .brand>span:last-child{display:none}}
+@media(max-width:480px){
+ .current-grid .recipe-fields{grid-template-columns:minmax(0,1fr)}
+ .current-grid .recipe-fields label{grid-template-columns:minmax(0,1fr) 150px;align-items:center}
+ .current-grid .stepper button{width:44px}
+}
+@media(max-width:360px){.current-grid .recipe-fields label{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>Decent <span style="font-weight:400;color:var(--muted)">Remote</span></div><span class="tag demo-tag">远程控制</span><span class="top-status"><i class="dot"></i><span id="machine-state">待机</span></span><span class="top-spacer"></span><span class="start-lock" id="lock-label"></span><button class="quiet small" id="connect-button">连接</button><button class="theme-button" id="theme-button" aria-label="切换浅色" title="切换浅色"></button><button class="language-button" id="language-button" aria-label="Switch language"><span data-lang-option="zh" class="selected">中</span><span class="lang-divider">/</span><span data-lang-option="en">EN</span></button></header>
+<div class="shell"><nav aria-label="主导航"><button data-page="current" class="active"></button><button data-page="profiles"></button><button data-page="history"></button><button data-page="settings"></button><button class="help" id="about-button" aria-label="关于 Decent Remote"></button></nav><main>
+<section class="view active" id="view-current" aria-label="当前"><div class="page-title"><div><h1>准备下一杯</h1></div><div class="title-right"><span class="tiny" id="current-hint">当前配方</span><button class="quiet small" id="goto-profiles">曲线库 <span aria-hidden="true">↗</span></button></div></div>
+<div class="quick-profiles" role="group" aria-label="常用曲线"><div class="quick-profile-list" id="home-favorites"></div><button class="quiet" id="home-favorite-edit" aria-label="管理常用" title="管理常用" disabled></button></div>
+<div class="current-grid"><section class="recipe"><div class="recipe-head"><button class="quiet small" id="edit-current" aria-label="编辑当前曲线"></button><div class="eyebrow">当前曲线</div><h2 class="recipe-title" id="home-profile"></h2><span class="tiny" id="home-type"></span></div><div class="recipe-fields" id="recipe-fields"></div><p class="recipe-note" id="recipe-note"></p><div class="recipe-bottom"><button class="primary" id="apply-recipe" disabled>应用参数</button><div class="power-row"><button id="wake-button">唤醒</button><button id="sleep-button">休眠</button></div></div></section>
+<section class="telemetry"><div class="readouts" id="readouts"></div><div class="chart-panel"><div class="chart-head"><span>上一杯</span><div class="chart-toolbar"><div class="legend" data-chart="home-chart"></div><button class="chart-expand" data-expand="home-chart" aria-label="放大曲线" title="放大曲线">⛶</button></div></div><div class="chart-wrap"><svg class="chart" id="home-chart" role="img" aria-label="压力、进水流量、杯流和温度曲线"></svg></div></div><div class="main-actions"><button class="scale-button" id="tare-button">秤清零</button><div class="right"><button disabled title="远程启动默认关闭" id="brew-button">启动已锁定</button><button class="danger stop-button" id="stop-button">停止</button></div></div></section></div></section>
+<section class="view" id="view-profiles" aria-label="曲线"><div class="page-title"><div><h1>曲线</h1></div><div class="title-right"><button class="quiet small" id="import-button">上传曲线</button><input type="file" accept=".tcl,.json" id="import-file" hidden><button class="quiet small" id="favorite-edit-button">管理常用</button></div></div><div class="split"><aside class="library"><input class="search" id="profile-search" placeholder="搜索曲线" aria-label="搜索曲线"><div class="favorites" id="favorites"></div><div class="list" id="profile-list"></div></aside><section class="editor"><div class="editor-heading"><div class="heading-text"><h2 id="editor-title"></h2><p id="editor-subtitle"></p></div><span id="editor-badge" class="tag good">已载入</span></div><div class="chips" id="stage-chips"></div><div class="editor-content" id="stage-form"></div><div class="editor-footer" id="editor-footer"></div></section></div></section>
+<section class="view" id="view-history" aria-label="历史"><div class="page-title"><div><h1>出杯记录</h1></div><span class="tiny">0 条记录</span></div><div class="split"><aside class="library" style="grid-template-rows:44px minmax(0,1fr)"><input class="search" id="history-search" placeholder="搜索记录" aria-label="搜索记录"><div class="list" id="history-list"></div></aside><section class="history-main"><div class="history-metrics" id="history-metrics"></div><div class="chart-panel"><div class="chart-head"><span id="history-chart-title">出杯记录</span><div class="chart-toolbar"><div class="legend" data-chart="history-chart"></div><button class="chart-expand" data-expand="history-chart" aria-label="放大曲线" title="放大曲线">⛶</button></div></div><div class="chart-wrap"><svg class="chart" id="history-chart" role="img" aria-label="选中历史记录的曲线"></svg></div></div><div class="history-actions"><button class="quiet" id="history-next">载入曲线文件</button><div><button id="download-raw">原始文件 ↓</button> <button id="download-json">JSON ↓</button></div></div></section></div></section>
+<section class="view" id="view-settings" aria-label="设置"><div class="page-title"><div><h1>设置</h1></div><span class="tiny">App 状态读回</span></div><div class="split settings-layout"><aside class="group-nav" id="settings-nav"></aside><section class="settings-panel"><div class="settings-heading"><h2 id="settings-title"></h2><p id="settings-description"></p></div><div class="settings-body" id="settings-body"></div><div class="settings-footer"><span id="settings-note"></span><button class="primary" id="apply-settings" disabled>应用设置</button></div></section></div></section>
+</main></div>
+<footer class="statusbar"><div class="receipt" id="receipt" role="status" aria-live="polite"><span class="dot"></span><span>等待连接</span></div><span class="local-only">de1app · 原生控制</span></footer>
+<dialog id="dialog"><h2 id="dialog-title"></h2><p id="dialog-description"></p><div class="dialog-body" id="dialog-body"></div><div class="dialog-actions" id="dialog-actions"></div></dialog>
+<script>
+'use strict';
+// Original web client for Decent Remote. Same-origin API; no third-party assets.
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const copy=x=>JSON.parse(JSON.stringify(x));
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icons={current:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',profiles:'<path d="M4 5h16M4 12h16M4 19h16"/><circle cx="9" cy="5" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="8" cy="19" r="2"/>',history:'<path d="M4 9a8 8 0 1 1 0 6M4 4v5h5M12 7v5l3 2"/>',settings:'<path d="M4 6h16M4 12h16M4 18h16"/><path d="M8 3v6M16 9v6M10 15v6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 6v1"/>',edit:'<path d="m14 4 6 6M4 20l4-1L21 6l-4-4L4 15z"/>',lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/>'};
+function icon(name){return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`}
+const stage=(name,pump,value,temp,seconds,weight=0,limit=0)=>({name,pump,value,temp,seconds,weight,limit,sensor:'coffee',transition:'fast',volume:0,exit:'off',exitValue:0});
+
+const groups={water:{label:'冲洗 / 热水 / 蒸汽',desc:'设置参数，另行启动。',fields:[['flushFlow','冲洗流量',4,'mL/s',1,10,.1],['flushTime','冲洗时间',5,'s',3,120,.1],['waterTemp','热水温度',90,'°C',0,100,1],['waterWeight','热水杯重目标',150,'g',3,255,1],['steamTemp','蒸汽温度',160,'°C',135,170,1],['steamTime','蒸汽最长时间',45,'s',0,255,1]]},scale:{label:'秤与停杯',desc:'杯重由电子秤测量，与进水量分开。',fields:[['requireScale','连接秤后才允许萃取',true,'toggle'],['keepScale','保持秤连接',true,'toggle'],['stopEarly','提前停止补偿',.5,'s',-1,1.5,.01]],note:'自动清零沿用 App 原生配置。'},preheat:{label:'预热 / 休眠 / 亮度',desc:'沿用 de1app 原生设置。',fields:[['phase1','预热流量',2,'mL/s',.5,6,.1],['phase2','控温流量',4,'mL/s',.5,8,.1],['timeout','预热最长等待',30,'s',1,30,.1],['idleTemp','待机水温',99,'°C',0,99,.5],['sleep','自动休眠',30,'min',0,480,1],['awakeBright','工作亮度',80,'%',0,100,1],['sleepBright','休眠亮度',40,'%',0,100,1]]},schedule:{label:'每日唤醒',desc:'以平板本地时间为准。',fields:[['scheduleOn','启用每日唤醒',true,'toggle'],['wakeTime','唤醒时间','09:00','time'],['awakeUntil','保持唤醒至','09:00','time']],note:'例如：09:00 唤醒、保持到 12:00，机器会在早上 9 点醒来加热，中午 12 点前不会因闲置而休眠。12 点后按自动休眠设置运行，不是立即关机。两个时间相同：只按时唤醒，闲置达到设定时长后照常休眠。'},charge:{label:'智能充电',desc:'机器 USB 与平板充电策略。',fields:[['chargeMode','充电模式','on','select',[['off','关闭策略'],['on','智能充电'],['night','夜间模式']]],['usb','机器 USB 供电',true,'toggle']],note:'原生充电策略可能随后覆盖手动 USB 设置。'},flow:{label:'流量补偿',desc:'调用已有插件，不改变官方校准倍率。',fields:[['flowOn','发送时补偿',true,'toggle']],note:'表内是指令与估计值，不是本杯实测流量。'}};
+
+groups.water.fields.splice(2,0,['waterFlow','热水流量',null,'mL/s',1,10,.1]);groups.water.fields.push(['waterTime','热水最长时间',null,'s',1,255,1],['waterScale','热水按杯重停止',null,'toggle'],['steamOn','启用蒸汽',null,'toggle'],['steamFlow','蒸汽流量',null,'mL/s',.4,2.5,.01]);groups.shortcuts={label:'配方快捷值',desc:'Streamline 常用粉量、杯重和温度。',fields:[]};
+
+function receipt(text,type=''){const el=$('#receipt');el.dataset.message=text;el.className='receipt '+type;el.innerHTML='<span class="dot"></span><span>'+esc(text)+'</span>'}
+function modal(title,description,content,actions){$('#dialog').classList.remove('chart-dialog','import-dialog','dragging');$('#dialog-title').removeAttribute('data-verbatim');$('#dialog-description').removeAttribute('data-verbatim');$('#dialog-title').textContent=title;$('#dialog-description').textContent=description;$('#dialog-body').innerHTML=content;$('#dialog-actions').innerHTML='';for(const a of actions){const b=document.createElement('button');b.textContent=a.label;b.className=a.class||'';b.onclick=()=>{if(a.run)a.run();else $('#dialog').close()};$('#dialog-actions').append(b)}if(!$('#dialog').open)$('#dialog').showModal()}
+function info(title,text){modal(title,text,'',[{label:'知道了',class:'primary'}])}
+function navigate(page){if(state.settingDirty&&page!=='settings'){modal('设置尚未应用','离开后放弃这组设置？','',[{label:'留在这里'},{label:'放弃并离开',run:()=>{state.settingDirty=false;settingDraft=copy(settings);$('#dialog').close();go(page)}}]);return}go(page)}
+
+function renderHome(){const p=current();$('#home-profile').toggleAttribute('data-verbatim',!!state.profileSnapshot);$('#home-profile').textContent=p.title;$('#home-type').textContent=p.type;const d=state.recipeDraft||p;$('#recipe-fields').innerHTML=[['dose','粉量','g',.1,30,.1],['yield','杯重目标','g',0,2000,1],['temp','设定温度','°C',0,105,.5]].map(([k,l,u,min,max,inc])=>`<label>${l} · ${u}<span class="stepper"><button data-inc="${k}" data-by="-${inc}" aria-label="减少${l}" ${state.busy||!state.connected?'disabled':''}>−</button><input type="number" id="recipe-${k}" aria-label="${l}" min="${min}" max="${max}" step="${inc}" value="${d[k]??''}" ${state.busy||!state.connected?'disabled':''}><button data-inc="${k}" data-by="${inc}" aria-label="增加${l}" ${state.busy||!state.connected?'disabled':''}>+</button></span></label>`).join('');$$('[data-inc]').forEach(b=>b.onclick=()=>{const k=b.dataset.inc;const d=state.recipeDraft||copy(current());const v=+(Number(d[k])+Number(b.dataset.by)).toFixed(2);const el=$('#recipe-'+k);if(v<+el.min||v>+el.max)return;d[k]=v;state.recipeDraft=d;renderHome()});$$('#recipe-fields input').forEach(i=>i.oninput=()=>{const d=state.recipeDraft||copy(current());d[i.id.replace('recipe-','')]=i.value===''?null:Number(i.value);state.recipeDraft=d;updateRecipeDirty()});updateRecipeDirty();renderReadouts()}
+
+function numericField(key,label,value,unit,min,max,step='.1'){return `<label class="field">${label}<span class="field-unit"><input type="number" data-field="${key}" value="${value}" min="${min}" max="${max}" step="${step}"><span>${unit}</span></span></label>`}
+
+const nativeStageNames={
+ 'forced rise without limit':'无限制强制上升','rise and hold':'升压并维持','preinfusion':'预浸泡',
+ 'preinfusion temp boost':'预浸温度补偿','preinfusion boost':'预浸补偿',
+ 'decline':'下降','hold':'维持','fill':'注水','bloom':'闷蒸','pause':'暂停','ramp':'渐变',
+ 'preinfuse':'预浸泡','infuse':'浸泡','pour':'注水','flow':'流量','pressure':'压力'
+};
+function stageLabel(name){return language==='zh'?(nativeStageNames[String(name).trim().toLowerCase()]||name):name}
+function stageText(s){return `<span data-stage-label="${esc(s.name)}" data-verbatim>${esc(stageLabel(s.name))}</span>`}
+const basicFields=[
+ ['preinfusion_flow_rate','预浸流量','mL/s'],['preinfusion_time','预浸最长时间','s'],['preinfusion_stop_pressure','预浸结束压力','bar'],
+ ['espresso_pressure','维持压力','bar'],['espresso_hold_time','维持时间','s'],['pressure_end','结束压力','bar'],['espresso_decline_time','下降时间','s'],['maximum_flow','流量上限','mL/s'],
+ ['flow_profile_hold','维持流量','mL/s'],
+ ['flow_profile_decline','结束流量','mL/s'],['maximum_pressure','压力上限','bar'],
+ ['espresso_temperature_0','预浸温度','°C'],['espresso_temperature_1','升压温度','°C'],['espresso_temperature_2','维持温度','°C'],['espresso_temperature_3','尾段温度','°C']
+];
+function basicParameters(src){
+ const flow=src.settings_profile_type==='settings_2b',out={};
+ for(const [k]of basicFields){
+  if(k.startsWith('flow_profile_')||k==='maximum_pressure'){if(!flow)continue}
+  else if(['espresso_pressure','pressure_end','maximum_flow'].includes(k)&&flow)continue;
+  if(k.startsWith('espresso_temperature_')&&Number(src.espresso_temperature_steps_enabled)!==1)continue;
+  if(finite(src[k])!==null)out[k]=finite(src[k]);
+ }
+ return out;
+}
+function basicPreview(p){
+ const rows=basicFields.filter(([k])=>finite(p.basic?.[k])!==null);
+ return `<p class="setting-note">原生基本曲线 · 参数预览</p>${p.previewStatus==='invalid_parameters'?'<p class=setting-note>部分参数无效，请在平板核对。</p>':p.previewStatus==='empty'?'<p class=setting-note>各段时长均为零。</p>':''}<div class="field-grid">${rows.map(([k,label,unit])=>`<div class="setting-row"><label>${label}</label><span class="num">${esc(p.basic[k])} ${unit}</span></div>`).join('')}</div>`;
+}
+function profileBadge(loaded){
+ if(!loaded)return '尚未载入';
+ if(state.busy)return '正在发送…';
+ if(state.dirty)return '编辑草稿';
+ if(needsProfileConfirmation())return profileTransferAttempted?'设备尚未确认':'已读取';
+ return state.applied?'已应用 · 未保存':'已载入';
+}
+
+function renderEditor(){const loaded=state.selected===state.current,p=loaded?state.draft:profiles.find(x=>x.id===state.selected);$('#editor-title').toggleAttribute('data-verbatim',!!p);if(!p){$('#editor-title').textContent='尚未选择';$('#stage-chips').innerHTML='';$('#stage-form').innerHTML='';$('#editor-footer').innerHTML='';return;}if(!loaded&&!p.loaded){$('#editor-title').textContent=p.title;$('#editor-subtitle').textContent='';$('#stage-chips').innerHTML='';$('#editor-badge').textContent='';$('#stage-form').innerHTML=p.readFailed?`<p class="setting-note">${esc(p.readError||'曲线读取失败')}</p><button id="retry-profile">重新读取</button>`:'<p class=setting-note>正在读取…</p>';$('#editor-footer').innerHTML='';if($('#retry-profile'))$('#retry-profile').onclick=()=>selectProfile(p.id);return;}$('#editor-title').textContent=p.title;$('#editor-subtitle').textContent=`${shownNumber(p.dose)} g 粉 · ${shownNumber(p.yield)} g 杯重目标 · ${p.unsupported?'暂不支持的曲线类型':p.editable===false?'原生基本曲线':p.steps.length+' 段'}`;$('#editor-badge').className='tag '+(state.dirty?'draft':loaded?'good':'draft');$('#editor-badge').textContent=profileBadge(loaded);$('#stage-chips').innerHTML=p.steps.map((s,i)=>`<button data-stage="${i}" class="${i===state.step?'active':''}"><small>${i+1}</small>${stageText(s)}<small>${s.pump==='flow'?'流量':'压力'}</small></button>`).join('')+(loaded&&p.editable?'<button id="add-stage" aria-label="增加分段">＋</button>':'');$$('[data-stage]').forEach(b=>b.onclick=()=>{state.step=+b.dataset.stage;renderEditor()});if(p.unsupported){$('#stage-form').innerHTML='<p class=setting-note>请在平板查看此曲线。</p>';$('#editor-footer').innerHTML='';return}if(!loaded||!p.editable){$('#stage-form').innerHTML=`${p.editable===false?basicPreview(p):'<div class="preview-message">载入后可编辑这条曲线。</div>'}<div class="preview-stages">${(p.editable===false?p.displaySteps||[]:p.steps).map((s,i)=>`<div class="preview-stage"><b>0${i+1}</b><div><strong>${stageText(s)}</strong><small>${s.temp}°C · ${s.seconds} s${s.weight?' · '+s.weight+' g 切段':''}</small></div><span class="num">${s.value} <small>${s.pump==='flow'?'mL/s':'bar'}</small></span></div>`).join('')}</div>`;$('#editor-footer').innerHTML='<button class="left quiet" id="export-profile">下载文件 ↓</button>'+(loaded?'<button class="primary" id="basic-recipe">调整粉量、杯重和温度</button>':'<button class="primary" id="load-profile">载入这条曲线</button>');if(loaded){$('#basic-recipe').disabled=state.busy||!state.connected;$('#basic-recipe').onclick=()=>navigate('current')}else{$('#load-profile').disabled=state.busy||!state.connected;$('#load-profile').onclick=()=>discardThen(()=>loadProfile(p))}$('#export-profile').onclick=()=>exportProfile(p);return}
+state.step=Math.min(state.step,p.steps.length-1);const s=p.steps[state.step];$('#stage-form').innerHTML=`<div class="field-grid"><label class="field">控制方式<select data-field="pump"><option value="flow" ${s.pump==='flow'?'selected':''}>流量控制</option><option value="pressure" ${s.pump==='pressure'?'selected':''}>压力控制</option></select></label>${numericField('value','目标'+(s.pump==='flow'?'进水流量':'压力'),s.value,s.pump==='flow'?'mL/s':'bar',0,12)}${numericField('temp','本段温度',s.temp,'°C',0,105,.5)}<label class="field">控温探头<select data-field="sensor"><option value="coffee" ${s.sensor==='coffee'?'selected':''}>咖啡探头</option><option value="water" ${s.sensor==='water'?'selected':''}>水温探头</option></select></label>${numericField('seconds','最长时间',s.seconds,'s',0,127,.1)}${numericField('weight','杯重切段 · 0 为关闭',s.weight,'g',0,2000,.1)}${numericField('limit',s.pump==='flow'?'压力上限 · 0 为关闭':'流量上限 · 0 为关闭',s.limit,s.pump==='flow'?'bar':'mL/s',0,12)}<label class="field">过渡<select data-field="transition"><option value="fast" ${s.transition==='fast'?'selected':''}>快速</option><option value="smooth" ${s.transition==='smooth'?'selected':''}>平滑</option></select></label></div><div class="subline"><span>更多条件</span><span class="tiny">切段条件取先满足项</span></div><div class="field-grid">${numericField('volume','进水体积上限 · 0 为关闭',s.volume,'mL',0,1023,1)}<label class="field">提前切段<select data-field="exit">${[['off','不启用'],['pressure_over','压力高于'],['pressure_under','压力低于'],['flow_over','流量高于'],['flow_under','流量低于']].map(([v,t])=>`<option value="${v}" ${s.exit===v?'selected':''}>${t}</option>`).join('')}</select></label>${s.exit!=='off'?numericField('exitValue','切段阈值',s.exitValue,s.exit.startsWith('flow')?'mL/s':'bar',0,12):''}</div><div class="subline"><span>当前分段</span><div class="stage-tools"><button id="move-stage" ${state.step===0?'disabled':''}>前移</button><button id="copy-stage">复制</button><button id="delete-stage" class="danger" ${p.steps.length===1?'disabled':''}>删除</button></div></div>`;
+$$('[data-field]').forEach(el=>{const edit=()=>{if(el.type==='number'&&(el.value===''||!el.checkValidity()))return false;state.draft.steps[state.step][el.dataset.field]=el.type==='number'?Number(el.value):el.value;state.dirty=editorChanged();return true};el.oninput=()=>{if(edit()){$('#editor-badge').textContent=profileBadge(true);$('#editor-badge').className='tag '+(state.dirty?'draft':'good');$('#apply-profile').disabled=(!state.dirty&&!needsProfileConfirmation())||state.busy;$('#apply-profile').textContent=needsProfileConfirmation()?'重新发送':'临时应用';$('#save-profile').disabled=!(state.dirty||state.applied)||state.busy}};el.onchange=()=>{if(!edit()){el.reportValidity();return}if(['pump','exit'].includes(el.dataset.field))renderEditor()}});$('#add-stage').onclick=()=>{if(state.draft.steps.length>=20)return;state.draft.steps.push(stage('新分段','flow',2,state.draft.temp,20));state.step=state.draft.steps.length-1;state.dirty=true;renderEditor()};$('#copy-stage').onclick=()=>{if(state.draft.steps.length>=20)return;state.draft.steps.splice(state.step+1,0,copy(s));state.step++;state.dirty=true;renderEditor()};$('#move-stage').onclick=()=>{const a=state.draft.steps;[a[state.step],a[state.step-1]]=[a[state.step-1],a[state.step]];state.step--;state.dirty=true;renderEditor()};$('#delete-stage').onclick=()=>{modal('删除这个分段？',s.name,'',[{label:'取消'},{label:'删除分段',class:'danger',run:()=>{state.draft.steps.splice(state.step,1);state.step=Math.max(0,state.step-1);state.dirty=true;$('#dialog').close();renderEditor()}}]);$('#dialog-description').setAttribute('data-verbatim','')};
+$('#editor-footer').innerHTML=`<button class="quiet left" id="restore-profile">恢复文件</button><button id="apply-profile" ${(!state.dirty&&!needsProfileConfirmation())||state.busy?'disabled':''}>${needsProfileConfirmation()?'重新发送':'临时应用'}</button><button id="save-as-profile" ${state.busy?'disabled':''}>另存为</button><button class="primary" id="save-profile" ${!(state.dirty||state.applied)||state.busy?'disabled':''}>保存</button>`;$('#apply-profile').onclick=()=>editorAction('apply');$('#save-profile').onclick=()=>editorAction('save');$('#restore-profile').onclick=restoreProfile;$('#save-as-profile').onclick=saveAs;
+if(state.busy||!state.connected)$$('#stage-form input,#stage-form select,#stage-form button,#stage-chips button,#editor-footer button').forEach(e=>e.disabled=true);
+}
+
+const importError=key=>{throw new Error(key)};
+const shownNumber=n=>n==null?'—':n;
+function tclList(text){
+ const result=[];let i=0;
+ function escape(){
+  i++;if(i>=text.length)importError('文件格式不完整。');
+  const c=text[i++],simple={n:'\n',r:'\r',t:'\t',f:'\f',v:'\v',a:'\x07',b:'\b'};
+  if(c==='\n'){while(/[ \t]/.test(text[i]||'\0'))i++;return ' '}
+  if(c in simple)return simple[c];
+  const pattern=c==='x'?/^[0-9a-fA-F]{1,2}/:c==='u'?/^[0-9a-fA-F]{1,4}/:c==='U'?/^[0-9a-fA-F]{1,8}/:null;
+  if(pattern){const m=text.slice(i).match(pattern);if(!m)return c;i+=m[0].length;const n=parseInt(m[0],16);if(n>0x10ffff)importError('文件格式不完整。');return String.fromCodePoint(n)}
+  if(/[0-7]/.test(c)){const m=(c+text.slice(i)).match(/^[0-7]{1,3}/)[0];i+=m.length-1;return String.fromCharCode(parseInt(m,8))}
+  return c;
+ }
+ while(i<text.length){
+  while(/\s/.test(text[i]||'\0'))i++;if(i>=text.length)break;
+  let word='';
+  if(text[i]==='{'){
+   i++;let depth=1;
+   while(i<text.length&&depth){
+    const c=text[i++];
+    if(c==='\\'){
+     if(i>=text.length)importError('文件格式不完整。');
+     if(text[i]==='\n'){i++;while(/[ \t]/.test(text[i]||'\0'))i++;word+=' '}
+     else word+=c+text[i++];
+    }else if(c==='{'){if(++depth>32)importError('文件嵌套过深。');word+=c}
+    else if(c==='}'){if(--depth)word+=c}
+    else word+=c;
+   }
+   if(depth)importError('文件格式不完整。');
+   if(i<text.length&&!/\s/.test(text[i]))importError('文件格式不完整。');
+  }else if(text[i]==='"'){
+   i++;let closed=false;
+   while(i<text.length){if(text[i]==='"'){i++;closed=true;break}word+=text[i]==='\\'?escape():text[i++]}
+   if(!closed||(i<text.length&&!/\s/.test(text[i])))importError('文件格式不完整。');
+  }else{while(i<text.length&&!/\s/.test(text[i]))word+=text[i]==='\\'?escape():text[i++]}
+  result.push(word);if(result.length>12000)importError('文件参数过多。');
+ }
+ return result;
+}
+function tclDictionary(text){const tokens=tclList(text),dict=Object.create(null);if(tokens.length%2)importError('文件格式不完整。');for(let i=0;i<tokens.length;i+=2){if(Object.hasOwn(dict,tokens[i]))importError('文件含有重复参数。');dict[tokens[i]]=tokens[i+1]}return dict}
+function profileNumber(value,max=10000,required=false){
+ if(value===undefined||value===null||value===''){if(required)importError('曲线缺少必要参数。');return null}
+ if(typeof value!=='number'&&typeof value!=='string')importError('曲线含有无效数值。');
+ if(typeof value==='string'&&!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value.trim()))importError('曲线含有无效数值。');
+ const n=Number(value);if(!Number.isFinite(n)||n < -1e-9||n>max)importError('曲线含有无效数值。');return Math.abs(n)<=1e-9?0:n;
+}
+function importText(value,fallback=''){if(value==null)return fallback;if(typeof value!=='string'||value.length>512)importError('曲线名称或分段名称无效。');return value.trim()||fallback}
+function normalizeImportedProfile(text,filename){
+ const ext=filename.split('.').at(-1).toLowerCase();
+ if(!['tcl','json'].includes(ext))importError('请选择 .tcl 或 .json 曲线文件。');
+ if(new TextEncoder().encode(text).length>1048576)importError('文件超过 1 MB，请选择单条曲线。');
+ text=text.replace(/^\uFEFF/,'').replace(/\r\n/g,'\n');
+ let src;try{src=ext==='tcl'?tclDictionary(text):JSON.parse(text)}catch(e){if(e instanceof SyntaxError)importError('JSON 格式有误，请检查文件。');throw e}
+ if(!src||typeof src!=='object'||Array.isArray(src))importError('没有找到可识别的曲线。');
+ if(src.prototype)importError('这是演示文件，不是可运行曲线。');
+ if(src.advanced_shot_tcl&&String(src.advanced_shot_tcl).trim())importError('此文件含执行脚本，不能作为参数曲线导入。');
+ if(ext==='tcl'&&['settings_2a','settings_2b'].includes(src.settings_profile_type)){return {profile:{title:src.profile_title||filename,dose:finite(src.profile_grinder_dose_weight),yield:finite(src.final_desired_shot_weight),temp:finite(src.espresso_temperature),steps:[],type:'原生基本曲线',editable:false,basic:basicParameters(src)},source:{filename,text,format:'Tcl'}}}
+ const tcl=ext==='tcl',rows=tcl?(src.advanced_shot?tclList(src.advanced_shot).map(tclDictionary):null):src.steps;
+ if(tcl&&!['settings_2c','settings_2c2'].includes(src.settings_profile_type))importError('导入暂支持高级分段曲线。');
+ if(!tcl&&String(src.version)!=='2')importError('请选择 de1app v2 格式的 JSON 曲线。');
+ if(!Array.isArray(rows)||!rows.length||rows.length>20)importError('曲线须包含 1–20 个分段。');
+ const title=importText(tcl?src.profile_title:src.title);if(!title)importError('曲线缺少名称。');
+ const steps=rows.map((s,i)=>{
+  if(!s||typeof s!=='object'||!['flow','pressure'].includes(s.pump)||!['coffee','water'].includes(s.sensor)||!['fast','smooth'].includes(s.transition))importError('分段的控制方式、探头或过渡无效。');
+  const value=profileNumber(s[s.pump],12,true),temp=profileNumber(s.temperature,110,true),seconds=profileNumber(s.seconds,10000,true);
+  const item=stage(importText(s.name,'Stage '+(i+1)),s.pump,value,temp,seconds,profileNumber(s.weight,2000)??0,profileNumber(tcl?s.max_flow_or_pressure:s.limiter?.value,12)??0);
+  item.sensor=s.sensor;item.transition=s.transition;item.volume=profileNumber(s.volume)??0;
+  const limits=['pressure_over','pressure_under','flow_over','flow_under'];
+  if(tcl&&Number(s.exit_if)===1){if(!limits.includes(s.exit_type))importError('曲线的提前切段条件无效。');item.exit=s.exit_type;item.exitValue=profileNumber(s['exit_'+s.exit_type],12,true)}
+  if(!tcl&&s.exit!=null){
+   const x=s.exit,key=x.type+'_'+(x.condition==='over'?'over':x.condition==='under'?'under':'invalid');
+   if(!limits.includes(key))importError('曲线的提前切段条件无效。');item.exit=key;item.exitValue=profileNumber(x.value,12,true);
+  }
+  return item;
+ });
+ const dose=profileNumber(tcl?src.profile_grinder_dose_weight??src.grinder_dose_weight:src.dose??src.profile_grinder_dose_weight,60);
+ const target=profileNumber(tcl?src.final_desired_shot_weight_advanced:src.target_weight,2000);
+ const temperature=profileNumber(tcl?src.espresso_temperature:undefined,110)??steps[0].temp;
+ return {profile:{id:'',title,dose,yield:target,temp:temperature,type:'本地导入 · 高级曲线',steps},source:{filename,text,format:tcl?'Tcl':'JSON v2'}};
+}
+
+const series=[
+ {key:'pressure',name:'压力',unit:'bar',color:'#17c29a',goal:'#374d47',width:2.3},
+ {key:'flow',name:'流量',unit:'mL/s',color:'#0358cf',goal:'#23416c',width:2.3},
+ {key:'cupflow',name:'杯流',unit:'g/s',color:'#695f57',goal:null,width:2.3},
+ {key:'temp',name:'温度',unit:'°C',color:'#AE6D73',goal:'#3e3233',width:1.45}
+];
+let hidden=new Set(),zoomSource='home-chart';
+
+function renderLegends(){
+ $$('.legend').forEach(el=>{el.innerHTML=series.map(s=>`<button data-line="${s.key}" aria-pressed="${!hidden.has(s.key)}" class="${hidden.has(s.key)?'off':''}" title="${s.name} · ${s.unit}"><span class="swatch" style="background:${s.color}"></span><span class="legend-text"><span class="legend-name">${s.name}</span><span class="legend-reading" data-readout="${s.key}" data-verbatim hidden></span></span></button>`).join('')});
+ $$('[data-line]').forEach(b=>b.onclick=()=>{const k=b.dataset.line;hidden.has(k)?hidden.delete(k):hidden.add(k);renderLegends();drawCharts()});
+}
+function chartName(key){const en=document.documentElement.lang==='en';return ({pressure:en?'Pressure':'压力',flow:en?'Flow':'流量',cupflow:en?'Cup flow':'杯流',temp:'°C'})[key]}
+// Inspect the exact plotted sample, never a target or an interpolated reading.
+const chartViews=new Map(),chartInspections=new Map();
+function nearestChartSample(rows,t){
+ let lo=0,hi=rows.length-1;
+ while(lo<hi){const mid=(lo+hi)>>1;if(rows[mid].t<t)lo=mid+1;else hi=mid}
+ return lo>0&&t-rows[lo-1].t<=rows[lo].t-t?lo-1:lo;
+}
+function chartInspectionPanel(svg){return svg.closest('.chart-panel,.zoom-chart-panel')}
+function showChartSample(id,index){
+ const view=chartViews.get(id);if(!view||!view.rows.length)return;
+ const {svg,rows,X,Y,T,H,kind,duration}=view,panel=chartInspectionPanel(svg);
+ const point=Math.max(0,Math.min(rows.length-1,index)),row=rows[point];
+ chartInspections.set(id,{index:point,kind,duration,active:true});
+ panel.classList.add('has-inspection');
+ const time=panel.querySelector('.chart-time');time.textContent=row.t.toFixed(2)+' s';time.dataset.time=row.t;
+ panel.querySelectorAll('[data-readout]').forEach(el=>{
+  const key=el.dataset.readout,s=series.find(s=>s.key===key);
+  el.hidden=false;el.innerHTML=`${fmt(row[key],key==='temp'?1:2)}<small>${s.unit}</small>`;el.dataset.value=row[key];
+ });
+ const cursor=svg.querySelector('.chart-cursor'),light=document.documentElement.dataset.theme==='light';
+ cursor.setAttribute('visibility','visible');cursor.setAttribute('data-time',row.t);
+ cursor.innerHTML=`<line x1="${X(row.t)}" x2="${X(row.t)}" y1="${T}" y2="${T+H}"/>`+series.filter(s=>!hidden.has(s.key)&&finite(row[s.key])!==null).map(s=>`<circle data-point="${s.key}" cx="${X(row.t)}" cy="${Y(s.key==='temp'?row.temp/10:row[s.key])}" r="3.2" fill="${light?'#fff':'#0d0e14'}" stroke="${s.color}"/>`).join('');
+ const en=document.documentElement.lang==='en';
+ svg.setAttribute('aria-label',`${en?'Shot chart':'出杯曲线'} ${row.t.toFixed(2)} s · ${series.map(s=>`${chartName(s.key)} ${fmt(row[s.key],s.key==='temp'?1:2)} ${s.unit}`).join(' · ')}`);
+}
+function clearChartInspection(id){
+ const view=chartViews.get(id);chartInspections.delete(id);if(!view||!view.rows.length)return;
+ const panel=chartInspectionPanel(view.svg);panel.classList.remove('has-inspection');
+ panel.querySelectorAll('[data-readout]').forEach(el=>{el.hidden=true;el.textContent='';delete el.dataset.value});
+ const time=panel.querySelector('.chart-time');if(time){time.textContent='';delete time.dataset.time}
+ const cursor=view.svg.querySelector('.chart-cursor');if(cursor){cursor.setAttribute('visibility','hidden');cursor.removeAttribute('data-time')}
+ view.svg.setAttribute('aria-label',document.documentElement.lang==='en'?'Shot chart. Use left and right arrow keys to inspect samples.':'出杯曲线，可用左右方向键查看各时刻数据。');
+}
+function attachChartInspection(view){
+ const {svg,id,rows,L,T,W,H,xmax,kind,duration}=view;chartViews.set(id,view);
+ const panel=chartInspectionPanel(svg),head=panel.querySelector('.chart-head,.zoom-caption');
+ if(!head.querySelector('.chart-time')){const output=document.createElement('output');output.className='chart-time';output.setAttribute('data-verbatim','');head.insertBefore(output,head.children[1])}
+ svg.setAttribute('tabindex','0');
+ const saved=chartInspections.get(id);
+ if(saved?.active&&saved.kind===kind&&saved.duration===duration)showChartSample(id,saved.index);else clearChartInspection(id);
+ function inspectPointer(event){
+  const matrix=svg.getScreenCTM();if(!matrix)return;
+  const p=new DOMPoint(event.clientX,event.clientY).matrixTransform(matrix.inverse());
+  if(p.x<L||p.x>L+W||p.y<T||p.y>T+H){if(event.pointerType!=='touch')clearChartInspection(id);return}
+  const index=nearestChartSample(rows,(p.x-L)/W*xmax),old=chartInspections.get(id);
+  if(!old?.active||old.index!==index)showChartSample(id,index);
+ }
+ svg.onpointermove=inspectPointer;
+ svg.onpointerdown=event=>{inspectPointer(event);if(event.pointerType==='touch')svg.setPointerCapture(event.pointerId)};
+ svg.onpointerleave=event=>{if(event.pointerType!=='touch')clearChartInspection(id)};
+ svg.onpointercancel=()=>clearChartInspection(id);
+ svg.onblur=()=>clearChartInspection(id);
+ svg.onkeydown=event=>{
+  if(!['ArrowLeft','ArrowRight','Home','End','Escape'].includes(event.key))return;
+  event.preventDefault();if(event.key==='Escape'){clearChartInspection(id);return}
+  const old=chartInspections.get(id),index=old?.active?old.index:0;
+  showChartSample(id,event.key==='Home'?0:event.key==='End'?rows.length-1:index+(event.key==='ArrowLeft'?-1:1));
+ };
+}
+
+
+function draw(id,data){
+ const svg=$('#'+id);if(!svg)return;const rows=data?.rows||[],duration=data?.duration||0,kind=data?.id||'',spec={cuts:data?.cuts||[]};if(!rows.length){clearChartInspection(id);chartViews.delete(id);svg.onpointermove=svg.onpointerdown=svg.onpointerleave=svg.onkeydown=null;svg.innerHTML='<text x="50%" y="50%" text-anchor="middle">尚无曲线数据</text>';return;}
+ const width=Math.max(360,svg.clientWidth||600),height=Math.max(140,svg.clientHeight||250),en=document.documentElement.lang==='en';
+ const zoom=id==='zoom-chart',L=30,R=en?69:46,T=15,B=26,W=width-L-R,H=height-T-B,max=10,xmax=Math.ceil((duration+1)/5)*5;
+ const light=document.documentElement.dataset.theme==='light',grid=light?'#E0E0E0':'#212227',minor=light?'#f0f0f0':'#17191f',axis=light?'#959595':'#606579',stage=light?'#7c7c7c':'#7f8bbb';
+ const X=t=>L+W*t/xmax,Y=v=>T+H*(1-v/max);
+ let h=`<defs><clipPath id="clip-${id}"><rect x="${L}" y="${T}" width="${W}" height="${H}"/></clipPath></defs>`;
+ for(let v=0;v<=10;v++){
+  h+=`<line class="chart-grid" x1="${L}" y1="${Y(v)}" x2="${L+W}" y2="${Y(v)}" stroke="${grid}" stroke-width=".8"/>`;
+  if(v>0)h+=`<text x="${L-9}" y="${Y(v)+3}" text-anchor="end" style="fill:${axis}">${v}</text>`;
+ }
+ const tick=Math.max(5,Math.ceil(xmax/10/5)*5);for(let t=0;t<=xmax;t++){
+  if(t%tick===0){h+=`<line class="chart-grid" x1="${X(t)}" y1="${T}" x2="${X(t)}" y2="${T+H}" stroke="${grid}" stroke-width=".8"/><text x="${X(t)}" y="${T+H+17}" text-anchor="middle" style="fill:${axis}">${t}</text>`}
+  else if(zoom){h+=`<line x1="${X(t)}" y1="${T}" x2="${X(t)}" y2="${T+H}" stroke="${minor}" stroke-width=".6"/>`}
+ }
+ h+=`<text x="${L}" y="10" class="axis-units">bar · mL/s · g/s</text><text x="${L+W}" y="10" text-anchor="end" class="axis-units">°C ÷ 10</text><text x="${width-8}" y="${T+H+17}" text-anchor="end" class="axis-units">s</text>`;
+ h+=`<g clip-path="url(#clip-${id})">`;
+ for(const t of spec.cuts.filter(t=>t<=duration)){h+=`<line class="stage-divider" x1="${X(t)}" y1="${T}" x2="${X(t)}" y2="${T+H}" stroke="${stage}" stroke-opacity=".72" stroke-width="1" stroke-dasharray="5 5"/>`}
+ // Explicit per-segment setpoints retain sharp corners. They are not a
+ // smoothed reconstruction of measurements or a pressure/flow limit.
+ for(const s of series.filter(s=>s.goal&&!hidden.has(s.key))){
+  let d='',pen=false;
+  for(const r of rows){const v=r.goal[s.key];if(finite(v)===null){pen=false;continue}const y=Y(s.key==='temp'?v/10:v);d+=(pen?' L':' M')+X(r.t).toFixed(2)+' '+y.toFixed(2);pen=true}
+  h+=`<path class="target-line" data-goal="${s.key}" d="${d}" fill="none" stroke="${s.goal}" stroke-width="${s.key==='temp'?.85:1.35}" stroke-dasharray="${s.key==='temp'?'6 5':'4 4'}"/>`;
+ }
+ for(const s of series.filter(s=>!hidden.has(s.key))){
+  let d='',pen=false;for(const r of rows){if(finite(r[s.key])===null){pen=false;continue}d+=(pen?' L':' M')+X(r.t).toFixed(2)+' '+Y(s.key==='temp'?r.temp/10:r[s.key]).toFixed(2);pen=true}
+  h+=`<path class="native-trace" data-trace="${s.key}" d="${d}" stroke="${s.color}" stroke-width="${s.width}"/>`;
+ }
+ h+='</g>';
+ const last=rows.at(-1),labels=series.filter(s=>!hidden.has(s.key)&&finite(last[s.key])!==null).map(s=>({...s,y:Y(s.key==='temp'?last.temp/10:last[s.key])})).sort((a,b)=>a.y-b.y),gap=15;
+ labels.forEach((s,i)=>{s.labelY=Math.max(T+5,s.y,i?labels[i-1].labelY+gap:T+5)});
+ if(labels.length){const over=labels.at(-1).labelY-(T+H-4);if(over>0)labels.forEach(s=>s.labelY-=over)}
+ for(const s of labels){
+  const c=s.key==='cupflow'?(light?'#ac988a':'#847971'):s.color;
+  if(Math.abs(s.labelY-s.y)>3)h+=`<path d="M${X(duration)+3} ${s.y} L${L+W+3} ${s.labelY}" fill="none" stroke="${c}" stroke-opacity=".35" stroke-width=".7"/>`;
+  h+=`<text data-end-label="${s.key}" x="${L+W+5}" y="${s.labelY+3}" style="fill:${c}" font-size="10">${chartName(s.key)}</text>`;
+ }
+ h+=`<g class="chart-cursor" visibility="hidden" clip-path="url(#clip-${id})" aria-hidden="true"></g><rect class="chart-hit-area" x="${L}" y="${T}" width="${W}" height="${H}"/>`;
+ svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.innerHTML=h;
+ attachChartInspection({id,svg,rows,X,Y,L,T,W,H,xmax,kind,duration});
+}
+
+// Production state contains only server readbacks and unsent browser drafts.
+let profiles=[],favorites=[],history=[];
+let favoriteTitles=new Map(),favoritesReady=false,favoritesReadAt=0,favoritesLoading=false;
+let state={page:'current',current:'',selected:'',step:0,recipeDraft:null,draft:null,dirty:false,applied:false,connected:false,machine:'Unknown',busy:false,settingGroup:'water',settingDirty:false,history:0,authenticated:false,remoteStart:false,status:null,profileSnapshot:null,settingError:'',pendingId:null};
+let accessKey='',polling=false,pollTimer=null,historyTicket=0,historyListTicket=0,profileTicket=0,profileListTicket=0,settingsTicket=0;
+const profileCache=new Map(),profileReads=new Map(),shotCache=new Map(),shotReads=new Map(),settingsCache=new Map();
+let settings={},settingDraft={},liveChart=null,lastShot=null,confirmedProfile=null,profileTransferAttempted=false;
+// Each new page starts without a device receipt. Browser storage is never proof.
+
+// An App readback is not a device acknowledgment. Keep this separate from draft dirtiness.
+function profileSignature(raw){
+ if(!raw)return null;
+ // File-save metadata does not change the parameters associated with a receipt.
+ const {dirty,readback,...parameters}=raw;
+ const ordered=x=>Array.isArray(x)?x.map(ordered):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,ordered(x[k])])):x;
+ return JSON.stringify(ordered(parameters));
+}
+function needsProfileConfirmation(){const signature=profileSignature(current().raw);return !!signature&&signature!==confirmedProfile}
+function resetProfileConfirmation(){confirmedProfile=null;profileTransferAttempted=false}
+function rememberProfileConfirmation(result){
+ // Bind the receipt to its mutation response, never to a later GET that may belong to another edit.
+ const sent=result?.data?.current_profile;
+ confirmedProfile=result?.receipt?.device_confirmed===true&&sent?profileSignature(sent):null;
+ if(result?.receipt?.device_confirmed===true&&needsProfileConfirmation())receipt('当前参数未获得对应确认','warn');
+}
+function editorChanged(){return JSON.stringify(state.draft.steps.map(stepPayload))!==JSON.stringify(current().steps.map(stepPayload))}
+function requireProfileConfirmation({newDraft=false}={}){if(needsProfileConfirmation()&&!(newDraft&&!profileTransferAttempted))throw new Error('曲线发送尚未确认；请先重新发送，确认后再保存')}
+const finite=x=>x!==''&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):null;
+const fmt=(x,d=1)=>finite(x)===null?'—':Number(x).toFixed(d);
+const displayState=x=>({Idle:'待机',Sleep:'休眠',Espresso:'萃取中',Steam:'蒸汽',HotWater:'热水',HotWaterRinse:'冲洗',Refill:'补水',Unknown:'状态未知'})[x]||x;
+function current(){return state.profileSnapshot||{id:'',title:'尚未连接',type:'',dose:null,yield:null,temp:null,steps:[],editable:false}}
+function requestId(){return 'web-'+Date.now().toString(36)+'-'+Array.from(crypto.getRandomValues(new Uint8Array(8)),v=>v.toString(16).padStart(2,'0')).join('')}
+async function api(path,{method='GET',data,id,timeout=12000}={}){
+ const headers={Authorization:'Bearer '+accessKey};if(id)headers['X-Request-ID']=id;
+ if(data!==undefined)headers['Content-Type']='application/json';
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);
+ try{const response=await fetch(path,{method,headers,body:data===undefined?undefined:JSON.stringify(data),cache:'no-store',credentials:'omit',signal:controller.signal});
+  const text=await response.text();let result;try{result=JSON.parse(text)}catch{result=text}
+  if(!response.ok){const e=new Error(result?.message||'读取失败');e.code=result?.error;e.status=response.status;throw e}return result;
+ }finally{clearTimeout(timer)}
+}
+function errorMessage(e){return e?.name==='AbortError'?'连接超时，请先核对状态':e?.message||'连接失败'}
+function failUI(e){receipt(errorMessage(e),'warn')}
+async function busyWork(label,work){
+ if(state.busy||!state.authenticated)return;state.busy=true;renderHome();renderEditor();receipt(label+' · 正在处理','busy');
+ try{return await work()}catch(e){failUI(e)}finally{if(!state.pendingId)state.busy=false;renderHome();if(state.page==='profiles')renderProfiles();if(state.page==='settings')updateSettingsDirty()}
+}
+async function awaitReceipt(id){
+ const deadline=Date.now()+35000;let r;
+ do{r=await api('/api/v1/requests/'+encodeURIComponent(id));if(!r.in_flight)return r;await new Promise(resolve=>setTimeout(resolve,400))}while(Date.now()<deadline);
+ throw new Error('确认仍在等待；不会重复发送');
+}
+function receiptLabel(r){
+ if(r?.device_confirmed)return '曲线数据已确认';
+ if(r?.phase==='unconfirmed_timeout')return '确认超时 · 未重发';
+ if(r?.phase==='rejected')return '请求被拒绝';
+ if(r?.app_applied)return 'App 已读回 · 设备未确认';
+ return '请求已接受 · 待状态核对';
+}
+async function send(path,data={},method='POST'){
+ if(path==='/api/v1/profile'||path==='/api/v1/recipe'){profileTransferAttempted=true}
+ if(path==='/api/v1/recipe'||path==='/api/v1/profile'||path==='/api/v1/profile/restore'||path==='/api/v1/flow-compensation'||method==='PUT')confirmedProfile=null;
+ const id=requestId();const tracked=path!=='/api/v1/machine/stop';if(tracked)state.pendingId=id;let response,networkError;
+ try{response=await api(path,{method,data:method==='PUT'?undefined:data,id})}
+ catch(e){if(e.status&&e.status<500){if(tracked&&state.pendingId===id)state.pendingId=null;throw e}networkError=e}
+ let r;try{r=await awaitReceipt(id)}catch(e){if(tracked)state.recovering=true;receipt('结果暂不可确认 · 不会重复发送','warn');throw networkError||e}
+ if(tracked&&state.pendingId===id){state.pendingId=null;state.recovering=false}
+ if(!r.accepted){throw new Error(networkError?errorMessage(networkError):'请求未完成，请核对状态')}
+ receipt(receiptLabel(r),r.device_confirmed||r.app_applied?'ok':'warn');
+ return {data:response,receipt:r};
+}
+function nativeStep(s,i){
+ const k=['flow_under','flow_over','pressure_under','pressure_over'];
+ const enabled=s.exit_if===1||s.exit_if==='1'||s.exit_if===true;
+ return {...stage(String(s.name||'Step '+(i+1)),s.pump,finite(s[s.pump])??0,finite(s.temperature)??0,finite(s.seconds)??0,finite(s.weight)??0,finite(s.max_flow_or_pressure)??0),sensor:s.sensor,transition:s.transition,volume:finite(s.volume)??0,exit:enabled&&k.includes(s.exit_type)?s.exit_type:'off',exitValue:finite(s['exit_'+s.exit_type])??0,raw:copy(s)};
+}
+function profileView(p){const basic=['settings_2a','settings_2b'].includes(p.profile_type);return {id:p.profile,title:p.title||p.profile,dose:finite(p.dose_g),yield:finite(p.yield_g),temp:finite(p.temperature_c),type:p.editable_steps?'高级分段曲线':basic?'原生基本曲线':'暂不支持的曲线类型',unsupported:!basic&&!p.editable_steps,steps:(p.steps||[]).map(nativeStep),displaySteps:(p.display_steps||[]).map(nativeStep),basic:basicParameters({...p.basic_parameters,settings_profile_type:p.profile_type}),previewStatus:p.display_steps_readback,editable:!!p.editable_steps,loaded:true,raw:copy(p)}}
+function stepPayload(s){
+ const out={...(s.raw||{}),name:s.name,pump:s.pump,sensor:s.sensor,transition:s.transition,temperature:s.temp,seconds:s.seconds,volume:s.volume,weight:s.weight,max_flow_or_pressure:s.limit};
+ for(const k of ['pressure','flow','max_flow_or_pressure_range','exit_flow_under','exit_flow_over','exit_pressure_under','exit_pressure_over'])if(out[k]===''||out[k]===undefined)out[k]=k==='max_flow_or_pressure_range'?.6:0;
+ out[s.pump]=s.value;out.exit_if=s.exit==='off'?0:1;out.exit_type=s.exit==='off'?(out.exit_type||'flow_under'):s.exit;
+ if(s.exit!=='off')out['exit_'+s.exit]=s.exitValue;
+ return out;
+}
+async function refreshProfile({force=false}={}){
+ const p=await api('/api/v1/profile'),v=profileView(p);state.profileReadAt=Date.now();state.profileSnapshot=v;
+ const switched=state.current!==v.id;state.current=v.id;state.applied=!!p.dirty;
+ if(force||!state.dirty){state.draft=copy(v);state.dirty=false}
+ if(force||!state.selected||(switched&&!state.dirty))state.selected=v.id;
+ if(force)state.recipeDraft=null;
+ const ix=profiles.findIndex(x=>x.id===v.id);if(ix<0)profiles.push(copy(v));else profiles[ix]={...profiles[ix],...copy(v)};
+ if(!$('#recipe-fields').contains(document.activeElement))renderHome();else updateRecipeDirty();if(state.page==='profiles')renderProfiles();
+}
+async function fillProfileList(ticket){
+ const queue=profiles.filter(p=>p.id!==state.current&&!p.loaded&&!p.readFailed);
+ async function next(){while(queue.length&&ticket===profileListTicket&&state.page==='profiles'&&state.authenticated){
+  const p=queue.shift();try{await readLibraryProfile(p.id)}catch(e){p.readFailed=true;p.readError=errorMessage(e)}
+  if(ticket===profileListTicket&&state.page==='profiles')renderProfiles();
+ }}
+ await Promise.all([next(),next()]);
+}
+async function refreshLibrary(){
+ const ticket=++profileListTicket;
+ const names=await api('/api/v1/profiles');if(!Array.isArray(names))throw new Error('曲线列表格式不正确');
+ if(ticket!==profileListTicket)return;
+ profiles=names.map(filename=>{const id=filename.replace(/\.tcl$/,'');return id===state.current?copy(current()):profileCache.get(id)||{id,filename,title:id,dose:null,yield:null,temp:null,steps:[],loaded:false}});
+  await refreshFavorites();if(ticket!==profileListTicket)return;
+ if(state.page==='profiles'){renderProfiles();fillProfileList(ticket)}
+}
+async function refreshFavorites(){
+ if(favoritesLoading||!state.authenticated)return;
+ favoritesLoading=true;const key=accessKey;
+ try{const f=await api('/api/v1/favorites');if(accessKey!==key)return;
+  favorites=Array.from({length:5},(_,i)=>f.slots.find(s=>Number(s.slot)===i+1)?.profile||'');
+  favoriteTitles=new Map(f.slots.filter(s=>s.profile).map(s=>[s.profile,s.title||s.profile]));favoritesReady=true;
+  for(const [id,title] of favoriteTitles){const p=profiles.find(p=>p.id===id);if(p&&!p.loaded)p.title=title}
+ }catch(e){if(accessKey===key){favoritesReady=false;failUI(e)}}
+ finally{favoritesLoading=false;favoritesReadAt=Date.now();renderHomeFavorites();if(state.page==='profiles')renderProfiles()}
+}
+function renderHomeFavorites(){
+ const container=$('#home-favorites');
+ const entries=Array.from({length:5},(_,i)=>{const id=favorites[i]||'',p=profiles.find(p=>p.id===id);return {id,title:!favoritesReady?'—':!id?'空位置':id===state.current?current().title:favoriteTitles.get(id)||p?.title||id}});
+ const signature=JSON.stringify([favoritesReady,entries]);
+ if(container.dataset.signature!==signature){container.dataset.signature=signature;
+  container.innerHTML=entries.map(({id,title},i)=>`<button class="quick-profile" data-home-fav="${esc(id)}" ${id?'data-verbatim':''} title="${esc(title)}"><span class="slot" aria-hidden="true">${i+1}</span><span class="name">${esc(title)}</span></button>`).join('');
+  container.querySelectorAll('[data-home-fav]').forEach(b=>b.onclick=()=>loadHomeFavorite(b.dataset.homeFav));
+ }
+ container.querySelectorAll('[data-home-fav]').forEach(b=>{const selected=!!b.dataset.homeFav&&b.dataset.homeFav===state.current;b.classList.toggle('chosen',selected);b.setAttribute('aria-pressed',String(selected));b.disabled=!favoritesReady||!b.dataset.homeFav||!state.authenticated||!state.connected||state.busy||!['Idle','Sleep'].includes(state.machine)});
+ $('#home-favorite-edit').disabled=!state.authenticated||state.busy||!favoritesReady;
+}
+function loadHomeFavorite(id){
+ if(!id||!favoritesReady||!favorites.includes(id)||!state.authenticated||!state.connected||state.busy||!['Idle','Sleep'].includes(state.machine))return;
+ if(id===state.current)return;
+ discardThen(()=>{if(!state.connected||state.busy||!['Idle','Sleep'].includes(state.machine))return;if(favoritesLoading){receipt('常用曲线正在更新，请稍后再选。','warn');return}if(!favoritesReady||!favorites.includes(id)){receipt('常用曲线已改变，请重新选择。','warn');return}loadProfile({id})});
+}
+async function readLibraryProfile(id){
+ if(id===state.current)return current();if(profileCache.has(id))return profileCache.get(id);
+ if(profileReads.has(id))return profileReads.get(id);
+ const reading=(async()=>{
+ const filename=id+'.tcl',text=await api('/api/v1/profiles/'+encodeURIComponent(filename));let p;
+ const src=tclDictionary(text);
+ if(src.advanced_shot_tcl&&src.advanced_shot_tcl.trim())throw new Error('此曲线包含脚本，请在平板查看。');
+ if(['settings_2c','settings_2c2'].includes(src.settings_profile_type))p=normalizeImportedProfile(text,filename).profile;
+ else if(['settings_2a','settings_2b'].includes(src.settings_profile_type))p={title:src.profile_title||id,dose:finite(src.profile_grinder_dose_weight),yield:finite(src.final_desired_shot_weight),temp:finite(src.espresso_temperature),type:'原生基本曲线',steps:[],editable:false,basic:basicParameters(src)};
+ else p={title:src.profile_title||id,type:'暂不支持的曲线类型',steps:[],editable:false,unsupported:true};
+ p={...p,id,filename,source:text,loaded:true};profileCache.set(id,p);const ix=profiles.findIndex(x=>x.id===id);if(ix>=0)profiles[ix]=p;return p;
+ })();profileReads.set(id,reading);
+ try{return await reading}finally{profileReads.delete(id)}
+}
+
+async function go(page){state.page=page;$$('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+page));$$('nav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ if(page==='current'){renderHomeFavorites();if(state.authenticated)refreshFavorites()}
+ if(page==='profiles'){renderProfiles();if(state.authenticated)refreshLibrary().catch(failUI)}
+ if(page==='history'){renderHistory();if(state.authenticated)refreshHistory().catch(failUI)}
+ if(page==='settings'){renderSettings();if(state.authenticated)loadSettings().catch(failUI)}requestAnimationFrame(drawCharts);
+}
+async function poll(){
+ if(polling||!accessKey||document.hidden)return;const pollingKey=accessKey;polling=true;
+ try{const s=await api('/api/v1/status',{timeout:6000});if(accessKey!==pollingKey)return;const old=state.machine;state.status=s;state.connected=!!s.connected;state.machine=s.state;state.remoteStart=!!s.remote_start_enabled;state.authenticated=true;
+  if(s.connected&&$('#receipt').dataset.message==='连接中断 · 等待恢复')receipt('已连接 · 状态由 App 读取','ok');
+  renderReadouts();updateRecipeDirty();
+  if(state.pendingId&&state.recovering){try{const r=await api('/api/v1/requests/'+state.pendingId);if(!r.in_flight){state.pendingId=null;state.recovering=false;state.busy=false;receipt(receiptLabel(r),r.device_confirmed?'ok':'warn');await refreshProfile()}}catch{}}
+  if(!state.busy&&(!state.current||s.recipe?.profile!==state.current||Date.now()-(state.profileReadAt||0)>6000))await refreshProfile();
+  if(state.page==='current'&&!state.busy&&Date.now()-favoritesReadAt>15000)await refreshFavorites();
+  if(s.state==='Espresso'){const details=await api('/api/status/details');liveChart=chartFromLive(details);drawCharts()}
+  else if(old==='Espresso'){liveChart=null;await refreshHistory();await refreshProfile()}
+ }catch(e){if(accessKey!==pollingKey)return;state.connected=false;state.status=null;state.remoteStart=false;renderReadouts();updateRecipeDirty();receipt(e.status===401?'访问密钥无效':'连接中断 · 等待恢复','warn');if(e.status===401){state.authenticated=false;accessKey='';forgetKey(pollingKey);clearInterval(pollTimer);if(!$('#dialog').open){connectionDialog();$('#login-error').textContent='密钥已变更，请重新连接。'}}}finally{polling=false}
+}
+function renderReadouts(){const s=state.connected?state.status:null;const v=[[s?.temperature_c,1,'°C'],[s?.pressure_bar,2,'bar'],[s?.flow_ml_s,2,'mL/s'],[s?.scale_connected?s.scale_weight_g:null,1,'g']];$('#readouts').innerHTML=['咖啡温度','压力','机器流量','杯重'].map((l,i)=>`<div class="reading"><div class="label">${l}</div><div class="value"><strong>${fmt(v[i][0],v[i][1])}</strong><em>${v[i][2]}</em></div></div>`).join('');
+ $('#machine-state').textContent=state.connected?displayState(state.machine):'未连接';$('#connect-button').textContent=state.authenticated?'连接设置':'连接';
+ $('#wake-button').disabled=!state.connected||state.machine!=='Sleep';$('#sleep-button').disabled=!state.connected||state.machine!=='Idle';$('#tare-button').disabled=!state.connected||!s?.scale_connected;$('#stop-button').disabled=!state.connected;
+ $('#brew-button').disabled=!state.connected||!state.remoteStart||state.machine!=='Idle'||state.busy;$('#brew-button').textContent=state.remoteStart?'开始萃取':'启动已锁定';$('#lock-label').innerHTML=icon('lock')+(state.remoteStart?'远程启动已启用':'远程启动已锁定');
+  renderHomeFavorites();
+}
+function updateRecipeDirty(){const dirty=!!state.recipeDraft;$('#recipe-note').textContent=state.busy?'正在等待操作结果…':dirty?'参数已修改，尚未应用':needsProfileConfirmation()&&profileTransferAttempted?'曲线发送尚未确认':state.applied?'当前曲线有未保存修改':'';$('#apply-recipe').disabled=!dirty||state.busy||!state.connected;$('#apply-recipe').textContent=state.busy?'正在发送…':'应用参数';if(dirty&&!state.busy){const b=document.createElement('button');b.id='discard-recipe';b.className='quiet small';b.textContent='放弃';b.onclick=()=>{state.recipeDraft=null;renderHome()};$('#recipe-note').append(b)}$('#edit-current').disabled=!state.current}
+function unsaved(){return state.dirty||state.applied||!!state.recipeDraft}
+function discardThen(action){if(!unsaved()){action();return}modal('当前曲线有未保存修改','切换会放弃当前修改。','',[{label:'取消'},{label:'放弃修改并切换',run:()=>{$('#dialog').close();action()}}])}
+async function selectProfile(id){if(!id)return;if(state.dirty&&state.selected!==id){modal('编辑内容还没有应用','先保留当前编辑，或放弃后查看其他曲线。','',[{label:'保留编辑'},{label:'放弃并查看',run:()=>{state.dirty=false;state.draft=copy(current());$('#dialog').close();selectProfile(id)}}]);return}
+ state.selected=id;state.step=0;const ticket=++profileTicket;const target=profiles.find(p=>p.id===id);if(target){target.readFailed=false;target.readError=''}renderEditor();try{await readLibraryProfile(id);if(ticket===profileTicket)renderProfiles()}catch(e){if(target){target.readFailed=true;target.readError=errorMessage(e)}if(ticket===profileTicket){renderEditor();failUI(e)}}
+}
+function renderProfiles(){const q=$('#profile-search').value.toLowerCase();$('#favorites').innerHTML='<span>常用</span>'+favorites.map((id,i)=>`<button data-fav="${esc(id)}" title="${esc(profiles.find(p=>p.id===id)?.title||'空位置')}" ${!id?'disabled':''} class="${id===state.current?'chosen':''}">${i+1}</button>`).join('');$$('[data-fav]').forEach(b=>b.onclick=()=>selectProfile(b.dataset.fav));$('#profile-list').innerHTML=profiles.filter(p=>(p.title+' '+p.id).toLowerCase().includes(q)).map(p=>`<button class="list-item ${p.id===state.selected?'active':''}" data-profile="${esc(p.id)}"><span class="row"><strong ${p.loaded||p.id===state.current?'data-verbatim':''}>${p.loaded||p.id===state.current?esc(p.title):p.readFailed?'曲线读取失败':'正在读取曲线…'}</strong>${p.id===state.current?'<span class="tag good">当前</span>':''}</span><span>${p.loaded||p.id===state.current?shownNumber(p.dose)+' g → '+shownNumber(p.yield)+' g · '+shownNumber(p.temp)+'°C':'<span data-verbatim>'+esc(p.id)+'</span>'}</span></button>`).join('')||'<p class="setting-note">没有找到曲线</p>';$$('[data-profile]').forEach(b=>b.onclick=()=>selectProfile(b.dataset.profile));$('#import-button').disabled=!state.authenticated;$('#favorite-edit-button').disabled=!state.authenticated||state.busy;if(!$('#stage-form').contains(document.activeElement))renderEditor()}
+async function loadProfile(p){await busyWork('载入曲线',async()=>{const result=await send('/api/v1/profiles/'+encodeURIComponent(p.id+'.tcl'),undefined,'PUT');await refreshProfile({force:true});resetProfileConfirmation();profileTransferAttempted=true;rememberProfileConfirmation(result)})}
+async function ensureUnchanged(base){const p=await api('/api/v1/profile');if(JSON.stringify(p)!==JSON.stringify(base))throw new Error('平板上的曲线已改变，请重新读取后编辑')}
+async function applyEditor(){const p=state.draft;await ensureUnchanged(p.raw);const payload={steps:p.steps.map(stepPayload)};const result=await send('/api/v1/profile',payload);await refreshProfile({force:true});rememberProfileConfirmation(result);return result}
+function validEditor(){return $$('#stage-form input[data-field]').every(el=>el.value!==''&&el.reportValidity())}
+async function editorAction(kind){
+ if(!validEditor())return;
+ if(state.recipeDraft){info('参数尚未应用','请先应用或放弃主页上的配方修改。');return}
+ await busyWork(kind==='save'?'保存曲线':'临时应用',async()=>{
+  state.dirty=editorChanged();
+  if(kind==='save')requireProfileConfirmation({newDraft:state.dirty});
+  if(state.dirty||(kind==='apply'&&needsProfileConfirmation()))await applyEditor();
+  if(kind==='save'){requireProfileConfirmation();await ensureUnchanged(state.draft.raw);await send('/api/v1/profile/save',{});profileCache.delete(state.current);await refreshProfile({force:true});receipt('曲线文件已保存并读回','ok')}
+ });
+}
+function saveAs(){if(!validEditor())return;if(state.recipeDraft){info('参数尚未应用','请先应用或放弃主页上的配方修改。');return}modal('另存一条曲线','保留原曲线。',`<label class="field">曲线名称<input id="new-title" value="${esc(state.draft.title+(language==='en'?' · Copy':' · 我的版本'))}" maxlength="100"></label><label class="field">文件名<input id="new-filename" value="${esc(state.current+'_copy.tcl')}" maxlength="120"></label><span class="dialog-error" id="save-error"></span>`,[{label:'取消'},{label:'另存并载入',class:'primary',run:async()=>{const title=$('#new-title').value.trim(),filename=$('#new-filename').value.trim();if(!title||!filename.endsWith('.tcl')||/[\\/%\x00-\x1f]/.test(filename)){$('#save-error').textContent='请检查名称和 .tcl 文件名';return}$('#dialog').close();await busyWork('另存曲线',async()=>{state.dirty=editorChanged();requireProfileConfirmation({newDraft:state.dirty});if(state.dirty)await applyEditor();else await ensureUnchanged(state.draft.raw);requireProfileConfirmation();await send('/api/v1/profile/save-as',{filename,title});await refreshProfile({force:true});resetProfileConfirmation();await refreshLibrary()})}}])}
+function restoreProfile(){modal('恢复文件中的设置？','放弃本次尚未保存的修改。','',[{label:'取消'},{label:'恢复',run:()=>{$('#dialog').close();busyWork('恢复曲线',async()=>{await send('/api/v1/profile/restore',{});await refreshProfile({force:true});resetProfileConfirmation()})}}])}
+function download(name,data,type='text/plain;charset=utf-8'){const a=document.createElement('a'),u=URL.createObjectURL(new Blob([typeof data==='string'?data:JSON.stringify(data,null,2)],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+async function exportProfile(p){try{const text=await api('/api/v1/profiles/'+encodeURIComponent(p.id+'.tcl'));download(p.id+'.tcl',text)}catch(e){failUI(e)}}
+// The chart plots supplied telemetry samples, never generated or interpolated data.
+function chartFromShot(raw,id){
+ const elapsed=Array.isArray(raw.elapsed)?raw.elapsed:[],rows=[];
+ for(let i=0;i<elapsed.length;i++){const t=finite(elapsed[i]);if(t===null||t<0)continue;
+  rows.push({t,pressure:finite(raw.pressure?.pressure?.[i]),flow:finite(raw.flow?.flow?.[i]),cupflow:finite(raw.flow?.by_weight?.[i]),temp:finite(raw.temperature?.basket?.[i]),weight:finite(raw.totals?.weight?.[i]),goal:{pressure:(finite(raw.pressure?.goal?.[i])??-1)>=0?finite(raw.pressure?.goal?.[i]):null,flow:(finite(raw.flow?.goal?.[i])??-1)>=0?finite(raw.flow?.goal?.[i]):null,temp:finite(raw.temperature?.goal?.[i])},state:raw.state_change?.[i]});
+ }
+ rows.sort((a,b)=>a.t-b.t);const cuts=[];
+ // Native state_change is a transition marker, not the pressure or flow target.
+ for(let i=1;i<rows.length;i++)if(finite(rows[i].state)!==null&&i>1&&finite(rows[i].state)!==0&&rows[i].state!==rows[i-1].state)cuts.push(rows[i].t);
+ return {id,rows,cuts,duration:rows.at(-1)?.t||0,title:raw.profile?.title||id};
+}
+function chartFromLive(d){return chartFromShot({elapsed:d.espresso_elapsed,pressure:{pressure:d.espresso_pressure},flow:{flow:d.espresso_flow,by_weight:d.espresso_flow_weight},temperature:{basket:d.espresso_temperature_basket},totals:{weight:d.espresso_weight}},'live')}
+function historyTime(id){const m=id.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/);return m?`${m[1]}-${m[2]}-${m[3]} ${m[4]}:${m[5]}:${m[6]}`:id}
+function rawShotJson(text){const d=tclDictionary(text),vector=k=>d[k]?tclList(d[k]):[];let profile={};try{profile=d.settings?tclDictionary(d.settings):d}catch{};return {elapsed:vector('espresso_elapsed'),pressure:{pressure:vector('espresso_pressure'),goal:vector('espresso_pressure_goal')},flow:{flow:vector('espresso_flow'),by_weight:vector('espresso_flow_weight'),goal:vector('espresso_flow_goal')},temperature:{basket:vector('espresso_temperature_basket'),goal:vector('espresso_temperature_goal')},totals:{weight:vector('espresso_weight')},state_change:vector('espresso_state_change'),profile:{title:profile.profile_title||d.profile_title||'',reference_file:profile.profile_filename||''},meta:{in:profile.grinder_dose_weight||d.grinder_dose_weight,out:d.drink_weight||vector('espresso_weight').at(-1),time:vector('espresso_elapsed').at(-1)}}}
+async function readShot(r){
+ if(shotCache.has(r.id))return shotCache.get(r.id);
+ if(shotReads.has(r.id))return shotReads.get(r.id);
+ const reading=(async()=>{
+ let raw,jsonText=null;
+ if(r.hasJson){jsonText=await api('/api/v1/shots/json/'+encodeURIComponent(r.id+'.json'));raw=jsonText}
+ else raw=rawShotJson(await api('/api/v1/shots/'+encodeURIComponent(r.id+'.shot')));
+ const out={...r,title:raw.profile?.title||r.id,dose:finite(raw.meta?.in),yield:finite(raw.meta?.out)??finite(raw.totals?.weight?.at(-1)),temp:finite(raw.profile?.steps?.[0]?.temperature),duration:finite(raw.meta?.time)??finite(raw.elapsed?.at(-1)),ref:raw.profile?.reference_file||'',raw,chart:chartFromShot(raw,r.id)};
+ shotCache.set(r.id,out);const ix=history.findIndex(x=>x.id===r.id);if(ix>=0)history[ix]=out;return out;
+ })();shotReads.set(r.id,reading);
+ try{return await reading}finally{shotReads.delete(r.id)}
+}
+async function fillHistoryList(ticket){
+ // Two reads at a time leave room for status polling and manual selection.
+ // Reuse the same in-flight read if a row is selected before it has loaded.
+ const queue=history.filter(r=>!shotCache.has(r.id)&&!r.readFailed);
+ async function next(){while(queue.length&&ticket===historyListTicket&&state.page==='history'){
+  const r=queue.shift();try{await readShot(r)}catch(e){r.readFailed=true}
+  if(ticket===historyListTicket&&state.page==='history')renderHistory();
+ }}
+ await Promise.all([next(),next()]);
+}
+function showLastShot(shot){lastShot=shot;$('#home-chart').closest('.chart-panel').querySelector('.chart-head>span').textContent=shot?'上一杯 · '+shot.time:'上一杯';drawCharts()}
+async function refreshHistory(){
+ const ticket=++historyListTicket;
+ const result=await Promise.allSettled([api('/api/v1/shots/json'),api('/api/v1/shots')]);
+ const jsons=result[0].status==='fulfilled'&&Array.isArray(result[0].value)?result[0].value:[],raws=result[1].status==='fulfilled'&&Array.isArray(result[1].value)?result[1].value:[];
+ if(result.every(r=>r.status==='rejected'))throw result[0].reason;
+ const selected=history[state.history]?.id;
+ const ids=[...new Set([...jsons.map(n=>n.replace(/\.json$/,'')),...raws.map(n=>n.replace(/\.shot$/,''))])].sort().reverse();
+ history=ids.map(id=>shotCache.get(id)||{id,title:id,time:historyTime(id),hasJson:jsons.includes(id+'.json'),hasRaw:raws.includes(id+'.shot')});
+ state.history=Math.max(0,history.findIndex(r=>r.id===selected));$('#view-history .page-title>.tiny').textContent=history.length+' 条记录';
+ // Show the index before reading any detail: a broken latest shot must not
+ // hide older records or prevent the user from selecting a retry.
+ if(state.page==='history')renderHistory();
+ if(history[0]){try{showLastShot(await readShot(history[0]))}catch(e){history[0].readFailed=true;showLastShot(null)}}else showLastShot(null);
+ if(state.page==='history'){renderHistory();fillHistoryList(ticket);if(!history[state.history]?.readFailed)await selectHistory(state.history)}
+}
+async function selectHistory(i){state.history=i;const ticket=++historyTicket;renderHistory();const r=history[i];if(!r)return;try{const shot=await readShot(r);if(r.id===history[0]?.id)showLastShot(shot);if(ticket===historyTicket)renderHistory()}catch(e){r.readFailed=true;if(r.id===history[0]?.id)showLastShot(null);if(ticket===historyTicket){renderHistory();failUI(e)}}}
+function renderHistory(){const q=$('#history-search').value.toLowerCase();$('#history-list').innerHTML=history.map((r,i)=>({...r,index:i})).filter(r=>(r.title+r.time).toLowerCase().includes(q)).map(r=>`<button class="list-item ${r.index===state.history?'active':''}" data-history="${r.index}"><span class="tiny">${esc(r.time)}</span><strong ${shotCache.has(r.id)?'data-verbatim':''}>${shotCache.has(r.id)?esc(r.title):(r.readFailed?'记录读取失败':'正在读取记录…')}</strong><span>${shownNumber(r.dose)} → ${shownNumber(r.yield)} g · ${shownNumber(r.duration)} s</span></button>`).join('')||'<p class="setting-note">没有匹配的记录</p>';$$('[data-history]').forEach(b=>b.onclick=()=>selectHistory(+b.dataset.history));const r=history[state.history];$('#history-metrics').innerHTML=[['粉量',r?.dose,'g'],['出液',r?.yield,'g'],['总时长',r?.duration,'s'],['设定温度',r?.temp,'°C']].map(([l,v,u])=>`<div class="reading"><div class="label">${l}</div><div class="value"><strong>${v==null?'—':fmt(v,1)}</strong><em>${u}</em></div></div>`).join('');$('#history-chart-title').toggleAttribute('data-verbatim',!!r&&shotCache.has(r.id));$('#history-chart-title').textContent=r?(shotCache.has(r.id)?r.title:r.readFailed?'记录读取失败':'正在读取记录…'):'尚无记录';$('#download-raw').disabled=!r?.hasRaw;$('#download-json').disabled=!r?.hasJson;$('#history-next').disabled=!r?.ref||!profiles.some(p=>p.id===r.ref)||state.busy;drawCharts()}
+async function historyDownload(json){const r=history[state.history];if(!r)return;try{const suffix=json?'.json':'.shot';const raw=await api('/api/v1/shots/'+(json?'json/':'')+encodeURIComponent(r.id+suffix));download(r.id+suffix,raw,json?'application/json':'text/plain;charset=utf-8')}catch(e){failUI(e)}}
+function drawCharts(){draw('home-chart',liveChart||lastShot?.chart);draw('history-chart',history[state.history]?.chart);if($('#zoom-chart'))draw('zoom-chart',zoomSource==='history-chart'?history[state.history]?.chart:liveChart||lastShot?.chart)}
+function expandChart(source){zoomSource=source;const r=source==='history-chart'?history[state.history]:lastShot;modal(r?.title||'曲线','',`<div class="zoom-chart-panel"><div class="zoom-caption"><span>记录数据</span><div class="legend" data-chart="zoom-chart"></div></div><svg id="zoom-chart" class="chart" role="img" aria-label="放大曲线"></svg></div>`,[{label:'返回'}]);if(r?.title)$('#dialog-title').setAttribute('data-verbatim','');$('#dialog').classList.add('chart-dialog');renderLegends();requestAnimationFrame(drawCharts)}
+
+const groupEndpoint={water:'/controls',scale:'/scale',preheat:'/settings',schedule:'/scheduler',charge:'/charging',flow:'/flow-compensation',shortcuts:'/shortcuts'};
+const groupFields={flushFlow:'flush_flow_ml_s',flushTime:'flush_timeout_s',waterFlow:'hotwater_flow_ml_s',waterTemp:'hotwater_temperature_c',waterWeight:'hotwater_target',waterTime:'hotwater_timeout_s',waterScale:'water_stop_on_scale',steamOn:'steam_enabled',steamFlow:'steam_flow_ml_s',steamTemp:'steam_temperature_c',steamTime:'steam_timeout_s',requireScale:'require_scale',keepScale:'keep_scale_on',stopEarly:'stop_before_s',phase1:'preheat_phase1_flow_ml_s',phase2:'preheat_phase2_flow_ml_s',timeout:'preheat_timeout_s',idleTemp:'idle_temperature_c',sleep:'sleep_timeout_minutes',awakeBright:'awake_brightness',sleepBright:'sleep_brightness',scheduleOn:'enabled',wakeTime:'wake_time',awakeUntil:'awake_until',chargeMode:'smart_charging_mode',usb:'machine_usb_enabled',flowOn:'enabled'};
+async function loadSettings(){const id=state.settingGroup,ticket=++settingsTicket;state.settingError='';try{const response=await api('/api/v1'+groupEndpoint[id]);if(ticket!==settingsTicket)return;settingsCache.set(id,response);if(!state.settingDirty){for(const f of groups[id].fields)settings[f[0]]=response[groupFields[f[0]]];settingDraft=copy(settings)}renderSettings()}catch(e){if(ticket===settingsTicket){state.settingError=errorMessage(e);renderSettings()}}}
+function changeGroup(id){const run=()=>{state.settingGroup=id;state.settingDirty=false;settingDraft=copy(settings);state.settingError='';renderSettings();if(state.authenticated)loadSettings()};if(state.settingDirty)modal('当前设置尚未应用','切换分组会放弃未应用的设置。','',[{label:'继续编辑'},{label:'放弃并切换',run:()=>{$('#dialog').close();run()}}]);else run()}
+function renderSettings(){const g=groups[state.settingGroup],raw=settingsCache.get(state.settingGroup);$('#settings-nav').innerHTML=Object.entries(groups).map(([id,v])=>`<button data-group="${id}" class="${id===state.settingGroup?'active':''}">${v.label}</button>`).join('');$$('[data-group]').forEach(b=>b.onclick=()=>changeGroup(b.dataset.group));$('#settings-title').textContent=g.label;$('#settings-description').textContent=g.desc;
+ if(state.settingError||!raw){$('#settings-body').innerHTML=`<p class="setting-note">${esc(state.settingError||'等待连接')}</p>`;updateSettingsDirty();return}
+ if(state.settingGroup==='shortcuts'){$('#settings-body').innerHTML='<div class="shortcut-grid">'+['dose_yield','temperatures'].map(key=>(raw[key]||[]).map((r,i)=>`<div class="setting-row"><label>${key==='dose_yield'?'配方':'温度'} ${r.slot}</label><div class="control">${Object.entries(r).filter(([k])=>k!=='slot').map(([k,v])=>`<span class="field-unit"><input type="number" aria-label="${key} ${i+1} ${k}" data-shortcut="${key}:${i}:${k}" value="${esc(v)}" min="${k==='dose_g'?.1:0}" max="${k==='dose_g'?30:k==='yield_g'?2000:105}" step="0.1"><span>${k==='temperature_c'?'°C':'g'}</span></span>`).join('')}</div></div>`).join('')).join('')+'</div>';$$('[data-shortcut]').forEach(el=>el.oninput=()=>{state.settingDirty=true;updateSettingsDirty()});updateSettingsDirty();return}
+ $('#settings-body').innerHTML=g.fields.map(f=>{const[k,label,,unit,min,max,step]=f,v=settingDraft[k],available=v!==undefined;let c='';if(unit==='toggle')c=`<button class="toggle" role="switch" aria-checked="${!!v}" aria-label="${label}" data-setting="${k}" ${!available?'disabled':''}></button>`;else if(unit==='select')c=`<select data-setting="${k}" aria-label="${label}">${min.map(([val,t])=>`<option value="${val}" ${v===val?'selected':''}>${t}</option>`).join('')}</select>`;else c=`<span class="field-unit"><input aria-label="${label}" data-setting="${k}" type="${unit==='time'?'time':'number'}" value="${esc(v??'')}" ${!available?'disabled':''} ${unit!=='time'?`min="${min}" max="${max}" step="${step}"`:''}>${unit==='time'?'':`<span>${k==='waterWeight'?esc(raw.hotwater_target_unit||unit):unit}</span>`}</span>`;return `<div class="setting-row"><label>${label}</label><div class="control" ${unit==='toggle'?'style="width:48px"':''}>${c}</div></div>`}).join('');
+ if(state.settingGroup==='flow'){$('#settings-body').innerHTML+=`<p class="setting-note" data-verbatim>${esc(raw.last_message||raw.last_state||'')} · ${esc(raw.last_profile||'')}</p>`+(raw.changes?.length?'<table class="mini-table"><thead><tr><th>目标流量</th><th>发送指令</th><th>估计实际流量</th></tr></thead><tbody>'+raw.changes.map(c=>`<tr><td>${fmt(c.target,2)} mL/s</td><td>${fmt(c.command,2)} mL/s</td><td>${fmt(c.estimate,2)} g/s</td></tr>`).join('')+'</tbody></table>':'')}
+ if(g.note)$('#settings-body').innerHTML+=`<p class="setting-note">${esc(g.note)}</p>`;
+ if(state.settingGroup==='water'){$('#settings-body').innerHTML+=`${raw.hotwater_target_warning?'<p class="setting-note">'+esc(raw.hotwater_target_warning)+'</p>':''}<div class="water-actions">${[['flush','冲洗'],['hotwater','热水'],['steam','蒸汽']].map(([k,n])=>`<button data-start="${k}" ${!state.remoteStart||state.busy?'disabled':''}>${n}</button>`).join('')}</div>`;$$('[data-start]').forEach(b=>b.onclick=()=>confirmStart(b.dataset.start))}
+ $$('[data-setting]').forEach(el=>{if(el.tagName==='BUTTON')el.onclick=()=>{settingDraft[el.dataset.setting]=!settingDraft[el.dataset.setting];state.settingDirty=true;renderSettings()};else el.oninput=()=>{settingDraft[el.dataset.setting]=el.type==='number'?(el.value===''?null:Number(el.value)):el.value;state.settingDirty=true;updateSettingsDirty()}});updateSettingsDirty();
+}
+function updateSettingsDirty(){$('#settings-note').textContent=state.settingDirty?'有未应用的修改':'';$('#apply-settings').disabled=!state.settingDirty||state.busy||!state.connected||!!state.settingError}
+async function applySettings(){if(!$$('#settings-body input').every(i=>i.value!==''&&i.reportValidity()))return;const id=state.settingGroup;let payload={};if(id==='shortcuts'){payload=copy(settingsCache.get(id));delete payload.readback;$$('[data-shortcut]').forEach(el=>{const[k,i,f]=el.dataset.shortcut.split(':');payload[k][i][f]=Number(el.value)})}else for(const f of groups[id].fields){const k=f[0];if(settingDraft[k]!==settings[k])payload[groupFields[k]]=settingDraft[k]}
+ if(!Object.keys(payload).length){state.settingDirty=false;updateSettingsDirty();return}
+ await busyWork('应用设置',async()=>{await send('/api/v1'+groupEndpoint[id],payload);state.settingDirty=false;await loadSettings();receipt('设置已由 App 读回','ok')})
+}
+async function editFavorites(){if(!profiles.length)return;const choices=[{id:'',title:'空位置'},...profiles];modal('常用曲线','调整位置不会载入或启动曲线。',Array.from({length:5},(_,i)=>`<label class="field">位置 ${i+1}<select data-favorite-slot="${i}">${choices.map(p=>`<option value="${esc(p.id)}" ${p.id===favorites[i]?'selected':''}>${esc(p.title)}</option>`).join('')}</select></label>`).join(''),[{label:'取消'},{label:'保存位置',class:'primary',run:async()=>{const next=$$('[data-favorite-slot]').map(e=>e.value);if(new Set(next.filter(Boolean)).size!==next.filter(Boolean).length){$('#dialog-description').textContent='同一条曲线不能占用两个常用位置。';return}$('#dialog').close();await busyWork('保存常用位置',async()=>{await send('/api/v1/favorites',{slots:next.map((profile,i)=>({slot:i+1,profile}))});await refreshLibrary()})}}])}
+const rememberedKeyName='decent-remote-access-key';
+function rememberedKey(){try{return localStorage.getItem(rememberedKeyName)||''}catch{return ''}}
+function forgetKey(expected){try{if(expected===undefined||localStorage.getItem(rememberedKeyName)===expected)localStorage.removeItem(rememberedKeyName)}catch{}}
+function storeKey(key,remember){try{if(remember)localStorage.setItem(rememberedKeyName,key);else localStorage.removeItem(rememberedKeyName);return true}catch{return false}}
+function disconnect(){forgetKey();accessKey='';state.authenticated=false;state.connected=false;state.status=null;state.remoteStart=false;clearInterval(pollTimer);renderReadouts();updateRecipeDirty();$('#dialog').close();receipt('已断开','warn')}
+function connectionDialog(){
+ const saved=rememberedKey();
+ modal('连接咖啡机',location.host,`<label class="field">访问密钥<span class="key-input"><input id="access-key" type="password" autocomplete="off" spellcheck="false" placeholder="admin1234" maxlength="128"><button id="show-access-key" type="button" aria-pressed="false">显示</button></span></label><label class="remember-row"><input id="remember-connection" type="checkbox" ${saved?'checked':''}>记住连接<span class="tiny">仅限自己的设备</span></label><p class="tiny connection-help">仅全新安装默认：admin1234；更新后保留原密钥。<br>修改密钥：平板 → 设定 → 程序 → 插件 → Decent Remote → 设置</p><span id="login-error" class="dialog-error"></span>`,[{label:'关闭'},...(state.authenticated||saved?[{label:saved?'忘记连接':'断开',run:disconnect}]:[]),{label:'连接',class:'primary',run:connect}]);
+ $('#access-key').value=accessKey||saved||'admin1234';
+ $('#show-access-key').onclick=()=>{const input=$('#access-key'),show=input.type==='password';input.type=show?'text':'password';$('#show-access-key').textContent=show?'隐藏':'显示';$('#show-access-key').setAttribute('aria-pressed',String(show))};
+ $('#access-key').onkeydown=e=>{if(e.key==='Enter')connect()};$('#access-key').focus();$('#access-key').select();
+}
+function startConnection(){const saved=rememberedKey();connectionDialog();if(saved)connect()}
+async function connect(){
+ const input=$('#access-key'),key=input?.value,remember=!!$('#remember-connection')?.checked,button=$('#dialog-actions .primary');
+ if(!key||!button||button.disabled)return;button.disabled=true;accessKey=key;
+ try{
+  const s=await api('/api/v1/status');const persisted=storeKey(key,remember);
+  state.authenticated=true;state.connected=!!s.connected;state.status=s;state.machine=s.state;state.remoteStart=!!s.remote_start_enabled;
+  $('#dialog').close();renderReadouts();clearInterval(pollTimer);pollTimer=setInterval(poll,1200);
+  await refreshProfile({force:true}).catch(failUI);await refreshLibrary().catch(failUI);await refreshHistory().catch(failUI);
+  receipt(persisted?'已连接 · 状态由 App 读取':'已连接 · 浏览器未允许记住连接',persisted?'ok':'warn');if(state.page==='settings')loadSettings();
+ }catch(e){
+  if(e.status===401){forgetKey(key);$('#remember-connection').checked=false}
+  accessKey='';state.authenticated=false;state.connected=false;state.status=null;state.remoteStart=false;renderReadouts();updateRecipeDirty();
+  if($('#login-error'))$('#login-error').textContent=e.status===401?'密钥不正确，请在平板插件设置中查看。':errorMessage(e);else failUI(e);
+ }finally{button.disabled=false}
+}
+function confirmStart(kind){if(!state.remoteStart)return;modal('确认启动？',({espresso:'萃取',flush:'冲洗',steam:'蒸汽',hotwater:'热水'})[kind],'',[{label:'取消'},{label:'启动',class:'danger',run:()=>{$('#dialog').close();machineAction(kind)}}])}
+async function machineAction(kind){if(['espresso','flush','steam','hotwater'].includes(kind)&&!state.remoteStart)return;const run=async()=>{await send('/api/v1/machine/'+kind,{});await poll()};if(kind==='stop'){try{await run()}catch(e){failUI(e)}}else await busyWork(displayState(kind),run)}
+function init(){
+ const labels={current:'当前',profiles:'曲线',history:'历史',settings:'设置'};$$('nav [data-page]').forEach(b=>{b.innerHTML=icon(b.dataset.page)+labels[b.dataset.page];b.onclick=()=>navigate(b.dataset.page)});
+ $('#about-button').innerHTML=icon('info');$('#about-button').onclick=()=>info('Decent Remote','0.3.4 · 原生控制与状态读回');$('#edit-current').innerHTML=icon('edit');$('#edit-current').onclick=()=>{state.selected=state.current;navigate('profiles')};$('#goto-profiles').onclick=()=>navigate('profiles');
+ $('#connect-button').onclick=connectionDialog;$('#apply-recipe').onclick=()=>{if(!$$('#recipe-fields input').every(i=>i.value!==''&&i.reportValidity()))return;const d=state.recipeDraft,payload={};for(const[k,v]of Object.entries({dose:'dose_g',yield:'yield_g',temp:'temperature_c'}))if(d[k]!==current()[k])payload[v]=d[k];if(!Object.keys(payload).length){state.recipeDraft=null;renderHome();return}busyWork('应用参数',async()=>{await ensureUnchanged(d.raw);const result=await send('/api/v1/profile',payload);await refreshProfile({force:true});rememberProfileConfirmation(result)})};
+ $('#wake-button').onclick=()=>machineAction('wake');$('#sleep-button').onclick=()=>machineAction('sleep');$('#stop-button').onclick=()=>machineAction('stop');$('#brew-button').onclick=()=>confirmStart('espresso');$('#tare-button').onclick=()=>busyWork('秤清零',async()=>{await send('/api/v1/scale/tare',{});await poll()});
+ $('#profile-search').oninput=renderProfiles;$('#history-search').oninput=renderHistory;$('#download-json').onclick=()=>historyDownload(true);$('#download-raw').onclick=()=>historyDownload(false);
+  $('#history-next').onclick=()=>{const r=history[state.history];if(r?.ref)discardThen(()=>loadProfile({id:r.ref}))};$('#apply-settings').onclick=applySettings;$('#import-button').onclick=openImport;$('#import-file').onchange=()=>readImportFile($('#import-file').files[0]);$('#favorite-edit-button').onclick=editFavorites;$('#home-favorite-edit').innerHTML=icon('edit');$('#home-favorite-edit').onclick=editFavorites;
+ renderHome();renderLegends();renderProfiles();renderHistory();renderSettings();go('current');window.addEventListener('resize',drawCharts);document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+ window.addEventListener('beforeunload',e=>{if(state.dirty||state.recipeDraft||state.settingDirty||state.pendingId){e.preventDefault();e.returnValue=''}});
+}
+let importReadTicket=0;
+function openImport(){modal('上传曲线','先预览，再加入曲线库。',`<button class="upload-zone" id="choose-upload">${icon('profiles')}<strong>选择文件，或拖到这里</strong><small>.tcl / .json · de1app</small></button><p class="upload-error" id="upload-error" hidden></p>`,[{label:'取消'}]);$('#dialog').classList.add('import-dialog');$('#choose-upload').onclick=chooseImportFile}
+function chooseImportFile(){const el=$('#import-file');el.value='';el.click()}
+async function readImportFile(file){if(!file)return;const ticket=++importReadTicket;try{if(file.size>1048576)throw new Error('文件超过 1 MB，请选择单条曲线。');const text=await file.text();if(ticket!==importReadTicket)return;const data=normalizeImportedProfile(text,file.name);await api('/api/v1/profiles/import',{method:'POST',id:requestId(),data:{filename:'preview_'+Date.now()+'.tcl',content:text,format:file.name.toLowerCase().endsWith('.json')?'json':'tcl',dry_run:true,overwrite:false}});if(ticket!==importReadTicket||!$('#dialog').open)return;showImportPreview(data)}catch(e){if(ticket!==importReadTicket)return;openImport();$('#upload-error').hidden=false;$('#upload-error').textContent=errorMessage(e)}}
+function tclWord(v){return '"'+String(v).replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\$/g,'\\$').replace(/\[/g,'\\[').replace(/\]/g,'\\]').replace(/\r/g,'\\r').replace(/\n/g,'\\n')+'"'}
+function importContent(data,title){if(data.source.format==='Tcl'){const d=tclDictionary(data.source.text);d.profile_title=title;return Object.entries(d).map(([k,v])=>k+' '+tclWord(v)).join('\n')+'\n'}const d=JSON.parse(data.source.text);d.title=title;return JSON.stringify(d)}
+function showImportPreview(data){const p=data.profile,base=data.source.filename.replace(/\.(tcl|json)$/i,'');let filename=base+'.tcl',n=2;while(profiles.some(x=>x.id+'.tcl'===filename))filename=base+'_'+(n++)+'.tcl';const missing=n=>n==null?'<small>未提供</small>':n===0?'<small>未启用</small>':n+' <small>g</small>';
+ modal('确认导入','只加入曲线库，载入另点。',`<div class="upload-file"><div><strong data-verbatim>${esc(data.source.filename)}</strong><span class="tiny">${data.source.format} · ${p.steps.length} 段</span></div><button class="quiet" id="reselect-upload">重选文件</button></div><div class="upload-preview"><div class="upload-details"><label class="field">曲线名称<input id="import-title" value="${esc(p.title)}" maxlength="100"></label><label class="field">文件名<input id="import-filename" value="${esc(filename)}" maxlength="120"></label><dl class="upload-metrics"><div><dt>粉量</dt><dd>${missing(p.dose)}</dd></div><div><dt>杯重目标</dt><dd>${missing(p.yield)}</dd></div><div><dt>温度</dt><dd>${p.temp}<small> °C</small></dd></div></dl><p id="import-notice" class="upload-notice" role="status"></p></div><div class="upload-stages"><div class="preview-stages">${p.steps.map((s,i)=>`<div class="preview-stage"><b>${String(i+1).padStart(2,'0')}</b><div><strong>${stageText(s)}</strong><small>${s.temp}°C · ${s.seconds} s · ${s.sensor==='coffee'?'咖啡探头':'水温探头'}${s.weight?' · '+s.weight+' g 切段':''}</small><small>${s.limit?(s.pump==='flow'?'压力上限':'流量上限')+' '+s.limit+(s.pump==='flow'?' bar':' mL/s'):'不限压/流量'}</small></div><span class="num">${s.value}<small>${s.pump==='flow'?'mL/s':'bar'}</small></span></div>`).join('')}</div></div>`,[{label:'取消'},{label:'导入到曲线库',class:'primary',run:async()=>{if(!validateName())return;const title=$('#import-title').value.trim(),filename=$('#import-filename').value.trim(),content=importContent(data,title);$('#confirm-import').disabled=true;await busyWork('导入曲线',async()=>{await send('/api/v1/profiles/import',{filename,content,format:data.source.format==='Tcl'?'tcl':'json',overwrite:false});await refreshLibrary();if(!state.dirty){state.selected=filename.replace(/\.tcl$/,'');await readLibraryProfile(state.selected)}$('#profile-search').value='';$('#dialog').close();renderProfiles();receipt('已加入曲线库 · 未载入','ok')});if($('#confirm-import'))validateName()}}]);
+ $('#dialog').classList.add('import-dialog');$('#reselect-upload').onclick=chooseImportFile;const confirm=$('#dialog-actions .primary');confirm.id='confirm-import';
+ function validateName(){const title=$('#import-title').value.trim(),filename=$('#import-filename').value.trim();let error='';if(!title)error='请输入曲线名称。';else if(!filename.endsWith('.tcl')||filename==='.tcl'||/[\\/%\x00-\x1f]/.test(filename))error='请检查名称和 .tcl 文件名';else if(profiles.some(x=>x.id+'.tcl'===filename))error='文件名已存在，请换一个名称。';confirm.disabled=!!error||state.busy;$('#import-notice').textContent=error;return !error}
+ $('#import-title').oninput=validateName;$('#import-filename').oninput=validateName;validateName();
+}
+
+$$('[data-expand]').forEach(b=>b.onclick=()=>expandChart(b.dataset.expand));
+$('#dialog').addEventListener('close',()=>{chartViews.delete('zoom-chart');chartInspections.delete('zoom-chart');importReadTicket++;$('#dialog').classList.remove('chart-dialog','import-dialog','dragging');$('#dialog-body').innerHTML=''});
+for(const name of ['dragenter','dragover'])$('#dialog').addEventListener(name,e=>{if(!$('#dialog').classList.contains('import-dialog'))return;e.preventDefault();$('#dialog').classList.add('dragging')});
+$('#dialog').addEventListener('dragleave',e=>{if(!$('#dialog').contains(e.relatedTarget))$('#dialog').classList.remove('dragging')});
+$('#dialog').addEventListener('drop',e=>{if(!$('#dialog').classList.contains('import-dialog'))return;e.preventDefault();$('#dialog').classList.remove('dragging');const files=e.dataTransfer.files;if(files.length!==1){openImport();$('#upload-error').hidden=false;$('#upload-error').textContent='请一次选择一条曲线。';return}readImportFile(files[0])});
+
+
+const languageCatalog = {"上传曲线":"Upload profile","确认导入":"Review import","仅在浏览器内预览，刷新后清空。":"Browser preview only. Reload to clear.","只加入曲线库，载入另点。":"Add to the library. Load separately.","选择文件，或拖到这里":"Choose a file or drop it here","重选文件":"Choose another","未提供":"Not specified","未启用":"Disabled","浏览器原型 · 刷新后清空":"Browser demo · Reload to clear","压力上限":"Pressure limit","流量上限":"Flow limit","不限压/流量":"No limit","导入到曲线库":"Add to library","这个文件已经导入。":"This file is already in the library.","请输入曲线名称。":"Enter a profile name.","名称已存在，请换一个名称。":"This name exists. Choose another.","名称已存在，将新增一条，不覆盖。":"Name exists. A separate copy will be added.","已加入原型曲线库 · 未载入":"Added to demo library · Not loaded","本地导入 · 高级曲线":"Local import · Advanced profile","请一次选择一条曲线。":"Select one profile at a time.","文件格式不完整。":"The file is incomplete or malformed.","文件嵌套过深。":"The file has excessive nesting.","文件参数过多。":"The file has too many parameters.","文件含有重复参数。":"The file contains duplicate parameters.","曲线缺少必要参数。":"Required profile parameters are missing.","曲线含有无效数值。":"The profile contains invalid numbers.","曲线名称或分段名称无效。":"The profile or stage name is invalid.","请选择 .tcl 或 .json 曲线文件。":"Choose a .tcl or .json profile.","文件超过 1 MB，请选择单条曲线。":"The file exceeds 1 MB. Choose a single profile.","JSON 格式有误，请检查文件。":"Invalid JSON. Check the file.","没有找到可识别的曲线。":"No supported profile was found.","这是演示文件，不是可运行曲线。":"This is a demo export, not a runnable profile.","此文件含执行脚本，不能作为参数曲线导入。":"This file contains a script, not only profile parameters.","原型暂支持高级分段曲线。":"This prototype supports advanced staged profiles.","请选择 de1app v2 格式的 JSON 曲线。":"Choose a de1app v2 JSON profile.","曲线须包含 1–20 个分段。":"The profile must contain 1–20 stages.","曲线缺少名称。":"The profile name is missing.","分段的控制方式、探头或过渡无效。":"A stage has an invalid control mode, sensor or transition.","曲线的提前切段条件无效。":"The profile has an invalid early-exit condition.","无法读取这个文件。":"Unable to read this file.","上一杯":"Last shot · Demo","模拟曲线":"Shot chart","放大曲线":"Expand chart","返回":"Back","流量":"Flow","切换浅色":"Switch to light","切换深色":"Switch to dark","Decent Remote":"Decent Remote","交互原型":"Prototype","待机":"Idle","模拟连接状态":"Demo connection","模拟连接":"Demo connected","主导航":"Navigation","关于 Decent Remote":"About this prototype","当前配方":"Current recipe · Demo","编辑当前曲线":"Edit current profile","当前曲线":"Current profile","当前":"Current","准备下一杯":"Ready for the next cup","曲线库":"Profiles","应用参数":"Apply recipe","唤醒":"Wake","休眠":"Sleep","上一杯曲线":"Last shot · Demo","压力、进水流量、杯流和温度曲线":"Pressure, flow, temperature and cup weight","秤清零":"Tare scale","远程启动默认关闭":"Remote start is disabled by default","启动已锁定":"Start locked","停止":"Stop","曲线名称":"Profile name","导入曲线":"Import profile","管理常用":"Edit favorites","搜索曲线":"Search profiles","曲线":"Profiles","已载入":"Loaded","历史":"History","出杯记录":"Shot history","0 条记录":"0 shots","搜索记录":"Search shots","模拟记录":"Demo shot","选中历史记录的曲线":"Chart for the selected shot","作为下一杯":"Use for next shot","原始文件下载":"Download original file","原始文件":"Original file","App 状态读回":"Changes apply to this demo only","应用设置":"Apply settings","等待连接":"Prototype ready","de1app · 原生控制":"Demo data · No device connection","设置":"Settings","两段式 · 压力 → 流量":"Two stages · Pressure → Flow","四段式 · 流量控制":"Four stages · Flow control","自适应曲线":"Adaptive profile","闷蒸 · 低温快萃":"Bloom · Low-temperature extraction","温和压力 · 经典浓缩":"Gentle pressure · Classic espresso","长浓缩 · 流量控制":"Long espresso · Flow control","过滤式 · 分段注水":"Filter · Staged water delivery","高压建立":"Pressure rise","低流量收尾":"Low-flow finish","预浸泡":"Preinfusion","闷蒸":"Bloom","高流量":"High flow","低流量":"Low flow","快速注水":"Fast fill","持续注水":"Continuous flow","持续萃取":"Extraction","建立压力":"Pressure rise","萃取":"Extraction","注水":"Water delivery","尾段":"Finish","今天":"Today","昨天":"Yesterday","冲洗 / 热水 / 蒸汽":"Flush / water / steam","设置参数，另行启动。":"Settings only. Start separately.","冲洗流量":"Flush flow","冲洗时间":"Flush duration","热水温度":"Hot-water temperature","热水杯重目标":"Hot-water weight target","蒸汽温度":"Steam temperature","蒸汽最长时间":"Maximum steam time","秤与停杯":"Scale & stop","杯重由电子秤测量，与进水量分开。":"Cup weight is measured by the scale, separately from inlet water.","连接秤后才允许萃取":"Require a connected scale","保持秤连接":"Keep scale connected","提前停止补偿":"Early-stop adjustment","萃取 / 热水开始时，使用 App 原生自动清零。":"Native auto-tare at the start of espresso and hot water.","预热 / 休眠 / 亮度":"Heat / sleep / display","沿用 de1app 原生设置。":"Uses native de1app settings.","预热流量":"Preheat flow","控温流量":"Temperature-control flow","预热最长等待":"Maximum preheat wait","待机水温":"Idle water temperature","自动休眠":"Auto sleep","工作亮度":"Active brightness","休眠亮度":"Sleep brightness","每日唤醒":"Daily wake","以平板本地时间为准。":"Uses the tablet’s local time.","启用每日唤醒":"Enable daily wake","唤醒时间":"Wake time","保持唤醒至":"Stay awake until","例如：09:00 唤醒、保持到 12:00，机器会在早上 9 点醒来加热，中午 12 点前不会因闲置而休眠。12 点后按自动休眠设置运行，不是立即关机。两个时间相同：只按时唤醒，闲置达到设定时长后照常休眠。":"Example: wake at 09:00 and stay awake until 12:00. The machine wakes and heats at 9 am, with idle sleep prevented until noon. After noon, normal idle-sleep rules apply; it does not switch off at noon. Set both times the same to wake on schedule and allow normal idle sleep from then on.","智能充电":"Smart charging","机器 USB 与平板充电策略。":"Machine USB and tablet charging.","充电模式":"Charging mode","关闭策略":"Off","夜间模式":"Night mode","机器 USB 供电":"Machine USB power","原生充电策略可能随后覆盖手动 USB 设置。":"The native charging policy may override a manual USB setting.","流量补偿":"Flow compensation","调用已有插件，不改变官方校准倍率。":"Uses the installed plugin. Factory calibration is unchanged.","发送时补偿":"Compensate when sending","表内是指令与估计值，不是本杯实测流量。":"Commands and estimates, not measured flow for this shot.","知道了":"Got it","设置尚未应用":"Unapplied settings","离开后放弃这组设置？":"Discard these changes before leaving?","留在这里":"Stay here","放弃并离开":"Discard & leave","粉量":"Dose","杯重目标":"Cup target","设定温度":"Set temperature","减少":"Decrease ","增加":"Increase ","正在发送曲线…":"Sending profile…","参数已修改，尚未应用":"Changed · Not applied","当前曲线有未保存修改":"Unsaved profile changes","正在发送…":"Sending…","咖啡探头":"Coffee sensor","压力":"Pressure","机器流量":"Machine flow","杯重":"Cup weight","未连接":"Disconnected","发送中（模拟）":"Sending (demo)","模拟确认完成":"Demo confirmation received","切换会放弃当前修改。":"Switching will discard the current changes.","取消":"Cancel","放弃修改并切换":"Discard & switch","编辑内容还没有应用":"Edits not applied","先保留当前编辑，或放弃后查看其他曲线。":"Keep editing, or discard these edits to view another profile.","保留编辑":"Keep editing","放弃并查看":"Discard & view","常用曲线":"Favorite profiles","常用位置已保存 · 仅模拟":"Favorites saved · Demo only","常用":"Favorites","空位置":"Empty slot","没有找到曲线":"No profiles found","编辑草稿":"Draft","已应用 · 未保存":"Applied · Unsaved","尚未载入":"Not loaded","增加分段":"Add stage","载入后可编辑这条曲线。":"Load this profile to edit it.","下载文件":"Download file","载入这条曲线":"Load this profile","载入":"Load","控制方式":"Control mode","流量控制":"Flow control","压力控制":"Pressure control","目标进水流量":"Target inlet flow","目标压力":"Target pressure","本段温度":"Stage temperature","控温探头":"Temperature sensor","水温探头":"Water sensor","最长时间":"Maximum duration","杯重切段 · 0 为关闭":"Cup-weight exit · 0 = off","压力上限 · 0 为关闭":"Pressure limit · 0 = off","流量上限 · 0 为关闭":"Flow limit · 0 = off","过渡":"Transition","快速":"Fast","平滑":"Smooth","更多条件":"More conditions","切段条件取先满足项":"First condition met ends the stage","进水体积上限 · 0 为关闭":"Inlet volume limit · 0 = off","提前切段":"Early exit","关闭":"Close","压力高于":"Pressure above","压力低于":"Pressure below","流量高于":"Flow above","流量低于":"Flow below","切段阈值":"Exit threshold","当前分段":"This stage","前移":"Move earlier","复制":"Duplicate","删除这个分段？":"Delete this stage?","删除分段":"Delete stage","删除":"Delete","新分段":"New stage","恢复文件":"Restore file","临时应用曲线":"Apply profile temporarily","临时应用":"Apply temporarily","保存曲线":"Save profile","另存一条曲线":"Save a new profile","另存为":"Save as","保存":"Save","恢复文件中的设置？":"Restore settings from file?","放弃本次尚未保存的修改。":"Discard changes that have not been saved.","已恢复原型中的曲线文件":"Demo profile restored from file","恢复":"Restore","保留原曲线。新曲线只存在于此原型。":"The original stays intact. The new profile exists in this demo only.","另存并载入":"Save & load","已另存并载入 · 模拟":"Saved and loaded · Demo","进水":"Inlet","杯流":"Cup flow","温度":"Temperature","没有匹配的记录":"No matching shots","出液":"Yield","总时长":"Duration","当前设置尚未应用":"Unapplied settings","切换分组会放弃未应用的设置。":"Switching groups will discard unapplied settings.","继续编辑":"Keep editing","放弃并切换":"Discard & switch","匹配曲线":"Matched profile","示意表":"Example","目标流量":"Target flow","发送指令":"Sent command","估计实际流量":"Estimated actual flow","有未应用的修改":"Unapplied changes","已下载模拟文件 · 不是可运行曲线":"Demo file downloaded · Not a runnable profile","这是与 Opus 5.5 共同讨论后的界面方案。所有数据和操作均为本地模拟；刷新会恢复初始状态。":"Designed with input from Opus 5.5. All data and actions are simulated locally. Reload to reset.","远程启动已锁定":"Remote start locked","已唤醒 · 仅模拟":"Awake · Demo only","已休眠 · 仅模拟":"Sleeping · Demo only","杯秤已清零 · 仅模拟":"Scale tared · Demo only","停止操作已响应 · 仅模拟":"Stop handled · Demo only","连接咖啡机":"Connect to machine","原型不接受真实密钥，也不会连接设备。":"This prototype does not accept real keys or connect to a device.","已连接":"Connected","模拟断开":"Simulate disconnect","模拟连接已恢复":"Demo connection restored","模拟断线：状态读数已清空":"Demo disconnected: readings cleared","正式版将直接下载 de1app 保存的 .shot 文件。原型没有真实出杯文件。":"The finished app will download the original .shot file saved by de1app. This prototype has no real shot files.","已采用模拟记录的配方":"Demo shot recipe loaded","请检查时间":"Check the times","保持唤醒的结束时间不能早于开始时间。":"The end of the awake interval cannot be earlier than its start.","设置已应用 · 仅模拟":"Settings applied · Demo only","正式版在这里选择 Tcl 参数文件，并先展示名称与分段。确认后再导入，导入不会启动机器。":"The finished app will preview the name and stages of a Tcl profile before importing it. Importing will not start the machine.","调整位置不会载入或启动曲线。":"Changing favorites does not load a profile or start the machine.","保存位置":"Save favorites","同一条曲线不能占用两个常用位置。":"A profile can occupy only one favorite slot.","位置":"Slot","模拟":"Demo","为关闭":"= off","切段":"exit","粉 ·":"dose ·","段":"stages"};
+Object.assign(languageCatalog,{'载入曲线文件':'Load profile file'});
+Object.assign(languageCatalog,{"de1app · 原生控制": "de1app · Native controls", "关于 Decent Remote": "About Decent Remote", "连接": "Connect", "连接设置": "Connection", "访问密钥": "Access key", "密钥仅保留在当前页面，刷新后重新输入。": "The key stays in this page only. Reload to sign in again.", "等待连接": "Waiting for connection", "尚未连接": "Not connected", "尚未选择": "No profile selected", "正在读取…": "Loading…", "高级分段曲线": "Advanced staged profile", "原生基本曲线": "Native basic profile", "尚无记录": "No shots yet", "尚无曲线数据": "No shot data", "记录数据": "Recorded data", "上一杯": "Last shot", "条记录": "shots", "文件名": "Filename", "保留原曲线。": "Keep the original profile.", "先预览，再加入曲线库。": "Preview, then add to the library.", "已加入曲线库 · 未载入": "Added to library · Not loaded", "正在等待操作结果…": "Waiting for the result…", "确认启动？": "Confirm start?", "开始萃取": "Start espresso", "启动": "Start", "断开": "Disconnect", "已断开": "Disconnected", "当前配方": "Current recipe", "原生控制与状态读回": "Native controls and readback", "配方快捷值": "Recipe shortcuts", "Streamline 常用粉量、杯重和温度。": "Streamline dose, yield and temperature shortcuts.", "热水流量": "Hot-water flow", "热水最长时间": "Maximum hot-water time", "热水按杯重停止": "Stop hot water by weight", "启用蒸汽": "Enable steam", "蒸汽流量": "Steam flow", "冲洗": "Flush", "热水": "Hot water", "蒸汽": "Steam", "配方": "Recipe", "App 状态读回": "App state readback", "远程控制": "Remote control", "状态未知": "Unknown state", "萃取中": "Brewing", "补水": "Refilling", "曲线数据已确认": "Profile data confirmed", "App 已读回 · 设备未确认": "App readback · Device unconfirmed", "请求已接受 · 待状态核对": "Accepted · Check state", "确认超时 · 未重发": "Confirmation timed out · Not resent", "设置已由 App 读回": "Settings read back from app", "曲线文件已保存并读回": "Profile file saved and read back", "已连接 · 状态由 App 读取": "Connected · App state readback", "导入暂支持高级分段曲线。": "Import supports advanced staged profiles.", "文件名已存在，请换一个名称。": "Filename exists. Choose another.", "请检查名称和 .tcl 文件名": "Check the name and .tcl filename", "参数尚未应用": "Unapplied recipe", "请先应用或放弃主页上的配方修改。": "Apply or discard the recipe edits on Current first.", "连接中断 · 等待恢复": "Connection lost · Waiting to recover", "访问密钥无效": "Invalid access key", "自动清零沿用 App 原生配置。": "Auto-tare follows native app settings.", "正在处理": "Processing", "结果暂不可确认 · 不会重复发送": "Result unknown · Will not resend"});
+Object.assign(languageCatalog,{"正在读取记录…":"Loading shot…","显示": "Show", "隐藏": "Hide", "记住连接": "Remember connection", "忘记连接": "Forget connection", "仅限自己的设备": "On your own device", "仅全新安装默认：admin1234；更新后保留原密钥。": "New installations: admin1234. Updates keep your existing key.", "修改密钥：平板 → 设定 → 程序 → 插件 → Decent Remote → 设置": "Change key: tablet → Settings → App → Extensions → Decent Remote → Settings", "密钥不正确，请在平板插件设置中查看。": "Incorrect key. Check the plugin settings on your tablet.", "密钥已变更，请重新连接。": "The key has changed. Please reconnect.", "已连接 · 浏览器未允许记住连接": "Connected · Browser did not allow saving this connection"});
+Object.assign(languageCatalog,{"杯重目标": "Target yield", "设定温度": "Brew temperature", "秤与停杯": "Scale & auto-stop", "热水杯重目标": "Hot-water target weight", "热水按杯重停止": "Stop hot water at target weight", "App 状态读回": "Status from de1app", "原生控制与状态读回": "Control and status through de1app", "已连接 · 状态由 App 读取": "Connected · Status from de1app", "App 已读回 · 设备未确认": "Updated in de1app · Not confirmed by machine", "设置已由 App 读回": "Settings updated and verified in de1app", "曲线文件已保存并读回": "Profile saved and verified", "请求已接受 · 待状态核对": "Request accepted · Check machine state", "确认超时 · 未重发": "Confirmation timed out · No retry sent", "曲线数据已确认": "Profile transfer confirmed", "高级分段曲线": "Advanced profile", "原生基本曲线": "Basic profile", "发送时补偿": "Apply compensation when sending", "例如：09:00 唤醒、保持到 12:00，机器会在早上 9 点醒来加热，中午 12 点前不会因闲置而休眠。12 点后按自动休眠设置运行，不是立即关机。两个时间相同：只按时唤醒，闲置达到设定时长后照常休眠。": "Example: wake at 09:00 and stay awake until 12:00. The machine wakes and heats at 9 am, with idle sleep prevented until noon. After noon, normal idle-sleep rules apply; it does not switch off at noon. Set both times the same to wake on schedule and allow normal idle sleep from then on.", "仅限自己的设备": "Only on a device you own", "密钥不正确，请在平板插件设置中查看。": "Incorrect key. Check Decent Remote settings on your tablet.", "已连接 · 浏览器未允许记住连接": "Connected · This browser could not save the key", "确认仍在等待；不会重复发送": "Still waiting for confirmation. No retry will be sent.", "请求被拒绝": "Request rejected", "请求未完成，请核对状态": "Request not completed. Check machine state.", "曲线发送尚未确认；请核对后再保存": "Profile transfer not confirmed. Check its status before saving.", "平板上的曲线已改变，请重新读取后编辑": "The profile changed on the tablet. Reload it before editing.", "曲线列表格式不正确": "Could not read the profile list.", "读取失败": "Could not read the response.", "连接失败": "Could not connect.", "连接超时，请先核对状态": "Connection timed out. Check the machine before trying again.", "远程启动已启用": "Remote start enabled", "放弃": "Discard", "未编辑": "No changes", "原生基本曲线暂不支持分段编辑。": "Stage editing is not available for basic profiles.", "载入曲线": "Load profile", "另存曲线": "Save a copy", "恢复曲线": "Restore profile", "保存常用位置": "Save favorites", "压力、进水流量、杯流和温度曲线": "Pressure, inlet flow, scale flow and temperature", "使用 App 原生流量补偿。": "Uses de1app flow compensation.", "没有匹配的记录": "No matching shots", "保持唤醒的结束时间不能早于开始时间。": "Stay-awake end time must be after the wake time.", "请检查时间": "Check wake schedule", "只加入曲线库，载入另点。": "Adds the profile to your library. Load it when you are ready.", "文件嵌套过深。": "The file contains too many nested elements.", "准备下一杯": "Next shot", "提前停止补偿": "Stop-early adjustment", "切换浅色": "Use light theme", "切换深色": "Use dark theme"});
+Object.assign(languageCatalog,{"秤已连接且称重停止关闭：原生固件容量上限固定为250mL，所设目标容量不生效": "Scale connected, but stop by weight is off. Firmware limits hot water to 250 mL; the target volume setting has no effect.", "当前版本不可用": "Not available in this version.", "记录读取失败": "Could not load this shot.", "咖啡温度": "Coffee temperature", "当前曲线暂不支持分段编辑。": "Stage editing is not available for this profile."});
+Object.assign(languageCatalog,{'不启用':'Off'});
+Object.assign(languageCatalog,{'当前参数未获得对应确认':'Current profile not verified','重新发送':'Resend profile','等待设备确认':'Unconfirmed','曲线发送尚未确认':'Profile transfer not confirmed','曲线发送尚未确认；请先重新发送，确认后再保存':'Profile transfer not confirmed. Resend the profile before saving.'});
+Object.assign(languageCatalog,{"原生基本曲线 · 参数预览": "Basic profile · Parameters", "调整粉量、杯重和温度": "Adjust dose, yield and temperature", "设备尚未确认": "Not confirmed by machine", "已读取": "Read from de1app", "曲线读取失败": "Could not load profile", "正在读取曲线…": "Loading profile…", "重新读取": "Reload", "此曲线包含脚本，请在平板查看。": "This profile includes a script. View it on the tablet.", "预浸流量": "Preinfusion flow", "预浸最长时间": "Maximum preinfusion time", "预浸结束压力": "Preinfusion exit pressure", "维持压力": "Hold pressure", "维持时间": "Hold time", "结束压力": "End pressure", "下降时间": "Decline time", "流量上限": "Flow limit", "维持流量": "Hold flow", "结束流量": "End flow", "最低压力": "Minimum pressure", "压力上限": "Pressure limit", "预浸温度": "Preinfusion temperature", "升压温度": "Ramp temperature", "维持温度": "Hold temperature", "尾段温度": "Finish temperature"});
+let language=localStorage.getItem('decent-remote-language')==='en'?'en':'zh';
+const originalText=new WeakMap(),originalAttributes=new WeakMap();
+Object.assign(languageCatalog,{'部分参数无效，请在平板核对。':'Some parameters are invalid. Check them on the tablet.','各段时长均为零。':'All phase durations are zero.','暂不支持的曲线类型':'Unsupported profile type','请在平板查看此曲线。':'View this profile on the tablet.'});
+Object.assign(languageCatalog,{"常用曲线已改变，请重新选择。":"Favorites have changed. Select a profile again.","常用曲线正在更新，请稍后再选。":"Favorites are updating. Please try again in a moment."});
+const translationsByLength=Object.entries(languageCatalog).sort((a,b)=>b[0].length-a[0].length);
+function displayTranslation(text){
+ if(language==='zh')return text;
+ let out=text.replace(/(\d+) 条记录/g,(_,n)=>n+' '+(n==='1'?'shot':'shots')).replace(/(\d+) 段/g,(_,n)=>n+' '+(n==='1'?'stage':'stages'));
+ for(const [source,target] of translationsByLength)out=out.split(source).join(target);
+ return out;
+}
+function translateUI(){
+ languageObserver.disconnect();
+ $$('[data-stage-label]').forEach(el=>el.textContent=stageLabel(el.dataset.stageLabel));
+ document.documentElement.lang=language==='en'?'en':'zh-CN';
+ const walker=document.createTreeWalker(document.documentElement,NodeFilter.SHOW_TEXT);
+ while(walker.nextNode()){
+  const n=walker.currentNode,parent=n.parentElement;
+  if(!parent||parent.closest('script,style,textarea,#language-button,[data-favorite-slot] option:not([value=""]),[data-verbatim]'))continue;
+  const old=originalText.get(n);
+  const source=old&&n.nodeValue===old.display?old.source:n.nodeValue;
+  const display=displayTranslation(source);
+  originalText.set(n,{source,display});
+  if(n.nodeValue!==display)n.nodeValue=display;
+ }
+ document.querySelectorAll('[placeholder],[aria-label],[title]').forEach(el=>{
+  if(el.id==='language-button'||el.closest('[data-verbatim]'))return;
+  let record=originalAttributes.get(el)||{};
+  for(const attr of ['placeholder','aria-label','title']){
+   if(!el.hasAttribute(attr)||(attr==='title'&&el.matches('[data-fav]')&&el.dataset.fav))continue;
+   const value=el.getAttribute(attr),old=record[attr];
+   const source=old&&value===old.display?old.source:value;
+   const display=displayTranslation(source);
+   record[attr]={source,display};if(value!==display)el.setAttribute(attr,display);
+  }
+  originalAttributes.set(el,record);
+ });
+ document.querySelectorAll('[data-lang-option]').forEach(el=>el.classList.toggle('selected',el.dataset.langOption===language));
+ languageObserver.observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['placeholder','aria-label','title']});
+}
+const languageObserver=new MutationObserver(translateUI);
+$('#language-button').onclick=()=>{language=language==='zh'?'en':'zh';localStorage.setItem('decent-remote-language',language);translateUI();requestAnimationFrame(()=>{drawCharts();translateUI()})};
+translateUI();
+
+
+let theme=localStorage.getItem('decent-remote-theme')==='light'?'light':'dark';
+function applyTheme(){
+ document.documentElement.dataset.theme=theme;
+ const light=theme==='light';
+ const paths=light?'<path d="M20 15a8 8 0 0 1-11-11 8.5 8.5 0 1 0 11 11Z"/>':'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/>';
+ $('#theme-button').innerHTML='<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths+'</svg>';
+ $('#theme-button').setAttribute('aria-label',light?'切换深色':'切换浅色');
+ $('#theme-button').setAttribute('title',light?'切换深色':'切换浅色');
+ series.find(x=>x.key==='temp').color=light?'#ff97a1':'#AE6D73';
+ series.find(x=>x.key==='cupflow').color=light?'#e9d3c3':'#695f57';
+ series.find(x=>x.key==='pressure').goal=light?'#a0e0d1':'#374d47';
+ series.find(x=>x.key==='flow').goal=light?'#bed9ff':'#23416c';
+ series.find(x=>x.key==='temp').goal=light?'#ffd1d5':'#3e3233';
+ renderLegends();drawCharts();translateUI();
+}
+$('#theme-button').onclick=()=>{theme=theme==='dark'?'light':'dark';localStorage.setItem('decent-remote-theme',theme);applyTheme()};
+applyTheme();
+
+
+
+init();translateUI();applyTheme();startConnection();
+
+</script>
+</body>
+</html>

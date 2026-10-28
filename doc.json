@@ -1,0 +1,314 @@
+{
+  "version": "0.3.4",
+  "status": "implemented; physical starts disabled and not exercised",
+  "authentication": "v1使用Authorization: Bearer；写请求需要唯一X-Request-ID。旧路径另兼容auth查询参数。",
+  "defaults": {
+    "allow_start": false,
+    "hds_enabled": false
+  },
+  "result_semantics": {
+    "accepted": "处理链接受，不证明完成",
+    "app_cache": "应用缓存，不是独立硬件读回",
+    "profile_frames_only": "只确认匹配曲线帧，不确认实际出水或杯重",
+    "ack_scope": "流量补偿ACK属于last_published_send，可能不是当前曲线",
+    "in_flight": "单一曲线请求仍在处理时拒绝后续曲线写入；停止与读取不受阻"
+  },
+  "reference": "API.md",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/",
+      "description": "原创中英文深浅色网页；同源接口，无外部依赖"
+    },
+    {
+      "method": "GET",
+      "path": "/api/help",
+      "description": "接口摘要"
+    },
+    {
+      "method": "GET",
+      "path": "/api/status",
+      "description": "旧简单状态"
+    },
+    {
+      "method": "POST",
+      "path": "/api/status",
+      "description": "active：唤醒或休眠，不启动萃取"
+    },
+    {
+      "method": "GET",
+      "path": "/api/status/details",
+      "description": "旧详细状态及萃取采样数组"
+    },
+    {
+      "method": "GET",
+      "path": "/api/profile",
+      "description": "曲线文件列表"
+    },
+    {
+      "method": "POST",
+      "path": "/api/profile",
+      "description": "上传Tcl数据曲线；filename头指定文件；同名覆盖"
+    },
+    {
+      "method": "GET",
+      "path": "/api/profile/{name.tcl}",
+      "description": "下载曲线"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/profile/{name.tcl}",
+      "description": "选择曲线；无正文"
+    },
+    {
+      "method": "GET",
+      "path": "/api/shot",
+      "description": "原始历史文件列表"
+    },
+    {
+      "method": "GET",
+      "path": "/api/shot/{name.shot}",
+      "description": "下载原始历史"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/shot/{timestamp}",
+      "description": "读取JSON历史"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v2/shot/{timestamp}",
+      "description": "DYE作为下一杯；依赖原插件"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/shots",
+      "description": "SDB历史摘要；未加载501"
+    },
+    {
+      "method": "GET",
+      "path": "/api/flush",
+      "description": "刷新日志缓冲，不是冲洗出水"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/status",
+      "description": "机器、秤与配方应用缓存"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/recipe",
+      "description": "当前粉量、杯重目标、温度"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/recipe",
+      "description": "dose_g/yield_g/temperature_c；临时调整，不覆盖曲线"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profile",
+      "description": "当前曲线、完整分段、体积目标、dirty状态"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/profile",
+      "description": "临时编辑高级分段steps或配方/体积/notes"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/profile/restore",
+      "description": "重载当前曲线文件，丢弃未保存修改"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/profile/save",
+      "description": "原生保存当前曲线并读回Tcl/JSON；只读曲线需另存"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/profile/save-as",
+      "description": "filename/title；新建Tcl/JSON，不覆盖已有目标"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/favorites",
+      "description": "Streamline五个常用曲线位置"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/favorites",
+      "description": "slots数组：slot与不带扩展名的profile"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/shortcuts",
+      "description": "Streamline粉量杯重及温度快捷值"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/shortcuts",
+      "description": "dose_yield与temperatures数组；保存快捷值"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/settings",
+      "description": "预热、自动休眠及亮度"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/settings",
+      "description": "保存预热、自动休眠及亮度；原生发送相关设置"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/controls",
+      "description": "冲洗、热水、蒸汽参数及热水目标生效说明"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/controls",
+      "description": "设置参数，不开始出水；hotwater_target单位看返回字段"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/scale",
+      "description": "秤读数、自动归零状态列表及停止策略"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/scale",
+      "description": "require_scale/stop_before_s/keep_scale_on；自动归零列表只读"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/scale/tare",
+      "description": "原生清零，正文{}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/scheduler",
+      "description": "本地定时与下一次唤醒Unix秒"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/scheduler",
+      "description": "enabled/wake_time/awake_until；结束为保持唤醒区间终点"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/charging",
+      "description": "智能充电模式与USB缓存状态"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/charging",
+      "description": "off/on/night模式或machine_usb_enabled；USB可被周期策略覆盖"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/flow-compensation",
+      "description": "可选原插件状态、历史发送变化和ACK"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/flow-compensation",
+      "description": "仅enabled；不改补偿表、倍率或范围"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/plugins",
+      "description": "插件实际加载/启用与HDS状态"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles",
+      "description": "Tcl曲线列表"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/profiles/{name.tcl}",
+      "description": "下载Tcl曲线"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/profiles/{name.tcl}",
+      "description": "选择已有曲线；无正文"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/shots",
+      "description": "原始历史列表"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/shots/{name.shot}",
+      "description": "原始历史文件"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/shots/json",
+      "description": "JSON历史列表"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/shots/json/{name.json}",
+      "description": "JSON历史文件"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/requests/{request_id}",
+      "description": "当前进程执行结果；profile_frames_only不等于实际出水"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/wake",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/sleep",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/stop",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/espresso",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/flush",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/steam",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/machine/hotwater",
+      "description": "原生控制；正文{}；出水和蒸汽启动默认关闭，不绕过GHC"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/grinder/start",
+      "description": "可选现有小方兼容桥；启动默认关闭，新网页无小方控件"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/grinder/stop",
+      "description": "可选现有小方兼容桥；启动默认关闭，新网页无小方控件"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/profiles/import",
+      "description": "filename/content/format(tcl|json)，可选dry_run/overwrite；只导入不选择、不发送"
+    }
+  ]
+}

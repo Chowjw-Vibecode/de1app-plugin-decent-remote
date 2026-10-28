@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-27T11:28:53.000Z",
+  "scope": "reporting installations; not people or all users",
+  "total_installations": 1,
+  "active_30d": 1,
+  "countries": [
+    {
+      "country": "SG",
+      "installations": 1,
+      "active_30d": 1
+    }
+  ]
+}
