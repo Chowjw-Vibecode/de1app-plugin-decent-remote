@@ -15,6 +15,7 @@ python3 tests/run.py --browser
 node --test statistics/tests/worker.test.mjs
 tclsh8.6 statistics/tests/client.test.tcl
 python3 statistics/tests/export.test.py
+node --test statistics/tests/site.test.mjs
 ```
 
 On Linux, Playwright may also need its documented system dependencies (`npx playwright install --with-deps chromium`). If the Tcl executable or Tcllib is not found automatically:

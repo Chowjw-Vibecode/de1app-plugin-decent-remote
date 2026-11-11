@@ -2,10 +2,11 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import worker,{handle} from '../worker.mjs';
 const NOW=2000000000, ID='a'.repeat(32), OTHER='b'.repeat(32);
-function fixture(){
- const db=new DatabaseSync(':memory:');db.exec(readFileSync(new URL('../schema.sql',import.meta.url),'utf8'));
+function fixture(schema=readFileSync(new URL('../schema.sql',import.meta.url),'utf8')){
+ const db=new DatabaseSync(':memory:');db.exec(schema);
  const limits=[];
  const env={
   DB:{
@@ -32,9 +33,81 @@ test('repeat reports count one installation; only a hash and country/time are st
  try{
   assert.equal((await handle(request(),env,NOW)).status,200);await handle(request(),env,NOW+604800);
   const rows=db.prepare('SELECT * FROM installations').all();assert.equal(rows.length,1);assert.match(rows[0].id_hash,/^[0-9a-f]{64}$/);assert.notEqual(rows[0].id_hash,ID);
-  assert.deepEqual(Object.keys(rows[0]),['id_hash','country','first_seen','last_seen']);assert.equal(rows[0].first_seen,NOW);assert.equal(rows[0].last_seen,NOW+604800);
+  assert.deepEqual(Object.keys(rows[0]),['id_hash','product','country','first_seen','last_seen']);assert.equal(rows[0].product,'decent_remote');assert.equal(rows[0].first_seen,NOW);assert.equal(rows[0].last_seen,NOW+604800);
   const s=await summary(env,NOW+604800);assert.equal(s.total_installations,1);assert.equal(s.active_30d,1);assert.equal(s.countries[0].country,'CN');
   assert(!JSON.stringify(s).includes('id_hash'));assert(!JSON.stringify(s).includes(ID));assert(!JSON.stringify(limits).includes('192.0.2.1'));
+ }finally{db.close()}
+});
+
+async function productSummary(env,now=NOW){return (await handle(request({method:'GET',path:'/v2/summary'}),env,now)).json()}
+test('migration preserves existing hashes, countries and dates; old clients update and delete the same record',async()=>{
+ const oldSchema=`CREATE TABLE installations(id_hash TEXT PRIMARY KEY,country TEXT NOT NULL,first_seen INTEGER NOT NULL,last_seen INTEGER NOT NULL);CREATE INDEX installations_last_seen ON installations(last_seen)`;
+ const {db,env}=fixture(oldSchema);
+ try{
+  const hash=createHash('sha256').update(ID).digest('hex');
+  db.prepare('INSERT INTO installations VALUES (?,?,?,?)').run(hash,'SG',NOW-100,NOW-10);
+  db.exec(readFileSync(new URL('../migrations/0001_products.sql',import.meta.url),'utf8'));
+  assert.deepEqual({...db.prepare('SELECT * FROM installations').get()},{id_hash:hash,country:'SG',first_seen:NOW-100,last_seen:NOW-10,product:'decent_remote'});
+  assert.equal((await summary(env)).total_installations,1);
+  await handle(request({country:'GB'}),env,NOW);
+  const row=db.prepare('SELECT * FROM installations').get();
+  assert.equal(row.id_hash,hash);assert.equal(row.country,'GB');assert.equal(row.first_seen,NOW-100);assert.equal(row.last_seen,NOW);
+  await handle(request({method:'DELETE'}),env,NOW);
+  assert.equal((await summary(env)).total_installations,0);
+ }finally{db.close()}
+});
+test('categories count the same random ID separately; v1 remains Decent Remote only',async()=>{
+ const {db,env}=fixture();try{
+  await handle(request({country:'SG'}),env,NOW-31*86400);
+  await handle(request({country:'CN',body:{install_id:ID,product:'this_cup'}}),env,NOW);
+  await handle(request({country:'CN',body:{install_id:ID,product:'this_cup'}}),env,NOW+1);
+  const legacy=await summary(env,NOW+1);
+  assert.deepEqual(legacy,{schema:1,generated_at:new Date((NOW+1)*1000).toISOString(),scope:'reporting installations; not people or all users',total_installations:1,active_30d:0,countries:[{country:'SG',installations:1,active_30d:0}]});
+  const s=await productSummary(env,NOW+1);
+  assert.equal(s.schema,2);assert.equal(s.total_installations,2);assert.equal(s.active_30d,1);
+  assert.deepEqual(s.countries,[{country:'CN',installations:1,active_30d:1},{country:'SG',installations:1,active_30d:0}]);
+  assert.deepEqual(s.products,[{product:'decent_remote',total_installations:1,active_30d:0,countries:[{country:'SG',installations:1,active_30d:0}]},{product:'this_cup',total_installations:1,active_30d:1,countries:[{country:'CN',installations:1,active_30d:1}]}]);
+  const rows=db.prepare('SELECT id_hash FROM installations').all();assert.equal(new Set(rows.map(r=>r.id_hash)).size,2);
+  assert(!JSON.stringify(s).includes(ID));assert(!JSON.stringify(s).includes('id_hash'));
+  await handle(request({method:'DELETE',body:{install_id:ID,product:'this_cup'}}),env,NOW+2);
+  assert.equal((await summary(env)).total_installations,1);
+  assert.equal((await productSummary(env)).products[1].total_installations,0);
+  await handle(request({method:'DELETE'}),env,NOW+3);
+  assert.equal((await productSummary(env)).total_installations,0);
+ }finally{db.close()}
+});
+test('explicit old category and omitted category deduplicate; country aggregates reconcile across products',async()=>{
+ const {db,env}=fixture();try{
+  await handle(request(),env,NOW);
+  await handle(request({body:{install_id:ID,product:'decent_remote'}}),env,NOW+1);
+  await handle(request({body:{install_id:OTHER,product:'this_cup'}}),env,NOW+1);
+  const s=await productSummary(env,NOW+1);
+  assert.equal(s.total_installations,2);assert.deepEqual(s.countries,[{country:'CN',installations:2,active_30d:2}]);
+  assert.deepEqual(s.products.map(p=>p.total_installations),[1,1]);
+ }finally{db.close()}
+});
+test('missing categories remain present with zero totals; unsupported products and private fields are rejected',async()=>{
+ const {db,env}=fixture();try{
+  const s=await productSummary(env);assert.equal(s.total_installations,0);
+  assert.deepEqual(s.products.map(p=>[p.product,p.total_installations,p.countries]),[['decent_remote',0,[]],['this_cup',0,[]]]);
+  for(const product of ['',null,1,{},[],true,'This Cup','decent-remote','other'])assert.equal((await handle(request({body:{install_id:ID,product}}),env,NOW)).status,422);
+  for(const field of ['country','ip','device_id','profile'])assert.equal((await handle(request({body:{install_id:ID,product:'this_cup',[field]:'private'}}),env,NOW)).status,422);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM installations').get().n,0);
+ }finally{db.close()}
+});
+test('browser preflight and success/error responses permit anonymous cross-origin access without credentials',async()=>{
+ const {db,env,limits}=fixture();try{
+  const preflight=new Request('https://usage.test/v1/check-in',{method:'OPTIONS',headers:{origin:'http://tablet.test:8080','access-control-request-method':'POST','access-control-request-headers':'content-type'}});
+  const response=await handle(preflight,env,NOW);
+  assert.equal(response.status,204);assert.equal(await response.text(),'');
+  assert.equal(response.headers.get('access-control-allow-origin'),'*');
+  assert.match(response.headers.get('access-control-allow-methods'),/POST/);assert.match(response.headers.get('access-control-allow-methods'),/DELETE/);
+  assert.equal(response.headers.get('access-control-allow-headers'),'Content-Type');
+  assert.equal(response.headers.get('access-control-allow-credentials'),null);assert.equal(limits.length,0);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM installations').get().n,0);
+  for(const r of [request(),request({body:{install_id:ID,product:'bad'}}),request({method:'GET',path:'/v2/summary'}),request({path:'/private'})]){
+   const result=await handle(r,env,NOW);assert.equal(result.headers.get('access-control-allow-origin'),'*');assert.equal(result.headers.get('access-control-allow-credentials'),null);
+  }
  }finally{db.close()}
 });
 test('current country changes without double-counting and stale reports leave the 30-day total',async()=>{

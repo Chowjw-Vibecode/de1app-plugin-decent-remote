@@ -1,0 +1,24 @@
+{
+  "schema": 2,
+  "generated_at": "2026-11-11T00:00:00Z",
+  "scope": "reporting installations; not people or all users",
+  "total_installations": 12,
+  "active_30d": 8,
+  "countries": [
+    {"country": "CN", "installations": 6, "active_30d": 5},
+    {"country": "SG", "installations": 3, "active_30d": 2},
+    {"country": "US", "installations": 2, "active_30d": 1},
+    {"country": "ZZ", "installations": 1, "active_30d": 0}
+  ],
+  "products": [
+    {"product": "decent_remote", "total_installations": 7, "active_30d": 5, "countries": [
+      {"country": "CN", "installations": 4, "active_30d": 3},
+      {"country": "SG", "installations": 3, "active_30d": 2}
+    ]},
+    {"product": "this_cup", "total_installations": 5, "active_30d": 3, "countries": [
+      {"country": "CN", "installations": 2, "active_30d": 2},
+      {"country": "US", "installations": 2, "active_30d": 1},
+      {"country": "ZZ", "installations": 1, "active_30d": 0}
+    ]}
+  ]
+}

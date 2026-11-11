@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-      - name: Fetch public country totals
+      - name: Fetch public country totals by product
         env:
           SUMMARY_URL: ${{ vars.USAGE_SUMMARY_URL }}
-        run: python3 statistics/tools/export_summary.py --url "$SUMMARY_URL"
+        run: python3 statistics/tools/export_summary.py --url "$SUMMARY_URL" --products
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

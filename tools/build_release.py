@@ -26,8 +26,10 @@ tools/build_release.py tools/render_release_notes.py
 .github/workflows/usage-pages.yml statistics/.gitignore statistics/worker.mjs
 statistics/schema.sql statistics/wrangler.example.toml statistics/README.md
 statistics/README.en.md statistics/tests/worker.test.mjs statistics/tests/client.test.tcl
-statistics/tests/export.test.py statistics/tools/export_summary.py
-statistics/site/index.html statistics/site/data.json'''.split() + TESTS
+statistics/tests/export.test.py statistics/tests/site.test.mjs
+statistics/tests/fixtures/products-summary.json statistics/tools/export_summary.py
+statistics/migrations/0001_products.sql
+statistics/site/index.html statistics/site/app.js statistics/site/data.json'''.split() + TESTS
 INSTALL = RUNTIME + DOCS + ['tools/create_config.py']
 
 
