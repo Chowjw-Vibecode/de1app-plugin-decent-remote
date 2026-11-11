@@ -13,6 +13,10 @@ jobs:
           cache: npm
       - name: Install Tcl and browser tools
         run: |
+          # Use the signed official archive when the runner's Azure mirror cannot resolve.
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          fi
           sudo apt-get update
           sudo apt-get install -y tcl8.6 tcllib
           npm ci
