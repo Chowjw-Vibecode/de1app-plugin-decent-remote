@@ -50,14 +50,7 @@ node --test statistics/tests/site.test.mjs
 
 Tests use an in-memory SQLite database and simulated transport. They do not contact a live service. The native client also requires Tcl Thread, TclCurl and de1app's `allcerts.pem` trust store.
 
-The page check uses Playwright and a local synthetic fixture, without a device or live statistics request. To generate a labeled preview and screenshots:
-
-```sh
-USAGE_SCREENSHOT_DIR=statistics/QA证据/product-preview node --test statistics/tests/site.test.mjs
-python3 -m http.server 8897 --bind 127.0.0.1 --directory statistics/QA证据/product-preview
-```
-
-Open `http://127.0.0.1:8897/`. Its numbers come from `tests/fixtures/products-summary.json`, not real installations.
+The Playwright check covers the legacy project URL redirect and the manual fallback link at desktop and mobile widths. The destination is intercepted by a local fixture; no device or live statistics service is contacted. Dashboard and version-table tests live in the [usage-stats repository](https://github.com/Chowjw-Vibecode/usage-stats/tree/main/tests).
 
 ## Cloudflare setup
 

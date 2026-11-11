@@ -50,14 +50,7 @@ node --test statistics/tests/site.test.mjs
 
 SQL 使用内存 SQLite，客户端用模拟传输，均不连接真实服务。客户端运行时还需要 Tcl Thread、TclCurl 及 de1app 的 `allcerts.pem`。
 
-页面检查使用 Playwright 和本地模拟汇总，不访问设备或真实统计服务。可生成带「模拟统计」标识的可预览页面及三张截图：
-
-```sh
-USAGE_SCREENSHOT_DIR=statistics/QA证据/product-preview node --test statistics/tests/site.test.mjs
-python3 -m http.server 8897 --bind 127.0.0.1 --directory statistics/QA证据/product-preview
-```
-
-在本机打开 `http://127.0.0.1:8897/`，测试数据固定来自 `tests/fixtures/products-summary.json`，不代表真实安装量。
+页面检查使用 Playwright 验证旧项目地址跳转到统一统计页，以及自动跳转不可用时的备用链接，覆盖桌面和手机宽度；目标页面由本地夹具替代，不访问设备或真实统计服务。统计界面与版本表的测试位于 [usage-stats 仓库](https://github.com/Chowjw-Vibecode/usage-stats/tree/main/tests)。
 
 ## Cloudflare 配置
 
