@@ -17,6 +17,12 @@ jobs:
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
           fi
+          if ! timeout 10 getent ahostsv4 archive.ubuntu.com >/dev/null; then
+            ci_iface=$(ip route show default | awk '{for(i=1;i<NF;i++) if($i=="dev") {print $(i+1); exit}}')
+            test -n "$ci_iface"
+            sudo resolvectl dns "$ci_iface" 1.1.1.1 8.8.8.8
+            sudo resolvectl flush-caches
+          fi
           sudo apt-get update
           sudo apt-get install -y tcl8.6 tcllib
           npm ci
