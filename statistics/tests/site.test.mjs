@@ -12,7 +12,7 @@ const html=readFileSync(new URL('../site/index.html',import.meta.url),'utf8');
 const script=readFileSync(new URL('../site/app.js',import.meta.url),'utf8');
 const previewLabel='<p style="margin:12px 24px;color:#d7b074;font:14px system-ui">界面预览 · 模拟统计 / Preview · synthetic statistics</p>';
 test('country dashboard filters both languages, preserves zero/unknown distinctions and fits mobile',async()=>{
- let current=fixture,status=200;
+ let current=fixture,status=200,live=false;
  const server=createServer((req,res)=>{
   if(req.url==='/data.json'){res.writeHead(status,{'content-type':'application/json'});res.end(JSON.stringify(current));return}
   if(req.url==='/app.js'){res.writeHead(200,{'content-type':'application/javascript'});res.end(script);return}
@@ -24,7 +24,7 @@ test('country dashboard filters both languages, preserves zero/unknown distincti
  const browser=await chromium.launch({headless:true});
  const page=await browser.newPage({viewport:{width:1100,height:1000}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.route('**/*',route=>route.request().url().startsWith(base+'/')?route.continue():route.abort());
+ await page.route('**/*',route=>route.request().url().startsWith(base+'/')?route.continue():live?route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(fixture)}):route.abort());
  const screenshotDir=process.env.USAGE_SCREENSHOT_DIR?resolve(process.env.USAGE_SCREENSHOT_DIR):null;
  if(screenshotDir){
   mkdirSync(screenshotDir,{recursive:true});
@@ -50,6 +50,7 @@ test('country dashboard filters both languages, preserves zero/unknown distincti
   current={schema:1,generated_at:fixture.generated_at,scope:fixture.scope,...fixture.products[0]};delete current.product;
   await page.reload();await page.waitForFunction(()=>document.querySelector('#total').textContent==='7');await page.selectOption('#product','this_cup');assert.equal(await page.locator('#total').textContent(),'—');assert.match(await page.locator('#message').textContent(),/not available/);
   status=503;await page.reload();await page.waitForFunction(()=>document.querySelector('#message').textContent.includes('could not be loaded'));assert.equal(await page.locator('#total').textContent(),'—');
+  live=true;await page.reload();await page.waitForFunction(()=>document.querySelector('#total').textContent==='12');await page.selectOption('#product','this_cup');assert.equal(await page.locator('#total').textContent(),'5');
   assert.deepEqual(errors,[]);
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
 });

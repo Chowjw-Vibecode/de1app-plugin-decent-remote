@@ -47,7 +47,8 @@ function render(){
 $('language').onclick=()=>{language=language==='en'?'zh':'en';render()};
 $('product').onchange=()=>{product=$('product').value;render()};
 render();
-fetch('./data.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('unavailable');return r.json()}).then(d=>{
+async function readSummary(url){const response=await fetch(url,{cache:'no-store',signal:AbortSignal.timeout(8000)});if(!response.ok)throw Error('unavailable');return response.json()}
+readSummary('https://decent-remote-usage.decent-remote-stats.workers.dev/v2/summary').catch(()=>readSummary('./data.json')).then(d=>{
   if(d.status!=='not_deployed'){
     if(![1,2].includes(d.schema)||!validTotals(d))throw Error('invalid');
     if(d.schema===2&&(!Array.isArray(d.products)||d.products.length!==2||!['decent_remote','this_cup'].every(p=>d.products.filter(r=>r.product===p&&validTotals(r)).length===1)))throw Error('invalid');
