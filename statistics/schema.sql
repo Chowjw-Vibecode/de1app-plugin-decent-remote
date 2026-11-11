@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS installations (
     product TEXT NOT NULL DEFAULT 'decent_remote' CHECK(product IN ('decent_remote','this_cup')),
     country TEXT NOT NULL CHECK(length(country) = 2),
     first_seen INTEGER NOT NULL,
-    last_seen INTEGER NOT NULL
+    last_seen INTEGER NOT NULL,
+    version TEXT CHECK(version IS NULL OR (length(version)>0 AND length(version)<=64))
 );
 CREATE INDEX IF NOT EXISTS installations_last_seen ON installations(last_seen);
 CREATE INDEX IF NOT EXISTS installations_product_last_seen ON installations(product,last_seen);

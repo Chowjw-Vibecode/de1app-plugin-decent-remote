@@ -1,7 +1,7 @@
 # Metadata/source is inert. de1app calls main only when enabled.
 namespace eval ::plugins::decent_remote {
     variable author "JW / Codex"
-    variable version 0.3.5
+    variable version 0.3.6
     variable name "Decent Remote"
     variable description "Local browser control for classic de1app"
     variable directory [file dirname [info script]]

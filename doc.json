@@ -1,5 +1,5 @@
 {
-  "version": "0.3.5",
+  "version": "0.3.6",
   "status": "implemented; physical starts disabled and not exercised",
   "authentication": "v1使用Authorization: Bearer；写请求需要唯一X-Request-ID。旧路径另兼容auth查询参数。",
   "defaults": {

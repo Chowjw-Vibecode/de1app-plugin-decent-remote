@@ -6,7 +6,7 @@ namespace eval ::plugins::decent_remote {variable directory; variable settings; 
 set ::testdir [makeDirectory usage-client]
 set ::plugins::decent_remote::directory $::testdir
 rename ::plugins::decent_remote::usage::dispatch ::plugins::decent_remote::usage::real_dispatch
-proc ::plugins::decent_remote::usage::dispatch {endpoint id} {lappend ::sent [list $endpoint $id]}
+proc ::plugins::decent_remote::usage::dispatch {endpoint id version} {lappend ::sent [list $endpoint $id $version]}
 rename ::plugins::decent_remote::usage::now ::plugins::decent_remote::usage::real_now
 proc ::plugins::decent_remote::usage::now {} {return $::test_now}
 rename ::plugins::decent_remote::usage::idle ::plugins::decent_remote::usage::real_idle
@@ -15,6 +15,7 @@ proc reset_usage {} {
  ::plugins::decent_remote::usage::stop
  set ::plugins::decent_remote::usage::pending {}; set ::plugins::decent_remote::usage::state {}
  set ::plugins::decent_remote::usage::worker {};set ::sent {};set ::test_now 2000000000;set ::is_idle 1
+ set ::plugins::decent_remote::version 0.3.5
  set ::plugins::decent_remote::settings(usage_enabled) 1
  set ::plugins::decent_remote::settings(usage_endpoint) https://usage.test/v1/check-in
  file delete -force [file join $::testdir usage-state.tdb] [file join $::testdir usage-state.tdb.tmp]
@@ -89,6 +90,35 @@ test client-11 {uses the existing classic state adapter without a newer optional
  }
  set out
 } -result {1 1 0 0}
+test client-12 {new version reports same installation without weekly wait and reload does not repeat} -setup {reset_usage} -body {
+ run_usage;set id [lindex $::sent 0 1];complete_usage 1
+ ::plugins::decent_remote::usage::stop;set ::plugins::decent_remote::version 0.3.6;run_usage
+ set sentVersion [lindex $::sent 1 2];complete_usage 1
+ ::plugins::decent_remote::usage::stop;run_usage
+ list [llength $::sent] $sentVersion [expr {[lindex $::sent 1 1] eq $id}]
+} -result {2 0.3.6 1}
+test client-13 {legacy state gains version and failed report retains daily backoff} -setup {reset_usage} -body {
+ set id [string repeat a 32]
+ ::plugins::decent_remote::usage::save_state [dict create install_id $id last_attempt $::test_now last_success $::test_now]
+ run_usage;complete_usage 0
+ ::plugins::decent_remote::usage::stop;run_usage
+ set before [llength $::sent];incr ::test_now 86400;::plugins::decent_remote::usage::tick
+ list $before [llength $::sent] [expr {[lindex $::sent 0 1] eq $id}] [dict get [::plugins::decent_remote::usage::load_state] attempt_version]
+} -result {1 2 1 0.3.5}
+test client-14 {payload includes only ID and actual version; unsafe strings rejected} -setup {reset_usage} -body {
+ set id [string repeat a 32]
+ list [::plugins::decent_remote::usage::payload $id [::plugins::decent_remote::usage::current_version]] [catch {::plugins::decent_remote::usage::payload $id {bad"version}}]
+} -result {{{"install_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","version":"0.3.5"}} 1}
+test client-15 {failed version report throttles every version sharing the installation state} -setup {reset_usage} -body {
+ run_usage;complete_usage 1
+ ::plugins::decent_remote::usage::stop;set ::plugins::decent_remote::version 0.3.6;run_usage;complete_usage 0
+ ::plugins::decent_remote::usage::stop;set ::plugins::decent_remote::version 0.3.5;incr ::test_now 60;run_usage
+ set older [llength $::sent]
+ ::plugins::decent_remote::usage::stop;set ::plugins::decent_remote::version 0.3.7;incr ::test_now 60;run_usage
+ set newest [llength $::sent]
+ incr ::test_now 86280;::plugins::decent_remote::usage::tick
+ list $older $newest [llength $::sent] [lindex $::sent end 2]
+} -result {2 2 3 0.3.7}
 ::plugins::decent_remote::usage::stop
 removeDirectory $::testdir
 set failed $::tcltest::numTests(Failed)

@@ -106,4 +106,50 @@ class Export(unittest.TestCase):
             with self.assertRaises(ValueError): exporter.write_summary(data,path)
             self.assertEqual(path.read_bytes(),old)
 
+    def test_optional_version_summary_unknown_empty_and_legacy_are_valid(self):
+        for version in (None, '0.2.31', '0.2.29-rc.11', '1.2.3-alpha.1+build.005', '1.2.3-'+'a'*58):
+            data = copy.deepcopy(PRODUCT_BASE)
+            data['products'][1]['versions'] = [dict(version=version, installations=1, active_30d=1)]
+            self.assertEqual(exporter.validate(data), data)
+        data = copy.deepcopy(PRODUCT_BASE)
+        data['products'][0].update(total_installations=2, active_30d=1, countries=copy.deepcopy(BASE['countries']), versions=[dict(version='0.3.5', installations=1, active_30d=1), dict(version=None, installations=1, active_30d=0)])
+        data['products'][1].update(total_installations=0, active_30d=0, countries=[], versions=[])
+        self.assertEqual(exporter.validate(data), data)
+        self.assertEqual(exporter.validate(copy.deepcopy(BASE)), BASE)
+        self.assertEqual(exporter.validate(copy.deepcopy(PRODUCT_BASE)), PRODUCT_BASE)
+    def test_version_formats_and_unknown_fields_are_rejected(self):
+        for version in ('', 'v1.2.3', '1.2', '01.2.3', '1.02.3', '1.2.03', '1.2.3-01', '1.2.3-a..b', '1.2.3+', '1.2.3+bad space', '1.2.3-'+'a'*59, 1, True, [], {}):
+            data = copy.deepcopy(PRODUCT_BASE)
+            data['products'][1]['versions'] = [dict(version=version, installations=1, active_30d=1)]
+            with self.assertRaises(ValueError): exporter.validate(data)
+        for private in ('install_id', 'id_hash', 'ip', 'device_id', 'token', 'country'):
+            data = copy.deepcopy(PRODUCT_BASE)
+            data['products'][1]['versions'] = [dict(version='0.2.31', installations=1, active_30d=1, **{private:'private'})]
+            with self.assertRaises(ValueError): exporter.validate(data)
+        with self.assertRaises(ValueError): exporter.validate(dict(BASE, versions=[]))
+    def test_version_counts_duplicates_and_reconciliation(self):
+        def product_with(rows):
+            data = copy.deepcopy(PRODUCT_BASE)
+            data['products'][1]['versions'] = rows
+            return data
+        for rows in (None, {}, '0.2.31', [], [dict(version='0.2.31', installations=1)], [None], [dict(version='0.2.31', installations=2, active_30d=1)], [dict(version='0.2.31', installations=1, active_30d=0)]):
+            with self.assertRaises(ValueError): exporter.validate(product_with(rows))
+        for version in (None, '0.2.31'):
+            with self.assertRaises(ValueError): exporter.validate(product_with([dict(version=version, installations=1, active_30d=1), dict(version=version, installations=0, active_30d=0)]))
+        for field in ('installations','active_30d'):
+            for n in (-1, True, 1.5, '1', 10**9+1):
+                row = dict(version='0.2.31', installations=1, active_30d=1); row[field] = n
+                with self.assertRaises(ValueError): exporter.validate(product_with([row]))
+        with self.assertRaises(ValueError): exporter.validate(product_with([dict(version='0.2.31', installations=1, active_30d=2)]))
+    def test_versions_preserved_in_export_and_invalid_data_keeps_snapshot(self):
+        data = copy.deepcopy(PRODUCT_BASE)
+        data['products'][0]['versions'] = [dict(version=None, installations=1, active_30d=0)]
+        data['products'][1]['versions'] = [dict(version='0.2.31', installations=1, active_30d=1)]
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder)/'data.json'; exporter.write_summary(data,path); old = path.read_bytes()
+            self.assertEqual(json.loads(old),data)
+            invalid = copy.deepcopy(data); invalid['products'][1]['versions'][0]['installations'] = 2
+            with self.assertRaises(ValueError): exporter.write_summary(invalid,path)
+            self.assertEqual(path.read_bytes(),old)
+
 if __name__=='__main__': unittest.main()

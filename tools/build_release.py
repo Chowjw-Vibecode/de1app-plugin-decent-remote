@@ -28,7 +28,7 @@ statistics/schema.sql statistics/wrangler.example.toml statistics/README.md
 statistics/README.en.md statistics/tests/worker.test.mjs statistics/tests/client.test.tcl
 statistics/tests/export.test.py statistics/tests/site.test.mjs
 statistics/tests/fixtures/products-summary.json statistics/tools/export_summary.py
-statistics/migrations/0001_products.sql
+statistics/migrations/0001_products.sql statistics/migrations/0002_versions.sql
 statistics/site/index.html statistics/site/app.js statistics/site/data.json'''.split() + TESTS
 INSTALL = RUNTIME + DOCS + ['tools/create_config.py']
 

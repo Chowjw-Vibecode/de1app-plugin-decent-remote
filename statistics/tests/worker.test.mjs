@@ -33,7 +33,7 @@ test('repeat reports count one installation; only a hash and country/time are st
  try{
   assert.equal((await handle(request(),env,NOW)).status,200);await handle(request(),env,NOW+604800);
   const rows=db.prepare('SELECT * FROM installations').all();assert.equal(rows.length,1);assert.match(rows[0].id_hash,/^[0-9a-f]{64}$/);assert.notEqual(rows[0].id_hash,ID);
-  assert.deepEqual(Object.keys(rows[0]),['id_hash','product','country','first_seen','last_seen']);assert.equal(rows[0].product,'decent_remote');assert.equal(rows[0].first_seen,NOW);assert.equal(rows[0].last_seen,NOW+604800);
+  assert.deepEqual(Object.keys(rows[0]),['id_hash','product','country','first_seen','last_seen','version']);assert.equal(rows[0].product,'decent_remote');assert.equal(rows[0].first_seen,NOW);assert.equal(rows[0].last_seen,NOW+604800);
   const s=await summary(env,NOW+604800);assert.equal(s.total_installations,1);assert.equal(s.active_30d,1);assert.equal(s.countries[0].country,'CN');
   assert(!JSON.stringify(s).includes('id_hash'));assert(!JSON.stringify(s).includes(ID));assert(!JSON.stringify(limits).includes('192.0.2.1'));
  }finally{db.close()}
@@ -48,6 +48,8 @@ test('migration preserves existing hashes, countries and dates; old clients upda
   db.prepare('INSERT INTO installations VALUES (?,?,?,?)').run(hash,'SG',NOW-100,NOW-10);
   db.exec(readFileSync(new URL('../migrations/0001_products.sql',import.meta.url),'utf8'));
   assert.deepEqual({...db.prepare('SELECT * FROM installations').get()},{id_hash:hash,country:'SG',first_seen:NOW-100,last_seen:NOW-10,product:'decent_remote'});
+  db.exec(readFileSync(new URL('../migrations/0002_versions.sql',import.meta.url),'utf8'));
+  assert.equal(db.prepare('SELECT version FROM installations').get().version,null);
   assert.equal((await summary(env)).total_installations,1);
   await handle(request({country:'GB'}),env,NOW);
   const row=db.prepare('SELECT * FROM installations').get();
@@ -66,7 +68,7 @@ test('categories count the same random ID separately; v1 remains Decent Remote o
   const s=await productSummary(env,NOW+1);
   assert.equal(s.schema,2);assert.equal(s.total_installations,2);assert.equal(s.active_30d,1);
   assert.deepEqual(s.countries,[{country:'CN',installations:1,active_30d:1},{country:'SG',installations:1,active_30d:0}]);
-  assert.deepEqual(s.products,[{product:'decent_remote',total_installations:1,active_30d:0,countries:[{country:'SG',installations:1,active_30d:0}]},{product:'this_cup',total_installations:1,active_30d:1,countries:[{country:'CN',installations:1,active_30d:1}]}]);
+  assert.deepEqual(s.products,[{product:'decent_remote',total_installations:1,active_30d:0,countries:[{country:'SG',installations:1,active_30d:0}],versions:[{version:null,installations:1,active_30d:0}]},{product:'this_cup',total_installations:1,active_30d:1,countries:[{country:'CN',installations:1,active_30d:1}],versions:[{version:null,installations:1,active_30d:1}]}]);
   const rows=db.prepare('SELECT id_hash FROM installations').all();assert.equal(new Set(rows.map(r=>r.id_hash)).size,2);
   assert(!JSON.stringify(s).includes(ID));assert(!JSON.stringify(s).includes('id_hash'));
   await handle(request({method:'DELETE',body:{install_id:ID,product:'this_cup'}}),env,NOW+2);
@@ -162,5 +164,67 @@ test('out-of-order writes keep the latest country and earliest check-in; equal t
   assert.equal(row.country,'US');assert.equal(row.first_seen,NOW);assert.equal(row.last_seen,NOW+100);
   await handle(request({country:'CN'}),env,NOW+100);
   assert.equal(db.prepare('SELECT country FROM installations').get().country,'US');
+ }finally{db.close()}
+});
+
+
+test('version migration keeps all historical rows unchanged apart from explicit unknown version',()=>{
+ const schema=readFileSync(new URL('../schema.sql',import.meta.url),'utf8').replace(/,\n    version TEXT[^\n]+/,'');
+ const {db}=fixture(schema);try{
+  db.prepare('INSERT INTO installations VALUES (?,?,?,?,?)').run('a'.repeat(64),'this_cup','CN',NOW-10,NOW);
+  const before={...db.prepare('SELECT * FROM installations').get()};
+  db.exec(readFileSync(new URL('../migrations/0002_versions.sql',import.meta.url),'utf8'));
+  assert.deepEqual({...db.prepare('SELECT * FROM installations').get()},{...before,version:null});
+ }finally{db.close()}
+});
+test('newer version reports move the existing installation; absent and out-of-order versions cannot erase or roll it back',async()=>{
+ const {db,env}=fixture();try{
+  const report=(version,time)=>handle(request({body:{install_id:ID,product:'this_cup',...(version===undefined?{}:{version})}}),env,time);
+  await report(undefined,NOW);await report('0.2.31',NOW+1);await report('0.2.32',NOW+3);
+  await report('0.2.30',NOW+2);await report(undefined,NOW+4);
+  const row=db.prepare('SELECT * FROM installations').get();
+  assert.equal(row.version,'0.2.32');assert.equal(row.first_seen,NOW);assert.equal(row.last_seen,NOW+4);
+  assert.equal(db.prepare('SELECT COUNT(*) n FROM installations').get().n,1);
+  const s=await productSummary(env,NOW+4);assert.deepEqual(s.products[1].versions,[{version:'0.2.32',installations:1,active_30d:1}]);
+  assert.equal((await summary(env)).total_installations,0);
+ }finally{db.close()}
+});
+test('version totals reconcile with country and product totals, including unknown and inactive installations',async()=>{
+ const {db,env}=fixture();try{
+  const inputs=[['a','this_cup','0.2.31','CN',NOW],['b','this_cup','0.2.31','GB',NOW],['c','this_cup','0.2.32','CN',NOW],['d','this_cup',undefined,'CN',NOW-31*86400],['e','decent_remote','0.3.5','CN',NOW]];
+  for(const [id,product,version,country,time] of inputs)await handle(request({country,body:{install_id:id.repeat(32),product,...(version?{version}:{})}}),env,time);
+  const s=await productSummary(env);assert.equal(s.total_installations,5);assert.equal(s.active_30d,4);
+  for(const p of s.products){
+    assert.equal(p.versions.reduce((n,r)=>n+r.installations,0),p.total_installations);
+    assert.equal(p.versions.reduce((n,r)=>n+r.active_30d,0),p.active_30d);
+    assert.equal(p.countries.reduce((n,r)=>n+r.installations,0),p.total_installations);
+    assert.equal(new Set(p.countries.map(r=>r.country)).size,p.countries.length);
+  }
+  assert.deepEqual(s.products[1].versions,[{version:'0.2.31',installations:2,active_30d:2},{version:'0.2.32',installations:1,active_30d:1},{version:null,installations:1,active_30d:0}]);
+  assert(!Object.hasOwn(await summary(env),'versions'));
+ }finally{db.close()}
+});
+test('only bounded valid SemVer strings are accepted; bad version/private fields never write',async()=>{
+ const {db,env}=fixture();try{
+  for(const version of [null,1,true,[],{},'', 'v0.2.31','0.2','01.2.3','1.02.3','1.2.03','1.2.3-01','1.2.3-a..b','1.2.3+', '1.2.3+bad space','1.2.3-'+ 'a'.repeat(60)]){
+    const r=await handle(request({body:{install_id:ID,version}}),env,NOW);assert.equal(r.status,422,JSON.stringify(version));
+  }
+  assert.equal(db.prepare('SELECT COUNT(*) n FROM installations').get().n,0);
+  for(const version of ['0.2.31','0.2.29-rc.11','1.2.3-alpha.1+build.005','0.0.0','1.2.3-0','1.2.3-'+ 'a'.repeat(58)])assert.equal((await handle(request({body:{install_id:ID,version}}),env,NOW)).status,200,version);
+  assert.equal((await handle(request({body:{install_id:ID,version:'1.2.3',device_id:'private'}}),env,NOW)).status,422);
+ }finally{db.close()}
+});
+
+
+test('same-second valid reports use arrival order and legitimate downgrades remain reportable',async()=>{
+ const {db,env}=fixture();try{
+  const report=(version,time)=>handle(request({body:{install_id:ID,product:'this_cup',...(version===undefined?{}:{version})}}),env,time);
+  await report('0.2.30',NOW);await report('0.2.31',NOW);
+  assert.equal(db.prepare('SELECT version FROM installations').get().version,'0.2.31');
+  await report(undefined,NOW);assert.equal(db.prepare('SELECT version FROM installations').get().version,'0.2.31');
+  await report('0.2.29',NOW+1);assert.equal(db.prepare('SELECT version FROM installations').get().version,'0.2.29');
+  await report('0.2.32',NOW);assert.equal(db.prepare('SELECT version FROM installations').get().version,'0.2.29');
+  assert.equal(db.prepare('SELECT COUNT(*) n FROM installations').get().n,1);
+  assert.deepEqual((await productSummary(env,NOW+1)).products[1].versions,[{version:'0.2.29',installations:1,active_30d:1}]);
  }finally{db.close()}
 });

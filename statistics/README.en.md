@@ -4,7 +4,7 @@
 
 Installation totals grouped by country or region cover Decent Remote and This Cup, with an all-products view and separate categories. A random installation ID prevents double-counting within each product. Names, accounts, access keys, profiles and shot records are not sent.
 
-**The Cloudflare Worker and D1 database are deployed. Version 0.3.4 includes the service URL.** [Public summary](https://chowjw-vibecode.github.io/de1app-plugin-decent-remote/).
+**The Cloudflare Worker and D1 database are deployed. Version 0.3.4 includes the service URL.** [Public summary](https://chowjw-vibecode.github.io/usage-stats/).
 
 That deployment is the original v1 service. The category update requires the database migration, Worker deployment and page update below. Local source and previews do not establish deployment.
 

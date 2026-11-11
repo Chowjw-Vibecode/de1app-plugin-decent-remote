@@ -12,6 +12,7 @@ from urllib.request import Request, build_opener, HTTPRedirectHandler
 FIELDS = {'schema', 'generated_at', 'scope', 'total_installations', 'active_30d', 'countries'}
 PRODUCTS = {'decent_remote', 'this_cup'}
 COUNTRY_FIELDS = {'total_installations', 'active_30d', 'countries'}
+VERSION = re.compile(r'(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?')
 
 def validate(data):
     if not isinstance(data, dict) or type(data.get('schema')) is not int or data['schema'] not in (1, 2):
@@ -36,13 +37,15 @@ def validate(data):
             raise ValueError('Invalid product list')
         seen, combined = set(), {}
         for product in products:
-            if not isinstance(product, dict) or set(product) != COUNTRY_FIELDS | {'product'}:
+            if not isinstance(product, dict) or set(product) not in (COUNTRY_FIELDS | {'product'}, COUNTRY_FIELDS | {'product', 'versions'}):
                 raise ValueError('Unexpected product fields')
             name = product['product']
             if not isinstance(name, str) or name not in PRODUCTS or name in seen:
                 raise ValueError('Invalid product')
             seen.add(name)
             validate_countries(product)
+            if 'versions' in product:
+                validate_versions(product)
             for row in product['countries']:
                 total, active = combined.get(row['country'], (0, 0))
                 combined[row['country']] = (total + row['installations'], active + row['active_30d'])
@@ -51,11 +54,31 @@ def validate(data):
             raise ValueError('Product totals do not reconcile')
     return data
 
+def count(value):
+    if type(value) is not int or not 0 <= value <= 10**9:
+        raise ValueError('Invalid installation count')
+    return value
+
+def validate_versions(data):
+    rows = data['versions']
+    if not isinstance(rows, list) or len(rows) > 1000:
+        raise ValueError('Invalid version list')
+    seen = set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {'version', 'installations', 'active_30d'}:
+            raise ValueError('Unexpected version fields')
+        version = row['version']
+        if version is not None and (not isinstance(version, str) or len(version) > 64 or not VERSION.fullmatch(version)):
+            raise ValueError('Invalid version')
+        if version in seen:
+            raise ValueError('Duplicate version')
+        seen.add(version)
+        if count(row['active_30d']) > count(row['installations']):
+            raise ValueError('Active count exceeds total')
+    if sum(row['installations'] for row in rows) != data['total_installations'] or sum(row['active_30d'] for row in rows) != data['active_30d']:
+        raise ValueError('Version totals do not reconcile')
+
 def validate_countries(data):
-    def count(value):
-        if type(value) is not int or not 0 <= value <= 10**9:
-            raise ValueError('Invalid installation count')
-        return value
     total, active = count(data['total_installations']), count(data['active_30d'])
     rows = data['countries']
     if not isinstance(rows, list) or len(rows) > 300:

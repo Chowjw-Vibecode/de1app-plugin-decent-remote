@@ -1,5 +1,11 @@
 # Changelog / 更新记录
 
+## 0.3.6 — 2026-11-11
+
+- 上报当前插件版本，支持按版本查看安装数量；升级保留原安装编号。
+- 旧新版共用失败重试间隔，避免反复切换绕过退避。
+- 统计页默认中文，迁移至通用 usage-stats 地址。
+
 ## 0.3.5 — 2026-10-28
 
 - Remove remote-start buttons and the permission setting; all start requests are rejected. Stop, wake, sleep and scale tare remain available. / 移除远程启动按钮和权限项，启动接口统一拒绝；保留停止、唤醒、休眠与秤清零。
