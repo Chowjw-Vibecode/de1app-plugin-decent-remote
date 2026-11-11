@@ -17,6 +17,39 @@ PRODUCT_BASE = dict(BASE, schema=2, products=[
 ])
 
 class Export(unittest.TestCase):
+    def city_fixture(self):
+        data = copy.deepcopy(PRODUCT_BASE)
+        for i, product in enumerate(data['products']):
+            product['regions'] = [dict(country='CN', region='同名省' if i == 0 else None, installations=1, active_30d=i)]
+            product['cities'] = [dict(product['regions'][0], city='同名市')]
+        for field in ('regions', 'cities'):
+            data[field] = [copy.deepcopy(p[field][0]) for p in data['products']]
+        return data
+    def test_city_totals_nulls_and_tuple_identity(self):
+        data = self.city_fixture()
+        self.assertEqual(exporter.validate(data), data)
+        data['cities'][1]['region'] = '同名省'
+        with self.assertRaises(ValueError): exporter.validate(data)
+    def test_city_exports_reject_private_fields_bad_names_and_inconsistent_totals(self):
+        for field in ('last_ip', 'id_hash', 'install_id'):
+            data = self.city_fixture();data['cities'][0][field] = 'private'
+            with self.assertRaises(ValueError): exporter.validate(data)
+        for name in ('', 'bad\nname', 42, 'x'*129):
+            data = self.city_fixture();data['cities'][0]['city'] = name
+            with self.assertRaises(ValueError): exporter.validate(data)
+        data = self.city_fixture();data['products'][0]['cities'][0]['city'] = '别的城市'
+        with self.assertRaisesRegex(ValueError, 'Product location totals'): exporter.validate(data)
+        data = self.city_fixture();del data['products'][0]['cities']
+        with self.assertRaises(ValueError): exporter.validate(data)
+    def test_snapshot_is_publicly_readable_and_canonical_url_preserves_prefix(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder)/'data.json';exporter.write_summary(self.city_fixture(), path)
+            self.assertEqual(path.stat().st_mode & 0o777, 0o644)
+        with patch.object(exporter, 'build_opener') as make_opener:
+            opener = make_opener.return_value
+            opener.open.return_value = io.BytesIO(json.dumps(PRODUCT_BASE).encode())
+            exporter.fetch('https://home.zhouchenxing.com/usage-stats/api/v1/summary', products=True)
+            self.assertEqual(opener.open.call_args.args[0].full_url, 'https://home.zhouchenxing.com/usage-stats/api/v2/summary')
     def test_valid_and_empty(self):
         self.assertEqual(exporter.validate(copy.deepcopy(BASE)), BASE)
         data = dict(BASE, total_installations=0, active_30d=0, countries=[])

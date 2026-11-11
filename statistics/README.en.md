@@ -1,5 +1,7 @@
 # Decent tools usage by country
 
+The [domestic page](https://home.zhouchenxing.com/usage-stats/) supports country, region, city and version totals. The service privately stores each installation’s latest valid public IP, matching location and IP collection time; public output contains aggregates only. The D1 deployment below describes the former backend. Current service source is in [usage-stats](https://github.com/Chowjw-Vibecode/usage-stats/tree/main/service).
+
 [中文](README.md)
 
 Installation totals grouped by country or region cover Decent Remote and This Cup, with an all-products view and separate categories. A random installation ID prevents double-counting within each product. Names, accounts, access keys, profiles and shot records are not sent.
@@ -17,9 +19,9 @@ Service: `https://decent-remote-usage.decent-remote-stats.workers.dev`; [country
 - The tablet stores a random ID and the last attempt and success times. Successful updates are seven days apart; failed attempts wait at least 24 hours before retrying.
 - D1 stores the ID's SHA-256 hash, product, country, and first and latest update times. Existing records and older clients without a product are `decent_remote`; This Cup is `this_cup`. These identify an installation record, not an account or hardware identity.
 - The GitHub page contains country totals, 30-day active-installation counts and the summary time, without installation records.
-- Cloudflare infers country from the request. VPNs, reinstalls and fabricated requests can affect the numbers; they are not counts of people. The application does not retain raw IP addresses in its database or logs. Cloudflare processes network information to handle requests.
+- Cloudflare infers country from the request. VPNs, reinstalls and fabricated requests can affect the numbers; they are not counts of people. The former D1 backend did not retain raw IPs. The current domestic backend retains the latest valid IP privately, with no IP history or access logs. It uses a local city database, without sending IPs to third-party geolocation APIs.
 - An empty endpoint produces no traffic. The client uses a background thread and skips updates if dependencies are unavailable. It does not control the machine. Configuration-based disabling is documented in `docs/USAGE.md` in the install package.
-- The thread and settings above belong to the classic de1app client. This Cup sends only its random ID and product from its browser, without credentials. Clearing browser storage, using another browser or changing the page origin can create another installation. Counts are neither people nor physical devices.
+- The thread and settings above belong to the classic de1app client. OneCup sends its random ID, product and version from its browser, without credentials. Clearing browser storage, using another browser or changing the page origin can create another installation. Counts are neither people nor physical devices.
 
 ## API
 

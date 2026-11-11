@@ -4,9 +4,9 @@
 
 ## English
 
-Usage statistics help us understand where Decent Remote is used. They count installations by country or region. A random installation ID prevents double-counting; names, accounts, access keys, profiles and shot records are not sent.
+Usage statistics help us understand where Decent Remote is used. They group reporting installations by country, state/province and city. A random installation ID prevents double-counting; names, accounts, access keys, profiles and shot records are not sent.
 
-The plugin sends its random ID and plugin version to the configured HTTPS service. Cloudflare determines the country from the request. D1 stores the ID's hash, country, latest reported version, and first and latest update times. The [GitHub summary page](https://chowjw-vibecode.github.io/usage-stats/) contains country totals and 30-day active-installation counts, with no installation identifiers. Counts are installations, not people; VPNs and reinstalls can affect them. Our application does not store raw IP addresses; Cloudflare processes network information to serve requests.
+The plugin sends its random ID and version to the configured HTTPS service. The legacy Cloudflare endpoint relays the source IP through an authenticated channel to the domestic service. That service privately saves the ID hash, product, version, first/latest report times and latest valid public IP, its collection time and locally resolved country/region/city. It keeps no IP history and does not send IPs to third-party geolocation APIs. The [domestic page](https://home.zhouchenxing.com/usage-stats/) and [GitHub page](https://chowjw-vibecode.github.io/usage-stats/) publish aggregates only, without IPs or installation identifiers. Locations reflect network exits, not home addresses; VPNs and database errors can affect them. Existing records without IPs need another report to gain city details. Counts are installations, not people.
 
 The first update is attempted while de1app is idle or asleep, at least one minute after the plugin starts. After a successful update, the next is due in seven days. Failures wait at least 24 hours before another attempt. Statistics run in a background thread and do not control the machine.
 
@@ -23,9 +23,9 @@ Preserve `usage-state.tdb` when updating the plugin. It contains the random ID a
 
 ## 中文
 
-使用地区统计用于了解 Decent Remote 在各地的使用情况，按国家／地区汇总安装数量。随机安装编号用于去重，不发送姓名、账户、访问密钥、曲线或出杯记录。
+使用地区统计用于了解 Decent Remote 在各地的使用情况，按国家、省／州和城市汇总已上报的安装数量。随机安装编号用于去重，不发送姓名、账户、访问密钥、曲线或出杯记录。
 
-插件向配置的 HTTPS 服务发送随机编号和当前插件版本。Cloudflare 根据请求判断国家／地区，D1 保存编号摘要、地区、最近上报版本及首次和最近更新时间。[GitHub 汇总页](https://chowjw-vibecode.github.io/usage-stats/)展示地区总量、版本分布和近 30 天活跃安装数，不包含安装编号。安装数量不等于人数，VPN 和重新安装可能影响结果。我们的应用不保存原始 IP；Cloudflare 会处理请求所需的网络信息。
+插件向配置的 HTTPS 服务发送随机编号和当前插件版本。旧 Cloudflare 入口通过认证通道向国内服务转交连接源 IP。国内服务私下保存编号摘要、产品、版本、首次／最近上报时间，以及最新有效公网 IP、IP 采集时间和本地解析的国家、省市。不保留 IP 历史，不向第三方定位接口发送 IP。[国内统计页](https://home.zhouchenxing.com/usage-stats/)和 [GitHub 汇总页](https://chowjw-vibecode.github.io/usage-stats/)只展示汇总，不含 IP 或安装编号。位置反映网络出口，不等于住址，VPN 和定位库误差会影响结果。旧记录未保存 IP，需下一次上报补齐省市。安装数量不等于人数。
 
 插件启动至少一分钟后，首次在 App 待机或休眠时尝试更新；成功后间隔七天，失败后至少隔一天再试。统计在后台线程进行，不控制咖啡机。
 
